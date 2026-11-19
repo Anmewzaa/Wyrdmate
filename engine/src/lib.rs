@@ -1,6 +1,9 @@
 //! Wyrdmate engine: eval + search on top of cozy-chess movegen.
 
+pub mod nnue;
+
 pub use cozy_chess::{Board, Color, GameStatus, Move, Piece};
+use std::sync::Arc;
 
 pub const MATE: i32 = 30_000;
 const INF: i32 = 32_000;
@@ -58,11 +61,25 @@ pub struct Searcher {
     pub nodes: u64,
     pub node_limit: u64,
     stopped: bool,
+    net: Option<Arc<nnue::Network>>,
 }
 
 impl Searcher {
     pub fn new(node_limit: u64) -> Self {
-        Self { nodes: 0, node_limit, stopped: false }
+        Self { nodes: 0, node_limit, stopped: false, net: None }
+    }
+
+    /// Use an NNUE instead of the material eval.
+    pub fn with_net(mut self, net: Arc<nnue::Network>) -> Self {
+        self.net = Some(net);
+        self
+    }
+
+    fn eval(&self, board: &Board) -> i32 {
+        match &self.net {
+            Some(n) => n.evaluate(board),
+            None => evaluate(board),
+        }
     }
 
     fn tick(&mut self) {
@@ -74,7 +91,7 @@ impl Searcher {
 
     fn quiesce(&mut self, board: &Board, mut alpha: i32, beta: i32, ply: i32) -> i32 {
         self.tick();
-        let stand = evaluate(board);
+        let stand = self.eval(board);
         if self.stopped || stand >= beta {
             return stand;
         }
