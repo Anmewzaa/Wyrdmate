@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wyrdmate progress</title>
+<style>
+:root{--bg:#fcfcfb;--ink:#0b0b0b;--mute:#52514e;--grid:#e1e0d9;--blue:#2a78d6;--red:#e34948;--gray:#898781}
+@media (prefers-color-scheme:dark){:root{--bg:#1a1a19;--ink:#f0efec;--mute:#c3c2b7;--grid:#2c2c2a}}
+body{margin:0;padding:16px;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,sans-serif;max-width:760px;margin-inline:auto}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}h2{font-size:16px;font-weight:500;margin:28px 0 4px}
+p.s{margin:0 0 8px;color:var(--mute);font-size:13px}.box{position:relative;width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{text-align:left;padding:4px 8px;border-bottom:1px solid var(--grid)}
+</style></head><body>
+<h1>Wyrdmate progress</h1>
+<p class="s">Data lives in <code>data.js</code>; add a row after each A/B match, then reload this page.</p>
+<h2>Strength in Elo (0 = equal to the opponent)</h2>
+<p class="s">Whisker = error margin; if it crosses 0 the result is not conclusive. Blue = accepted net, red = worse, gray = inconclusive.</p>
+<div class="box" id="eloBox"><canvas id="elo" role="img" aria-label="Bar chart of Elo per match"></canvas></div>
+<table id="tbl"><thead><tr><th>Net</th><th>vs</th><th>Elo</th><th>Games</th><th>Result</th></tr></thead><tbody></tbody></table>
+<h2>Training loss (log scale)</h2>
+<p class="s">Lower means the net predicts the stored scores better. It does not by itself prove the net plays better; only the matches above do.</p>
+<div class="box" style="height:240px"><canvas id="loss" role="img" aria-label="Line chart of training loss per round"></canvas></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="data.js"></script>
+<script>
+const D=window.WYRD_DATA, dark=matchMedia('(prefers-color-scheme: dark)').matches;
+const ink=dark?'#c3c2b7':'#52514e', grid=dark?'#2c2c2a':'#e1e0d9';
+const col=m=>m.accepted?'#2a78d6':(m.elo+m.err<0?'#e34948':'#898781');
+const rows=D.matches;
+document.getElementById('eloBox').style.height=(rows.length*44+90)+'px';
+const whisk={id:'whisk',afterDatasetsDraw(c){const m=c.getDatasetMeta(0),x=c.scales.x,g=c.ctx;g.save();g.strokeStyle=ink;g.fillStyle=ink;g.lineWidth=1.5;g.font='12px sans-serif';
+rows.forEach((r,i)=>{const cy=m.data[i].y,lo=x.getPixelForValue(r.elo-r.err),hi=x.getPixelForValue(r.elo+r.err);
+g.beginPath();g.moveTo(lo,cy);g.lineTo(hi,cy);g.moveTo(lo,cy-5);g.lineTo(lo,cy+5);g.moveTo(hi,cy-5);g.lineTo(hi,cy+5);g.stroke();
+g.textAlign=r.elo>=0?'left':'right';g.fillText((r.elo>0?'+':'')+r.elo+' ± '+r.err,r.elo>=0?hi+8:lo-8,cy+4)});g.restore()}};
+const lim=Math.ceil((Math.max(...rows.map(r=>Math.abs(r.elo)+r.err))+50)/50)*50;
+new Chart('elo',{type:'bar',data:{labels:rows.map(r=>[r.net,'vs '+r.vs]),datasets:[{data:rows.map(r=>r.elo),backgroundColor:rows.map(col),barThickness:20,borderRadius:4}]},
+options:{indexAxis:"y",animation:false,responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},
+scales:{x:{min:-lim,max:lim,ticks:{color:ink},grid:{color:grid},title:{display:true,text:'Elo',color:ink}},y:{ticks:{color:ink},grid:{display:false}}}},plugins:[whisk]});
+const tb=document.querySelector('#tbl tbody');
+rows.forEach(r=>{const tr=document.createElement('tr');[r.net,r.vs,(r.elo>0?'+':'')+r.elo+' ± '+r.err,r.games,r.note].forEach(t=>{const td=document.createElement('td');td.textContent=t;tr.appendChild(td)});tb.appendChild(tr)});
+const pal=['#2a78d6','#eb6834','#1baf7a','#6250d6'];
+new Chart('loss',{type:'line',data:{datasets:Object.entries(D.loss).map(([n,p],i)=>({label:n,data:p.map(q=>({x:q[0],y:q[1]})),borderColor:pal[i%4],borderWidth:2,pointRadius:0,tension:0.2}))},
+options:{animation:false,responsive:true,maintainAspectRatio:false,plugins:{legend:{display:Object.keys(D.loss).length>1,labels:{color:ink}}},
+scales:{x:{type:'linear',title:{display:true,text:'training round',color:ink},ticks:{color:ink},grid:{display:false}},y:{type:"logarithmic",min:0.0005,max:0.02,ticks:{color:ink,callback:v=>[0.0005,0.001,0.002,0.005,0.01,0.02].includes(v)?v:""},grid:{color:grid},title:{display:true,text:"loss",color:ink}}}}});
+</script></body></html>

@@ -162,3 +162,10 @@ fastchess -engine name=new cmd=<engine.exe> option.EvalFile=<quantised.bin> -eng
 
 `cargo run --release -p wyrdmate-engine --example validate -- <net> <data.txt>`
 checks a net against stored scores (correlation ~0.83 means the inference matches).
+
+## Progress page
+
+`docs/progress/index.html` (data in `docs/progress/data.js`) charts A/B results and
+training loss. After **every** A/B match add a row to `matches` (net, vs, elo, err,
+games, accepted, note); after a training run you want to keep, add its loss series.
+Open it in a browser (it loads `data.js` next to it, so use a local server or open the file directly).
