@@ -13,6 +13,8 @@ Rust engine + NNUE trained with [bullet](https://github.com/jw1912/bullet).
 
 ## Progress
 
-![Wyrdmate progress: match Elo and training loss](docs/progress/progress.svg)
+![Wyrdmate training process: match results per net](docs/progress/training-process.svg)
 
-The chart is generated from `docs/progress/data.js` by `scripts/make-progress-svg.ps1`.
+![Wyrdmate training loss per net version](docs/progress/loss.svg)
+
+The charts are generated from `docs/progress/data.json` by `scripts/make-progress-svg.ps1`.

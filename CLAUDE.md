@@ -165,12 +165,12 @@ checks a net against stored scores (correlation ~0.83 means the inference matche
 
 ## Progress page
 
-Data: `docs/progress/data.js` (**keep it strict JSON** after the `window.WYRD_DATA =`
-prefix; the generator parses it). After **every** A/B match add a row to `matches`
-(net, round, vs, elo, err, games, accepted, note); after a training run worth keeping
-add its loss series. Then regenerate the chart shown in the README and commit both:
+Data: `docs/progress/data.json` (strict JSON; the generator parses it; all chart text lives in its `ui` block).
+After **every** A/B match add a row to `matches` (net, vs, elo, err, games, accepted, finished, commit);
+after a training run worth keeping add a series to `loss` (name, detail, data, finished, commit, points).
+Then regenerate the two charts shown in the README and commit them with the data:
 
 ```text
-powershell -File scripts/make-progress-svg.ps1     # writes docs/progress/progress.svg
+powershell -File scripts/make-progress-svg.ps1   # writes docs/progress/training-process.svg and loss.svg
 ```
 

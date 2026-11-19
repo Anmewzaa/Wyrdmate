@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="620" viewBox="0 0 940 620" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Training loss">
+<rect width="940" height="620" fill="#ffffff"/>
+<text x="24" y="38" font-size="22" font-weight="700" fill="#1f1f1e" text-anchor="start">Wyrdmate · Training loss</text>
+<text x="24" y="58" font-size="13" font-weight="400" fill="#6b6a66" text-anchor="start">How far the net’s guesses are from the stored answers while training (lower = closer).</text>
+<rect x="24" y="72" width="892" height="28" rx="6" fill="#f6f5f0"/>
+<text x="40" y="91" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">Low loss does NOT mean it plays well (wyrd-iii has higher loss than wyrd-ii yet is stronger). Match results decide.</text>
+<rect x="24" y="128" width="16" height="16" rx="3" fill="#2a78d6"/>
+<text x="48" y="140" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-ii · run r2a · wdl 0.0 · 200 superbatches</text>
+<text x="48" y="157" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">data: round-2 self-play, 1,274,079 positions · trained 2026-11-19 23:11 · commit c3ed243</text>
+<rect x="24" y="172" width="16" height="16" rx="3" fill="#eb6834"/>
+<text x="48" y="184" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">r3a · run r3a · wdl 0.0 · 200 superbatches</text>
+<text x="48" y="201" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">data: round-3 self-play only · trained 2026-11-19 23:38 · commit c3ed243</text>
+<rect x="24" y="216" width="16" height="16" rx="3" fill="#1baf7a"/>
+<text x="48" y="228" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-iii · run r23a · wdl 0.0 · 200 superbatches</text>
+<text x="48" y="245" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">data: round 2+3 self-play, 2,414,058 positions · trained 2026-11-19 23:38 · commit c3ed243</text>
+<line x1="90" y1="540" x2="860" y2="540" stroke="#e1e0d9"/>
+<text x="82" y="544" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0005</text>
+<line x1="90" y1="491.15" x2="860" y2="491.15" stroke="#e1e0d9"/>
+<text x="82" y="495.15" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.001</text>
+<line x1="90" y1="442.29" x2="860" y2="442.29" stroke="#e1e0d9"/>
+<text x="82" y="446.29" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.002</text>
+<line x1="90" y1="377.71" x2="860" y2="377.71" stroke="#e1e0d9"/>
+<text x="82" y="381.71" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.005</text>
+<line x1="90" y1="328.85" x2="860" y2="328.85" stroke="#e1e0d9"/>
+<text x="82" y="332.85" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.01</text>
+<line x1="90" y1="280" x2="860" y2="280" stroke="#e1e0d9"/>
+<text x="82" y="284" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.02</text>
+<polyline points="93.85,318.08 97.7,464.76 101.55,472.28 105.4,476.04 109.25,478.65 128.5,486.25 147.75,490.24 167,492.79 186.25,494.61 205.5,495.88 224.75,496.95 244,497.79 263.25,498.57 282.5,498.96 301.75,499.68 321,500 340.25,500.4 359.5,500.48 378.75,500.88 398,501.12 417.25,501.37 436.5,501.53 455.75,501.78 475,502.1 494.25,502.02 513.5,502.43 532.75,502.6 552,502.52 571.25,502.68 590.5,502.85 609.75,503.02 629,503.1 648.25,503.18 667.5,503.18 686.75,504.7 706,504.7 725.25,504.53 744.5,504.79 763.75,504.79 783,504.62 802.25,504.7 821.5,504.79 840.75,504.79 860,504.88" fill="none" stroke="#2a78d6" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="860" cy="504.88" r="4" fill="#2a78d6"/>
+<polyline points="93.85,440.59 97.7,456.11 101.55,462.94 105.4,466.38 109.25,469.32 128.5,477.65 147.75,481.42 167,483.98 186.25,486.05 205.5,487.17 224.75,487.91 244,489.47 263.25,488.52 282.5,489.54 301.75,490.24 321,490.65 340.25,492.28 359.5,491.78 378.75,493.66 398,493.29 417.25,493.15 436.5,493.73 455.75,493.22 475,493.15 494.25,494.46 513.5,492.35 532.75,493.58 552,493.73 571.25,493.8 590.5,495.36 609.75,494.17 629,495.81 648.25,495.28 667.5,495.21 686.75,496.64 706,496.26 725.25,495.73 744.5,497.18 763.75,494.91 783,496.11 802.25,496.11 821.5,496.03 840.75,497.33 860,496.18" fill="none" stroke="#eb6834" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="860" cy="496.18" r="4" fill="#eb6834"/>
+<polyline points="93.85,458.73 97.7,467.73 101.55,471.79 105.4,473.86 109.25,476.27 128.5,483.22 147.75,486.84 167,487.17 186.25,486.51 205.5,489.41 224.75,489.61 244,489.96 263.25,491.71 282.5,489.82 301.75,489.47 321,490.37 340.25,492 359.5,490.1 378.75,493.15 398,491.93 417.25,490.37 436.5,490.44 455.75,493 475,491.29 494.25,492.14 513.5,493.29 532.75,491.64 552,490.24 571.25,492.71 590.5,491.93 609.75,492.28 629,493.66 648.25,491.57 667.5,490.86 686.75,493.15 706,494.24 725.25,492.86 744.5,495.28 763.75,494.02 783,492.71 802.25,492.57 821.5,495.21 840.75,493.29 860,494.1" fill="none" stroke="#1baf7a" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="860" cy="494.1" r="4" fill="#1baf7a"/>
+<text x="866" y="294" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="end">wyrd-ii final 0.000823</text>
+<text x="866" y="310" font-size="11" font-weight="700" fill="#eb6834" text-anchor="end">r3a final 0.000931</text>
+<text x="866" y="326" font-size="11" font-weight="700" fill="#1baf7a" text-anchor="end">wyrd-iii final 0.000959</text>
+<text x="90" y="558" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0</text>
+<text x="282.5" y="558" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">50</text>
+<text x="475" y="558" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">100</text>
+<text x="667.5" y="558" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">150</text>
+<text x="860" y="558" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">200</text>
+<text x="475" y="580" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">superbatch (training round; each point = last logged batch of that superbatch)</text>
+<text transform="translate(24 410) rotate(-90)" font-size="12" fill="#6b6a66" text-anchor="middle">loss (log scale)</text>
+<text x="24" y="608" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
+</svg>

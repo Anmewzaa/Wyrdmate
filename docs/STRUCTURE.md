@@ -31,9 +31,9 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 | `CLAUDE.md` | คู่มือหลักสำหรับ AI (Claude Code โหลดอัตโนมัติ): เป้าหมาย กฎเหล็ก โครงสร้าง วิธีตรวจสอบ สภาพแวดล้อมเครื่อง เขียนตามแบบโปรเจกต์ TerraFlow ช่วยประหยัด token |
 | `docs/STRUCTURE.md` | ไฟล์นี้ |
 | `docs/decisions.md` | บันทึกการตัดสินใจสำคัญ (ชื่อ, bullet, monorepo ฯลฯ) |
-| `docs/progress/data.js` | ข้อมูลความคืบหน้า (Elo จากการแข่ง + loss ตอนเทรน) เพิ่มแถวใหม่ทุกครั้งที่แข่งเสร็จ |
-| `docs/progress/progress.svg` | กราฟสรุปที่ฝังใน README ดูได้บน GitHub สร้างด้วย `scripts/make-progress-svg.ps1` |
-| `scripts/make-progress-svg.ps1` | สคริปต์ PowerShell สร้าง progress.svg จาก data.js |
+| `docs/progress/data.json` | ข้อมูลความคืบหน้า (ผลแข่ง Elo + loss ตอนเทรน + ข้อความในกราฟ) เพิ่มแถวใหม่ทุกครั้งที่แข่งเสร็จ |
+| `docs/progress/training-process.svg`, `loss.svg` | กราฟสองใบ (ผลแข่งของแต่ละ net / loss ตอนเทรน) ฝังใน README สร้างด้วย `scripts/make-progress-svg.ps1` |
+| `scripts/make-progress-svg.ps1` | สคริปต์ PowerShell สร้างกราฟทั้งสองจาก data.json |
 | `docs/TRAINING.md` | อธิบายวิธีเทรน NNUE ทั้งกระบวนการ (self-play → bullet → แข่งทดสอบ) |
 
 ### `engine/` — เครื่องยนต์หมากรุก (crate `wyrdmate-engine`)
