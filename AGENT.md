@@ -26,7 +26,7 @@ Rust. NNUE trained supervised with bullet (jw1912/bullet), not AlphaZero-style R
 ## Environment (Windows 11, user machine)
 - Rust stable installed via rustup; cargo is NOT on PATH in new shells. In PowerShell: `$env:Path += ";$env:USERPROFILE\.cargo\bin"`; in Bash: `export PATH="$PATH:$HOME/.cargo/bin"`.
 - MSVC Build Tools (C++) + Windows SDK installed.
-- GPU: NVIDIA RTX 4060 8 GB, driver 610.88. CUDA Toolkit (nvcc) NOT installed yet; needed for bullet. Check bullet README for required CUDA version before installing; ask the user first (big system install).
+- GPU: NVIDIA RTX 4060 8 GB, driver 610.88 (supports CUDA up to 13.3). CUDA Toolkit NOT installed yet. bullet needs: full Toolkit (links cuda, cudart, nvrtc, cublas), newest version <= 13.3 recommended, env var `CUDA_PATH` set (dirs bin/lib/include), build with `--features cuda`. Ask the user before the big system install.
 - No `winget`. Use official installers, verify signature.
 - Cargo prints progress to stderr: PowerShell shows a harmless NativeCommandError; judge by exit code/output.
 
