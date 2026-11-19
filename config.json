@@ -32,7 +32,7 @@
         "additional_lines_rgx": [],
         "event_name": "Fastchess Tournament",
         "site": "?",
-        "file": "logs\\match2.pgn",
+        "file": "logs\\r2b-vs-round1.pgn",
         "notation": 0,
         "append_file": true,
         "track_nodes": false,
@@ -60,7 +60,7 @@
     },
     "config_name": "config.json",
     "output": 0,
-    "seed": 15315747811701126144,
+    "seed": 16621068727084214311,
     "variant": 0,
     "type": 0,
     "gauntlet_seeds": 1,
@@ -89,7 +89,36 @@
     },
     "engines": [
         {
-            "name": "w0",
+            "name": "r2b",
+            "dir": "",
+            "cmd": "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\target\\release\\wyrdmate-engine.exe",
+            "args": "",
+            "restart": false,
+            "options": [
+                [
+                    "EvalFile",
+                    "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\checkpoints\\r2b-200\\quantised.bin"
+                ],
+                [
+                    "Nodes",
+                    "10000"
+                ]
+            ],
+            "limit": {
+                "tc": {
+                    "increment": 0,
+                    "fixed_time": 0,
+                    "time": 0,
+                    "moves": 0,
+                    "timemargin": 0
+                },
+                "nodes": 10000,
+                "plies": 0
+            },
+            "variant": 0
+        },
+        {
+            "name": "round1",
             "dir": "",
             "cmd": "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\target\\release\\wyrdmate-engine.exe",
             "args": "",
@@ -116,44 +145,19 @@
                 "plies": 0
             },
             "variant": 0
-        },
-        {
-            "name": "material",
-            "dir": "",
-            "cmd": "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\target\\release\\wyrdmate-engine.exe",
-            "args": "",
-            "restart": false,
-            "options": [
-                [
-                    "Nodes",
-                    "10000"
-                ]
-            ],
-            "limit": {
-                "tc": {
-                    "increment": 0,
-                    "fixed_time": 0,
-                    "time": 0,
-                    "moves": 0,
-                    "timemargin": 0
-                },
-                "nodes": 10000,
-                "plies": 0
-            },
-            "variant": 0
         }
     ],
     "stats": {
-        "w0 vs material": {
-            "wins": 180,
-            "losses": 155,
-            "draws": 265,
-            "penta_WW": 26,
-            "penta_WD": 77,
-            "penta_WL": 51,
-            "penta_DD": 62,
-            "penta_LD": 64,
-            "penta_LL": 20
+        "r2b vs round1": {
+            "wins": 87,
+            "losses": 217,
+            "draws": 296,
+            "penta_WW": 5,
+            "penta_WD": 43,
+            "penta_WL": 34,
+            "penta_DD": 67,
+            "penta_LD": 119,
+            "penta_LL": 32
         }
     }
 }

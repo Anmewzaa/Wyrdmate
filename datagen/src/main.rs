@@ -1,11 +1,22 @@
 //! Self-play data generator. Output lines (bullet text format):
 //!   <FEN> | <score cp, white POV> | <result: 1.0 white win, 0.5 draw, 0.0 black win>
 //!
-//! Usage: wyrdmate-datagen [games] [nodes] [seed] [out.txt]
+//! Usage: wyrdmate-datagen [games] [nodes] [seed] [out.txt] [net.bin (optional)]
 
 use std::fs::File;
 use std::io::{BufWriter, Write};
-use wyrdmate_engine::{legal_moves, Board, Color, GameStatus, Searcher, MATE};
+use std::sync::Arc;
+use wyrdmate_engine::{legal_moves, nnue::Network, Board, Color, GameStatus, Searcher, MATE};
+
+type Net = Option<Arc<Network>>;
+
+fn searcher(nodes: u64, net: &Net) -> Searcher {
+    let s = Searcher::new(nodes);
+    match net {
+        Some(n) => s.with_net(n.clone()),
+        None => s,
+    }
+}
 
 struct Rng(u64);
 impl Rng {
@@ -26,7 +37,7 @@ const OPENING_PLIES: usize = 8;
 const ADJ_SCORE: i32 = 1500;
 const ADJ_COUNT: usize = 4;
 
-fn random_opening(rng: &mut Rng, nodes: u64) -> Option<Board> {
+fn random_opening(rng: &mut Rng, nodes: u64, net: &Net) -> Option<Board> {
     let mut b = Board::default();
     let plies = OPENING_PLIES + rng.below(2);
     for _ in 0..plies {
@@ -40,13 +51,13 @@ fn random_opening(rng: &mut Rng, nodes: u64) -> Option<Board> {
         }
     }
     // reject lopsided openings
-    let (_, s) = Searcher::new(nodes).search(&b, 8)?;
+    let (_, s) = searcher(nodes, net).search(&b, 8)?;
     (s.abs() <= 300).then_some(b)
 }
 
 /// Returns (fen, white-POV score) samples and the white-POV result.
-fn play_game(rng: &mut Rng, nodes: u64) -> Option<(Vec<(String, i32)>, f32)> {
-    let mut board = random_opening(rng, nodes)?;
+fn play_game(rng: &mut Rng, nodes: u64, net: &Net) -> Option<(Vec<(String, i32)>, f32)> {
+    let mut board = random_opening(rng, nodes, net)?;
     let mut samples = Vec::new();
     let (mut win_streak, mut loss_streak) = (0usize, 0usize); // white POV
 
@@ -60,7 +71,7 @@ fn play_game(rng: &mut Rng, nodes: u64) -> Option<(Vec<(String, i32)>, f32)> {
                 GameStatus::Drawn => break 'game 0.5,
                 GameStatus::Ongoing => {}
             }
-            let (mv, score) = Searcher::new(nodes).search(&board, 64)?;
+            let (mv, score) = searcher(nodes, net).search(&board, 64)?;
             let white_score = if board.side_to_move() == Color::White { score } else { -score };
 
             let quiet = board.checkers().is_empty()
@@ -92,6 +103,7 @@ fn main() -> std::io::Result<()> {
     let nodes: u64 = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(5_000);
     let seed: u64 = a.get(3).and_then(|s| s.parse().ok()).unwrap_or(1);
     let path = a.get(4).cloned().unwrap_or_else(|| "data/selfplay.txt".into());
+    let net: Net = a.get(5).map(|p| Arc::new(Network::load(p).expect("load net")));
 
     if let Some(dir) = std::path::Path::new(&path).parent() {
         std::fs::create_dir_all(dir)?;
@@ -101,7 +113,7 @@ fn main() -> std::io::Result<()> {
     let (mut done, mut positions) = (0usize, 0usize);
 
     while done < games {
-        let Some((samples, result)) = play_game(&mut rng, nodes) else { continue };
+        let Some((samples, result)) = play_game(&mut rng, nodes, &net) else { continue };
         for (fen, score) in &samples {
             writeln!(out, "{fen} | {score} | {result:.1}")?;
         }
