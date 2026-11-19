@@ -31,3 +31,20 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 
 - wdl 0.5, 20 superbatches on round-1 data: -148 +/- 24 vs material.
 - wdl 0.3, 200 superbatches on round-2 data: -35 +/- 19 vs material, -76 +/- 19 vs wyrd-i.
+
+## wyrd-iii.bin — ACCEPTED (current best)
+
+- Tooling: commit `c3ed243` (datagen with net argument, trainer with wdl/net_id args; unchanged through round 3).
+- Data: round-3 self-play (4 runs x 2500 games, seeds 41-44, 5000 nodes/move, played by
+  `wyrd-ii.bin`; 1,139,979 positions) **plus all round-2 data** (1,274,079 positions) = 2,414,058 positions.
+  `wyrdmate-datagen 2500 5000 <seed> data/r3partSEED.txt nets/wyrd-ii.bin`, concatenated with the round-2 file,
+  then `bullet-utils convert --from text`, `shuffle`.
+- Training: `wyrdmate-trainer data/r23train.data 200 152 16384 0.0 r23a` (wdl 0.0;
+  152 batches/superbatch ~ one pass over the larger set). Final running loss 0.000964.
+- Match (fastchess, 600 games, 10000 nodes, same book as before):
+  vs wyrd-ii **+81 +/- 22 Elo**; vs material eval **+166 +/- 25 Elo**.
+
+## Round-3 experiment not committed
+
+- r3a (round-3 data only, 76 batches/superbatch, wdl 0.0): +63 +/- 22 vs wyrd-ii, +143 +/- 23 vs material.
+  Weaker than wyrd-iii, so combining the rounds' data helped. Not kept.

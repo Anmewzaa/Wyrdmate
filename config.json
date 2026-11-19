@@ -32,7 +32,7 @@
         "additional_lines_rgx": [],
         "event_name": "Fastchess Tournament",
         "site": "?",
-        "file": "logs\\r2b-vs-round1.pgn",
+        "file": "logs\\r23a-vs-material.pgn",
         "notation": 0,
         "append_file": true,
         "track_nodes": false,
@@ -60,7 +60,7 @@
     },
     "config_name": "config.json",
     "output": 0,
-    "seed": 16621068727084214311,
+    "seed": 12211349632998879393,
     "variant": 0,
     "type": 0,
     "gauntlet_seeds": 1,
@@ -89,7 +89,7 @@
     },
     "engines": [
         {
-            "name": "r2b",
+            "name": "r23a",
             "dir": "",
             "cmd": "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\target\\release\\wyrdmate-engine.exe",
             "args": "",
@@ -97,7 +97,7 @@
             "options": [
                 [
                     "EvalFile",
-                    "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\checkpoints\\r2b-200\\quantised.bin"
+                    "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\checkpoints\\r23a-200\\quantised.bin"
                 ],
                 [
                     "Nodes",
@@ -118,16 +118,12 @@
             "variant": 0
         },
         {
-            "name": "round1",
+            "name": "material",
             "dir": "",
             "cmd": "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\target\\release\\wyrdmate-engine.exe",
             "args": "",
             "restart": false,
             "options": [
-                [
-                    "EvalFile",
-                    "C:\\Users\\USER\\Documents\\GitHub\\Wyrdmate\\checkpoints\\w0-200\\quantised.bin"
-                ],
                 [
                     "Nodes",
                     "10000"
@@ -148,16 +144,16 @@
         }
     ],
     "stats": {
-        "r2b vs round1": {
-            "wins": 87,
-            "losses": 217,
-            "draws": 296,
-            "penta_WW": 5,
-            "penta_WD": 43,
-            "penta_WL": 34,
-            "penta_DD": 67,
-            "penta_LD": 119,
-            "penta_LL": 32
+        "r23a vs material": {
+            "wins": 348,
+            "losses": 82,
+            "draws": 170,
+            "penta_WW": 101,
+            "penta_WD": 96,
+            "penta_WL": 50,
+            "penta_DD": 25,
+            "penta_LD": 24,
+            "penta_LL": 4
         }
     }
 }
