@@ -22,3 +22,11 @@ Append new entries; never rewrite old ones (supersede with a new D-xxx).
   board.
 - **D-009 Docs:** `CLAUDE.md` is the single agent guide (replaces the earlier
   `AGENT.md`), modelled on the TerraFlow project's.
+- **D-010 Training recipe (from experiments, 600-game matches vs the previous best):**
+  train with `wdl 0.0` (fit the engine's search scores, not game results), 200
+  superbatches, and from round 3 on train on the data of **all rounds combined**.
+  Evidence: wdl 0.5 gave -148 +/- 24 Elo vs the material eval, wdl 0.3 gave -35 +/-
+  19 (round-2 data) while wdl 0.0 gave +115 +/- 23; round-3 data alone gave +63 +/-
+  22 vs wyrd-ii, rounds 2+3 together +81 +/- 22. The explanation (game results are
+  noisy when most games are draws; more varied data helps) is a hypothesis, not
+  tested separately. Revisit if the data stops being draw-heavy.

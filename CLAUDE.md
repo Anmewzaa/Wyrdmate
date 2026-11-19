@@ -13,13 +13,13 @@ RL). The product runs `no_std` on the board; training and datagen run on a PC.
 Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
-> Status: workspace, engine (material eval), datagen and the bullet trainer
-> driver are built; NNUE inference + UCI binary (`wyrdmate-engine`) work.
-> Round 2 done: nets/wyrd-ii.bin (+115 +/- 23 Elo vs material eval, +117 vs wyrd-i);
-> see nets/RECORDS.md for provenance. Earlier round-1 results (600 games, 10k nodes, vs material eval, 1.25M positions of
-> material-eval self-play): wdl 0.5 / 20 superbatches = -148 +/- 24 Elo (worse);
-> wdl 0.0 / 200 superbatches = +14 +/- 20 (not significant)). Next: round 3 (more and
-> better data), strength levels, then the no_std firmware port.
+> Status: engine (search + NNUE eval + UCI), datagen and the bullet trainer work.
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii`, `wyrd-iii` (current: +81 +/- 22
+> Elo vs wyrd-ii, +166 +/- 25 vs the material eval; 600 games, 10k nodes). Provenance
+> and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
+> Results are only vs our own earlier versions, never vs outside engines.
+> Next: more self-play rounds while Elo still rises, strength levels measured in Elo,
+> incremental accumulator, then the `no_std` firmware (nothing has run on a board).
 
 ## Start here — read only what your task needs
 
@@ -31,6 +31,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
 | Training / net shape | `trainer/src/main.rs`, bullet `examples/` (see Hard rule 4) |
 | ESP32 / `no_std` | `firmware/`, then bullet's example inference code |
 | What exists / why | `docs/STRUCTURE.md`, `docs/decisions.md` |
+| How a net is made, step by step | `docs/TRAINING.md` |
+| Which nets exist and how they were made | `nets/RECORDS.md` |
 
 ## Hard rules (never violate — these are the project, not preferences)
 
@@ -73,20 +75,26 @@ Don't re-open them unless the user does. For a file-by-file tour read
 
 ## Directory ownership
 
-- `engine/` — `wyrdmate-engine`: `cozy-chess` movegen, material eval (to be
-  replaced by NNUE), negamax + alpha-beta + quiescence + iterative deepening,
-  `node_limit`. Public: `Searcher::new(node_limit).search(&board, max_depth) ->
-  Option<(Move, cp)>`, `evaluate`, `legal_moves`. Scores are centipawns, side
-  to move POV. **Highest-value tests live here; never weaken them.**
+- `engine/` — `wyrdmate-engine`: `cozy-chess` movegen, material eval (baseline)
+  and NNUE eval (`src/nnue.rs`, recomputed from scratch each call, not yet
+  incremental), negamax + alpha-beta + quiescence + iterative deepening,
+  `node_limit`. Public: `Searcher::new(node_limit).with_net(net).search(&board,
+  max_depth) -> Option<(Move, cp)>`, `evaluate`, `legal_moves`. Scores are
+  centipawns, side to move POV. `src/main.rs` is the UCI front end (options `Nodes`,
+  `EvalFile`). `examples/validate.rs` checks a net against stored scores,
+  `examples/book.rs` makes opening books. **Highest-value tests live here; never weaken them.**
 - `datagen/` — self-play → text lines `FEN | score_cp_white_pov | result` where
   result is `1.0` / `0.5` / `0.0` (white POV), the bullet text format. Usage:
-  `wyrdmate-datagen [games] [nodes] [seed] [out]`.
+  `wyrdmate-datagen [games] [nodes] [seed] [out] [net.bin]` (net optional: it plays).
 - `trainer/` — bullet driver: `(768 -> 32)x2 -> 1`, screlu, i16 quantisation
   (QA 255, QB 64, scale 400). Usage: `wyrdmate-trainer <data.data> [superbatches]
-  [batches_per_sb] [batch_size]`. Feature `cuda` enables the GPU backend.
+  [batches_per_sb] [batch_size] [wdl=0.5] [net_id=wyrd]` (use wdl 0.0, D-010).
+  Feature `cuda` enables the GPU backend.
 - `firmware/` — `no_std` ESP32 inference. Not a workspace member. Skeleton only.
-- `nets/` — quantised nets plus their records (rule 1).
-- `docs/` — `STRUCTURE.md` (human tour), `decisions.md`.
+- `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).
+- `docs/` — `STRUCTURE.md` (human tour), `TRAINING.md` (how a net is made),
+  `decisions.md`, `progress/` (chart data + generated SVGs).
+- `scripts/` — `make-progress-svg.ps1`.
 - Git-ignored: `target/`, `checkpoints/`, `data/`, `*.binpack`.
 
 ## Compatibility surfaces (preserve or migrate; don't break silently)
