@@ -13,5 +13,7 @@ Rust engine + NNUE trained with [bullet](https://github.com/jw1912/bullet).
 
 ## Progress
 
-Open `docs/progress/index.html` in a browser for match results (Elo) and training loss.
-Data is in `docs/progress/data.js`.
+![Wyrdmate progress: match Elo and training loss](docs/progress/progress.svg)
+
+The chart is generated from `docs/progress/data.js`. `docs/progress/index.html`
+is an interactive version of the same data (open it in a browser).

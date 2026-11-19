@@ -165,7 +165,14 @@ checks a net against stored scores (correlation ~0.83 means the inference matche
 
 ## Progress page
 
-`docs/progress/index.html` (data in `docs/progress/data.js`) charts A/B results and
-training loss. After **every** A/B match add a row to `matches` (net, vs, elo, err,
-games, accepted, note); after a training run you want to keep, add its loss series.
-Open it in a browser (it loads `data.js` next to it, so use a local server or open the file directly).
+Data: `docs/progress/data.js` (**keep it strict JSON** after the `window.WYRD_DATA =`
+prefix; the generator parses it). After **every** A/B match add a row to `matches`
+(net, round, vs, elo, err, games, accepted, note); after a training run worth keeping
+add its loss series. Then regenerate the chart shown in the README and commit both:
+
+```text
+powershell -File scripts/make-progress-svg.ps1     # writes docs/progress/progress.svg
+```
+
+`docs/progress/index.html` is an interactive view of the same data (needs a local
+server or opening it in a browser; GitHub cannot render it, the SVG is what shows there).
