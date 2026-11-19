@@ -14,8 +14,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: workspace, engine (material eval), datagen and the bullet trainer
-> driver are built. No net has been trained yet. CUDA Toolkit install was
-> started (see Environment). Next: first training run, then wire the net into
+> driver are built. First training run done (net in git-ignored `checkpoints/`),
+> no A/B match yet. CUDA Toolkit is installed. Next: wire the net into
 > the engine, then A/B testing.
 
 ## Start here — read only what your task needs
@@ -125,9 +125,11 @@ wyrdmate-trainer data/X.data [...]  (--features cuda) → checkpoints/wyrd-N/
 - GPU: NVIDIA RTX 4060 8 GB, driver 610.88 (supports CUDA up to 13.3).
   bullet `cuda` needs the full Toolkit (links cuda, cudart, nvrtc, cublas),
   env var `CUDA_PATH` set (dirs `bin`/`lib`/`include`), and a Toolkit version
-  not newer than the driver supports. CUDA 13.3.1 install was started via the
-  official network installer; verify `C:\Program Files\NVIDIA GPU Computing
-  Toolkit\CUDA` exists and set `CUDA_PATH` before building with `--features cuda`.
+  not newer than the driver supports. CUDA 13.3.1 is installed (official network
+  installer; `CUDA_PATH` set by it). To RUN a `--features cuda` binary put
+  `%CUDA_PATH%\bin\x64` on PATH and launch from PowerShell (Git Bash fails with
+  "cublas64_13.dll not found"). First run: 1.25M positions, 20 superbatches took
+  ~2 s on the 4060; loss 0.0139 -> 0.0064 (low partly because ~80% of games are draws).
 - cozy-chess 0.3.4: `Board::default()`, `generate_moves(|ms| { ..; false })`,
   `play_unchecked`, `status()` (`Won` = side to move is mated), `to_string()` = FEN.
 

@@ -4,3 +4,4 @@ checkpoints/
 data/
 *.bin.tmp
 *.binpack
+logs/
