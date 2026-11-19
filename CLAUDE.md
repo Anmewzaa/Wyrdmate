@@ -152,8 +152,8 @@ wyrdmate-trainer data/X.data [...]  (--features cuda) → checkpoints/wyrd-N/
 
 ## Commits
 
-Focused commits with imperative messages. End each with the Co-Authored-By line
-from the session's attribution reminder. Don't push unless asked.
+Focused commits with imperative messages. **Do not add a `Co-Authored-By` line or
+any other attribution trailer** (owner's decision). Don't push unless asked.
 
 ## A/B match recipe (fastchess)
 
