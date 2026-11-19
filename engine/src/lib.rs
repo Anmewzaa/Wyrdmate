@@ -28,7 +28,7 @@ pub fn evaluate(board: &Board) -> i32 {
     if board.side_to_move() == Color::White { score } else { -score }
 }
 
-fn legal_moves(board: &Board) -> Vec<Move> {
+pub fn legal_moves(board: &Board) -> Vec<Move> {
     let mut v = Vec::with_capacity(40);
     board.generate_moves(|ms| {
         v.extend(ms);
