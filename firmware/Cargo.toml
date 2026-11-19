@@ -1,0 +1,8 @@
+[package]
+name = "wyrdmate-firmware"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+# TODO: add esp-hal deps and target config (ESP32-C3/C6 = riscv32imc/imac; Xtensa needs espup).
+
+[workspace]

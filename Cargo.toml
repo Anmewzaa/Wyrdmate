@@ -1,0 +1,10 @@
+[workspace]
+resolver = "2"
+members = ["engine", "datagen", "trainer"]
+# firmware targets ESP32 (no_std); build it separately with its own toolchain/target.
+exclude = ["firmware"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
