@@ -3,3 +3,11 @@ name = "wyrdmate-trainer"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+
+[dependencies]
+# bullet changes API often: pinned to a commit, pulled from git (crates.io 1.0.0 is yanked).
+bullet_lib = { git = "https://github.com/jw1912/bullet", rev = "5d70177680437b7c0ddf958bd4722d95afa78b0c" }
+
+[features]
+# Needs the CUDA Toolkit installed. Build with: cargo run --release -p wyrdmate-trainer --features cuda
+cuda = ["bullet_lib/cuda"]
