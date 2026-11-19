@@ -9,7 +9,7 @@ A tiny chess AI for ESP32-class boards: a Rust engine with a neural evaluation (
 ![NNUE](https://img.shields.io/badge/NNUE-768%E2%86%9232%C3%972%E2%86%921%20%C2%B7%2049%20KB-7c3aed?style=flat-square)
 ![bullet](https://img.shields.io/badge/trained%20with-bullet-22d3ee?style=flat-square)
 ![Target](https://img.shields.io/badge/target-ESP32%20(no__std)-e7352c?style=flat-square)
-![Status](https://img.shields.io/badge/status-net%20wyrd--iii%20%C2%B7%20firmware%20not%20started-f59e0b?style=flat-square)
+![Status](https://img.shields.io/badge/status-net%20wyrd--iv%20%C2%B7%20firmware%20not%20started-f59e0b?style=flat-square)
 
 </div>
 
@@ -63,7 +63,7 @@ Strength of each net, measured in matches (600 games each, 10,000 nodes per move
 
 </div>
 
-Latest accepted net, **`wyrd-iii`** (self-play round 3): **+81 ± 22 Elo** against `wyrd-ii` and **+166 ± 25 Elo** against the original material-counting evaluation.
+Latest accepted net, **`wyrd-iv`** (self-play round 4): **+31 ± 22 Elo** against `wyrd-iii` and **+212 ± 27 Elo** against the original material-counting evaluation. The gain per round is shrinking (+115, +81, +31), so the loop is nearing its plateau.
 Full history, including experiments that failed (a net trained to also fit game results lost to the baseline), is in [`nets/RECORDS.md`](nets/RECORDS.md).
 The charts are generated from [`docs/progress/data.json`](docs/progress/data.json) by `scripts/make-progress-svg.ps1`.
 
@@ -78,7 +78,7 @@ cargo build --release -p wyrdmate-engine
 
 ```text
 uci
-setoption name EvalFile value nets/wyrd-iii.bin     # the trained net (omit for the material-only baseline)
+setoption name EvalFile value nets/wyrd-iv.bin      # the trained net (omit for the material-only baseline)
 setoption name Nodes value 5000                      # strength: fewer nodes = weaker
 position startpos moves e2e4 e7e5
 go
@@ -94,7 +94,7 @@ The engine answers `bestmove ...`. `go nodes N` overrides the budget for one mov
 | `datagen/` | Self-play data generator (optionally played by a net) |
 | `trainer/` | [bullet](https://github.com/jw1912/bullet) training driver (pinned to a git revision) |
 | `firmware/` | `no_std` ESP32 inference. **Skeleton only**, built separately |
-| `nets/` | Accepted nets (`wyrd-i`, `wyrd-ii`, `wyrd-iii`) and their [records](nets/RECORDS.md) |
+| `nets/` | Accepted nets (`wyrd-i` to `wyrd-iv`) and their [records](nets/RECORDS.md) |
 | `docs/` | [Training guide](docs/TRAINING.md), [file-by-file tour](docs/STRUCTURE.md), [decisions](docs/decisions.md), progress data |
 | `scripts/` | Generates the progress charts |
 
@@ -104,7 +104,7 @@ You need Rust (stable). Training also needs an NVIDIA GPU with the CUDA Toolkit;
 
 ```bash
 cargo test -p wyrdmate-engine                  # engine tests
-cargo run --release -p wyrdmate-engine --example validate -- nets/wyrd-iii.bin data/some.txt   # net vs stored scores
+cargo run --release -p wyrdmate-engine --example validate -- nets/wyrd-iv.bin data/some.txt   # net vs stored scores
 ```
 
 One round of the loop (see the [training guide](docs/TRAINING.md) for what each step does):
@@ -127,7 +127,7 @@ fastchess -engine ... (see CLAUDE.md for the full match recipe) # 4. match new v
 
 ## Status
 
-Working: engine, UCI, data generation, GPU training, NNUE inference, A/B matches, three accepted net generations.
+Working: engine, UCI, data generation, GPU training, NNUE inference, A/B matches, four accepted net generations.
 Not done: strength levels measured in Elo, playing against outside engines, incremental NNUE updates, and the ESP32 firmware (nothing has run on a board yet).
 
 ## License

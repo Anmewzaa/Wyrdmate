@@ -74,7 +74,8 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 |---|---|
 | `nets/wyrd-i.bin` | net รอบ 1 เก็บไว้เป็นตัวสร้างข้อมูลของรอบ 2 (ยังไม่ผ่านเกณฑ์ว่าแรงกว่า engine เดิม) |
 | `nets/wyrd-ii.bin` | net รอบ 2 ผ่านเกณฑ์ (+115 Elo เทียบ engine นับหมาก) |
-| `nets/wyrd-iii.bin` | net รอบ 3 ตัวล่าสุด (+81 Elo เทียบ wyrd-ii, +166 เทียบ engine นับหมาก) |
+| `nets/wyrd-iii.bin` | net รอบ 3 (+81 Elo เทียบ wyrd-ii, +166 เทียบ engine นับหมาก) |
+| `nets/wyrd-iv.bin` | net รอบ 4 ตัวล่าสุด (+31 Elo เทียบ wyrd-iii, +212 เทียบ engine นับหมาก) |
 | `nets/RECORDS.md` | บันทึกที่มาของ net ทุกตัว: commit, ค่าที่ใช้เทรน, ข้อมูล (seed/nodes/เกม), ผลแข่ง และการทดลองที่ล้มเหลว |
 | `nets/.gitkeep` | ไฟล์เปล่าที่เหลือจากตอนโฟลเดอร์ยังว่าง |
 

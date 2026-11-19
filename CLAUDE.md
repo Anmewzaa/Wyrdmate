@@ -14,11 +14,11 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: engine (search + NNUE eval + UCI), datagen and the bullet trainer work.
-> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii`, `wyrd-iii` (current: +81 +/- 22
-> Elo vs wyrd-ii, +166 +/- 25 vs the material eval; 600 games, 10k nodes). Provenance
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii`, `wyrd-iii`, `wyrd-iv` (current: +31 +/- 22 Elo
+> vs wyrd-iii, +212 +/- 27 vs the material eval; 600 games, 10k nodes; gains per round +115, +81, +31). Provenance
 > and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
-> Next: more self-play rounds while Elo still rises, strength levels measured in Elo,
+> Next: round 5 is optional (gains are shrinking), strength levels measured in Elo,
 > incremental accumulator, then the `no_std` firmware (nothing has run on a board).
 
 ## Start here — read only what your task needs

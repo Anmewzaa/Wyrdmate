@@ -48,3 +48,17 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 
 - r3a (round-3 data only, 76 batches/superbatch, wdl 0.0): +63 +/- 22 vs wyrd-ii, +143 +/- 23 vs material.
   Weaker than wyrd-iii, so combining the rounds' data helped. Not kept.
+
+## wyrd-iv.bin — ACCEPTED (current best)
+
+- Tooling: commit `c3ed243` (unchanged through round 4).
+- Data: round-4 self-play (4 runs x 2500 games, seeds 51-54, 5000 nodes/move, played by
+  `wyrd-iii.bin`; 1,063,137 positions) **plus all round-2 and round-3 data** = 3,477,195 positions.
+  `wyrdmate-datagen 2500 5000 <seed> data/r4partSEED.txt nets/wyrd-iii.bin`, concatenated with the
+  earlier files, then `bullet-utils convert --from text`, `shuffle`.
+- Training: `wyrdmate-trainer data/r234train.data 200 212 16384 0.0 r234a` (wdl 0.0;
+  212 batches/superbatch ~ one pass). Final running loss 0.001057 (higher than earlier nets
+  because the data now holds more decisive, harder positions; loss is not comparable across datasets).
+- Match (fastchess, 600 games, 10000 nodes, same book): vs wyrd-iii **+31 +/- 22 Elo**
+  (lower bound still above 0); vs material eval **+212 +/- 27 Elo**.
+- Gains per round are shrinking: +115, +81, +31 Elo over the previous net.
