@@ -174,5 +174,3 @@ add its loss series. Then regenerate the chart shown in the README and commit bo
 powershell -File scripts/make-progress-svg.ps1     # writes docs/progress/progress.svg
 ```
 
-`docs/progress/index.html` is an interactive view of the same data (needs a local
-server or opening it in a browser; GitHub cannot render it, the SVG is what shows there).

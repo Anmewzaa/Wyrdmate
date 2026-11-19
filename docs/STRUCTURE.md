@@ -33,7 +33,6 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 | `docs/decisions.md` | บันทึกการตัดสินใจสำคัญ (ชื่อ, bullet, monorepo ฯลฯ) |
 | `docs/progress/data.js` | ข้อมูลความคืบหน้า (Elo จากการแข่ง + loss ตอนเทรน) เพิ่มแถวใหม่ทุกครั้งที่แข่งเสร็จ |
 | `docs/progress/progress.svg` | กราฟสรุปที่ฝังใน README ดูได้บน GitHub สร้างด้วย `scripts/make-progress-svg.ps1` |
-| `docs/progress/index.html` | หน้ากราฟแบบโต้ตอบ (ข้อมูลชุดเดียวกัน) เปิดในเบราว์เซอร์ |
 | `scripts/make-progress-svg.ps1` | สคริปต์ PowerShell สร้าง progress.svg จาก data.js |
 | `docs/TRAINING.md` | อธิบายวิธีเทรน NNUE ทั้งกระบวนการ (self-play → bullet → แข่งทดสอบ) |
 
