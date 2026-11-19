@@ -14,8 +14,11 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: workspace, engine (material eval), datagen and the bullet trainer
-> driver are built. First training run done (net in git-ignored `checkpoints/`),
-> no A/B match yet. CUDA Toolkit is installed. Next: wire the net into
+> driver are built; NNUE inference + UCI binary (`wyrdmate-engine`) work.
+> A/B results (600 games, 10k nodes, vs material eval, 1.25M positions of
+> material-eval self-play): wdl 0.5 / 20 superbatches = -148 +/- 24 Elo (worse);
+> wdl 0.0 / 200 superbatches = +14 +/- 20 (not significant yet). Next: more and
+> better data (second self-play round with the net), then wire the net into
 > the engine, then A/B testing.
 
 ## Start here — read only what your task needs
@@ -143,3 +146,19 @@ wyrdmate-trainer data/X.data [...]  (--features cuda) → checkpoints/wyrd-N/
 
 Focused commits with imperative messages. End each with the Co-Authored-By line
 from the session's attribution reminder. Don't push unless asked.
+
+## A/B match recipe (fastchess)
+
+Binary is not in the repo (download `fastchess-windows-x86-64.zip`, v1.8.3-alpha,
+from github.com/Disservin/fastchess releases). Openings: `cargo run --release -p
+wyrdmate-engine --example book -- 300 99 data/book.epd`. Run from PowerShell:
+
+```text
+fastchess -engine name=new cmd=<engine.exe> option.EvalFile=<quantised.bin> -engine name=old cmd=<engine.exe>
+  -each proto=uci tc=inf nodes=10000 option.Nodes=10000 -openings file=data/book.epd format=epd order=random
+  -rounds 300 -games 2 -repeat -concurrency 4 -maxmoves 120
+  -draw movenumber=30 movecount=8 score=10 -resign movecount=4 score=800
+```
+
+`cargo run --release -p wyrdmate-engine --example validate -- <net> <data.txt>`
+checks a net against stored scores (correlation ~0.83 means the inference matches).

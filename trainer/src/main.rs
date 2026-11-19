@@ -1,6 +1,6 @@
 //! Trains a (768 -> HIDDEN)x2 -> 1 NNUE with bullet.
 //!
-//! Usage: wyrdmate-trainer <data.data> [superbatches=20] [batches_per_superbatch=1000] [batch_size=16384]
+//! Usage: wyrdmate-trainer <data.data> [superbatches=20] [batches_per_superbatch=1000] [batch_size=16384] [wdl=0.5] [net_id=wyrd]
 //! Convert datagen text first:
 //!   bullet-utils convert --from text --input data/selfplay.txt --output data/selfplay.data
 //! Nets land in checkpoints/<net_id>-<superbatch>/ (git-ignored).
@@ -27,6 +27,8 @@ fn main() {
     let superbatches: usize = a.get(2).and_then(|s| s.parse().ok()).unwrap_or(20);
     let batches_per_sb: usize = a.get(3).and_then(|s| s.parse().ok()).unwrap_or(1000);
     let batch_size: usize = a.get(4).and_then(|s| s.parse().ok()).unwrap_or(16_384);
+    let wdl: f32 = a.get(5).and_then(|s| s.parse().ok()).unwrap_or(0.5);
+    let net_id = a.get(6).cloned().unwrap_or_else(|| "wyrd".to_string());
 
     let mut trainer = ValueTrainerBuilder::default()
         .dual_perspective()
@@ -48,7 +50,7 @@ fn main() {
         });
 
     let schedule = TrainingSchedule {
-        net_id: "wyrd".to_string(),
+        net_id,
         eval_scale: SCALE as f32,
         steps: TrainingSteps {
             batch_size,
@@ -56,7 +58,7 @@ fn main() {
             start_superbatch: 1,
             end_superbatch: superbatches,
         },
-        wdl_scheduler: wdl::ConstantWDL { value: 0.5 },
+        wdl_scheduler: wdl::ConstantWDL { value: wdl },
         lr_scheduler: lr::StepLR { start: 0.001, gamma: 0.1, step: (superbatches * 3 / 4).max(1) },
         save_rate: (superbatches / 4).max(1),
     };
