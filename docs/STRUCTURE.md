@@ -31,6 +31,7 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 | `CLAUDE.md` | คู่มือหลักสำหรับ AI (Claude Code โหลดอัตโนมัติ): เป้าหมาย กฎเหล็ก โครงสร้าง วิธีตรวจสอบ สภาพแวดล้อมเครื่อง เขียนตามแบบโปรเจกต์ TerraFlow ช่วยประหยัด token |
 | `docs/STRUCTURE.md` | ไฟล์นี้ |
 | `docs/decisions.md` | บันทึกการตัดสินใจสำคัญ (ชื่อ, bullet, monorepo ฯลฯ) |
+| `docs/TRAINING.md` | อธิบายวิธีเทรน NNUE ทั้งกระบวนการ (self-play → bullet → แข่งทดสอบ) |
 
 ### `engine/` — เครื่องยนต์หมากรุก (crate `wyrdmate-engine`)
 

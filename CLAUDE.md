@@ -15,11 +15,11 @@ Don't re-open them unless the user does. For a file-by-file tour read
 
 > Status: workspace, engine (material eval), datagen and the bullet trainer
 > driver are built; NNUE inference + UCI binary (`wyrdmate-engine`) work.
-> A/B results (600 games, 10k nodes, vs material eval, 1.25M positions of
+> Round 2 done: nets/wyrd-ii.bin (+115 +/- 23 Elo vs material eval, +117 vs wyrd-i);
+> see nets/RECORDS.md for provenance. Earlier round-1 results (600 games, 10k nodes, vs material eval, 1.25M positions of
 > material-eval self-play): wdl 0.5 / 20 superbatches = -148 +/- 24 Elo (worse);
-> wdl 0.0 / 200 superbatches = +14 +/- 20 (not significant yet). Next: more and
-> better data (second self-play round with the net), then wire the net into
-> the engine, then A/B testing.
+> wdl 0.0 / 200 superbatches = +14 +/- 20 (not significant)). Next: round 3 (more and
+> better data), strength levels, then the no_std firmware port.
 
 ## Start here — read only what your task needs
 
