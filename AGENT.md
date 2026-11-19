@@ -11,6 +11,7 @@ Rust. NNUE trained supervised with bullet (jw1912/bullet), not AlphaZero-style R
 - `datagen/`  self-play -> text lines `FEN | score_cp_white_pov | result(1.0/0.5/0.0 white POV)` (bullet text format). Usage: `wyrdmate-datagen [games] [nodes] [seed] [out]`.
 - `trainer/`  bullet training driver (see status below).
 - `firmware/` no_std ESP32 inference. NOT a workspace member (`exclude`); build separately.
+- `docs/STRUCTURE.md` human-readable (Thai) file-by-file guide; update it when files are added.
 - `nets/`     quantised nets (small, commit them). Record git hash + bullet config + data used.
 - git-ignored: `target/`, `checkpoints/`, `data/`, `*.binpack`.
 
