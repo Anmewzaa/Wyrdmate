@@ -63,6 +63,20 @@ Strength of each net, measured in matches (600 games each, 10,000 nodes per move
 
 </div>
 
+### Search and strength levels
+
+The search was improved in steps after the nets (see [SEARCH.md](docs/SEARCH.md), section 9). Strength is set by a node limit; the charts show how it scales, what each step added, and where the levels land on a strength-limited Stockfish (used only as a ruler, a rough scale, not a standard Elo).
+
+<div align="center">
+
+![Strength by node limit, first search vs current search](docs/progress/ladder.svg)
+
+![What each search step added](docs/progress/search-steps.svg)
+
+![Our levels placed on the Stockfish scale](docs/progress/stockfish.svg)
+
+</div>
+
 Latest accepted net, **`wyrd-iv`** (self-play round 4): **+31 ± 22 Elo** against `wyrd-iii` and **+212 ± 27 Elo** against the original material-counting evaluation. The gain per round is shrinking (+115, +81, +31), so the loop is nearing its plateau.
 Full history, including experiments that failed (a net trained to also fit game results lost to the baseline), is in [`nets/RECORDS.md`](nets/RECORDS.md).
 The charts are generated from [`docs/progress/data.json`](docs/progress/data.json) by `scripts/make-progress-svg.ps1`.
@@ -140,7 +154,7 @@ fastchess -engine ... (see CLAUDE.md for the full match recipe) # 4. match new v
 
 Working: engine, UCI, data generation, GPU training, NNUE inference, A/B matches, four accepted net generations.
 Strength levels are measured as relative Elo between our own node limits (100 to 51,200 nodes).
-Measured against Stockfish (strength-limited, used only as a ruler, never as a teacher): the top level (51,200 nodes) plays at roughly Stockfish `UCI_Elo` 1415, a rough figure, not a standard Elo ([EVALUATION.md](docs/EVALUATION.md), section 9).
+Measured against Stockfish (strength-limited, used only as a ruler, never as a teacher): the top level (51,200 nodes) plays at roughly Stockfish `UCI_Elo` 1530 with the current search (about 1415 with the first search), a rough figure, not a standard Elo ([EVALUATION.md](docs/EVALUATION.md), sections 9 and 9.1). The search was improved in six steps (repeat detection, killer/history ordering, null-move, late move reductions, a 64 KB transposition table); see [SEARCH.md](docs/SEARCH.md) section 9.
 Not done: the ESP32 firmware (nothing has run on a board yet).
 
 ## License

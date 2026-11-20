@@ -21,7 +21,7 @@
 | ไฟล์ | เนื้อหา | ผู้อ่านหลัก |
 |---|---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | องค์ประกอบของระบบ การไหลของข้อมูล โครงสร้างและรูปแบบไฟล์ net | ผู้พัฒนา |
-| [SEARCH.md](SEARCH.md) | กระบวนการค้นหา: negamax, alpha-beta, quiescence, iterative deepening | ผู้พัฒนา |
+| [SEARCH.md](SEARCH.md) | กระบวนการค้นหา: negamax, alpha-beta, quiescence, iterative deepening, killer/history, null-move, LMR, ตารางจำ และประวัติรุ่น s1–s6 | ผู้พัฒนา |
 | [STRUCTURE.md](STRUCTURE.md) | คำอธิบายรายไฟล์และรายโฟลเดอร์ | ผู้เริ่มต้น |
 | [TRAINING.md](TRAINING.md) | ขั้นตอนสร้าง net ตั้งแต่ข้อมูลจนถึงไฟล์ผลลัพธ์ | ผู้เทรน |
 | [EVALUATION.md](EVALUATION.md) | วิธีแข่ง A/B เกณฑ์การรับ net และการบันทึกผล | ผู้เทรน |

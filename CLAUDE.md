@@ -21,9 +21,11 @@ Don't re-open them unless the user does. For a file-by-file tour read
 > The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).
 > Strength levels are measured: relative Elo per node limit, 100 to 51,200 nodes (docs/EVALUATION.md section 8).
 > A browser demo exists (`web/`, WebAssembly, deployed to GitHub Pages by `.github/workflows/pages.yml`).
-> Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher): 51,200 nodes ~ `UCI_Elo` 1415
-> (rough, docs/EVALUATION.md section 9). Next: search improvements (docs/ROADMAP.md), then the `no_std` firmware
-> (nothing has run on a board). Round 5 is optional (gains are shrinking).
+> Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher): 51,200 nodes ~ `UCI_Elo` 1530 with search s6
+> (1415 with s1; rough, docs/EVALUATION.md sections 9, 9.1). Search is at s6 (docs/SEARCH.md section 9): s6 is much
+> stronger at equal nodes (not at 1k nodes) but ~20-25% slower per node. Next: a self-play/training round 5 with the s6
+> search (labels should be better; the old 'gains are shrinking' came from s1), more search work (docs/ROADMAP.md),
+> then the `no_std` firmware (nothing has run on a board).
 
 ## Start here — read only what your task needs
 

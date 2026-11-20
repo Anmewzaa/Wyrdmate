@@ -14,7 +14,7 @@ Wyrdmate เป็นโปรแกรมหมากรุกขนาดเ�
 | ส่วน | ตำแหน่ง | หน้าที่ | เรียนรู้ได้ |
 |---|---|---|---|
 | กฎหมากรุก | `cozy-chess` (ไลบรารีภายนอก) | สร้างตาเดินที่ถูกกติกา | ไม่ |
-| การค้นหา | `engine/src/lib.rs` | negamax + alpha-beta + quiescence + iterative deepening | ไม่ |
+| การค้นหา | `engine/src/lib.rs` | negamax + alpha-beta + quiescence + iterative deepening + ตรวจเดินซ้ำ, killer/history, null-move, LMR, transposition table 64 KB | ไม่ |
 | การประเมิน | `engine/src/nnue.rs` | ให้คะแนนตำแหน่งด้วย NNUE | **ได้** |
 | หน้าด่าน UCI | `engine/src/main.rs` | สื่อสารกับโปรแกรมภายนอกตามโปรโตคอล UCI | ไม่ |
 | ตัวสร้างข้อมูล | `datagen/` | ให้ engine เล่นกับตัวเองและบันทึกตำแหน่ง | ไม่ |
@@ -34,7 +34,7 @@ firmware ◀──(ฝังไฟล์ net)── nets/ ◀── checkpoints/
 
 ## 4. การค้นหา
 
-- อัลกอริทึม (อธิบายละเอียดที่ [SEARCH.md](SEARCH.md)): negamax พร้อม alpha-beta, quiescence search และ iterative deepening
+- อัลกอริทึม (อธิบายละเอียดที่ [SEARCH.md](SEARCH.md)): negamax พร้อม alpha-beta, quiescence search, iterative deepening และเทคนิคตัดกิ่ง/จำผล (killer, history, null-move, LMR, transposition table) รุ่น s1 ถึง s6 ดู SEARCH.md ข้อ 9
 - ขีดจำกัด: `Searcher::new(node_limit)` เมื่อนับ node ถึงขีดจำกัด การค้นหาจะหยุดและคืนผลของความลึกล่าสุดที่เสร็จสมบูรณ์
 - ค่าตั้งต้นของ UCI option `Nodes` คือ 20,000 และสั่ง `go nodes N` เพื่อเปลี่ยนเฉพาะตาเดียวได้
 - คะแนนเป็นเซนติเบี้ย (centipawn) จากมุมมองฝ่ายที่ถึงตา รุกฆาตใช้ค่า `MATE = 30000`
@@ -127,4 +127,5 @@ bullet เติมศูนย์ท้ายไฟล์ให้ขนาด�
 
 - accumulator เป็นแบบ incremental แต่ `accumulator_after` ทำสำเนา `Vec` ต่อทุกตา (มีการจัดสรรหน่วยความจำ) เฟิร์มแวร์ต้องใช้บัฟเฟอร์ขนาดคงที่แทน
 - ยังไม่มีโค้ดใน `firmware/` และยังไม่เคยรันบนบอร์ด
-- ผลการวัดความแรงทั้งหมดเทียบกับ engine รุ่นก่อนของโครงการเท่านั้น
+- ผลวัดเทียบกับรุ่นก่อนของโครงการ และเทียบ Stockfish จำกัดความแรงแบบหยาบ ๆ ไม่ใช่ Elo มาตรฐาน (EVALUATION.md ข้อ 9)
+- ตารางจำและตาราง history (รวม ~80 KB) ต้องนับในงบ RAM ของเฟิร์มแวร์ และ search ยังใช้ `Vec` ต่อ node
