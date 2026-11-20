@@ -43,6 +43,7 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 |---|---|
 | `README.md` | ดัชนีของเอกสาร |
 | `ARCHITECTURE.md` | สถาปัตยกรรม และรูปแบบไฟล์ net |
+| `SEARCH.md` | กระบวนการค้นหาของ engine |
 | `STRUCTURE.md` | ไฟล์นี้ |
 | `TRAINING.md` | ขั้นตอนเทรน NNUE ทั้งกระบวนการ |
 | `EVALUATION.md` | วิธีแข่ง A/B และเกณฑ์รับ net |
