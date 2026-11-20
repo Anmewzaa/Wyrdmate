@@ -110,7 +110,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
 - **Net format and `trainer` architecture** — engine/firmware inference must
   match the trainer's layout, quantisation (QA/QB/scale) and feature order.
   Change both sides together and retrain.
-- **Search public API** — used by datagen and (later) the UCI front end.
+- **Search public API** — used by datagen, the UCI front end and `web/`. `with_history(hashes)` is optional
+  (repetition draws); without it only repetitions inside the search tree are seen.
 
 ## Verification
 
@@ -163,6 +164,9 @@ Focused commits with imperative messages. **Do not add a `Co-Authored-By` line o
 any other attribution trailer** (owner's decision). Don't push unless asked.
 
 ## A/B match recipe (fastchess)
+
+`powershell -File scripts/ab.ps1` runs the whole recipe below (builds old/new engines from git refs, plays, prints a
+verdict by rule 2). Search changes follow the same rule as nets: record them in docs/EVALUATION.md section 10.
 
 Binary is not in the repo (download `fastchess-windows-x86-64.zip`, v1.8.3-alpha,
 from github.com/Disservin/fastchess releases). Openings: `cargo run --release -p

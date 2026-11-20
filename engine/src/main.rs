@@ -9,6 +9,7 @@ use cozy_chess::util::{display_uci_move, parse_uci_move};
 
 fn main() {
     let mut board = Board::default();
+    let mut history: Vec<u64> = Vec::new(); // hashes of positions before `board` (for repetition draws)
     let mut nodes: u64 = 20_000;
     let mut net: Option<Arc<Network>> = None;
 
@@ -23,7 +24,10 @@ fn main() {
                 println!("uciok");
             }
             Some("isready") => println!("readyok"),
-            Some("ucinewgame") => board = Board::default(),
+            Some("ucinewgame") => {
+                board = Board::default();
+                history.clear();
+            }
             Some("setoption") => {
                 // setoption name <N> value <V>
                 let name = t.iter().position(|&x| x == "name").map(|i| t[i + 1]);
@@ -39,6 +43,7 @@ fn main() {
             }
             Some("position") => {
                 let mut i = 1;
+                history.clear();
                 if t.get(1) == Some(&"startpos") {
                     board = Board::default();
                     i = 2;
@@ -50,7 +55,10 @@ fn main() {
                 if t.get(i) == Some(&"moves") {
                     for m in &t[i + 1..] {
                         match parse_uci_move(&board, m) {
-                            Ok(mv) => board.play_unchecked(mv),
+                            Ok(mv) => {
+                                history.push(board.hash());
+                                board.play_unchecked(mv);
+                            }
                             Err(_) => break,
                         }
                     }
@@ -58,7 +66,7 @@ fn main() {
             }
             Some("go") => {
                 let n = t.iter().position(|&x| x == "nodes").and_then(|i| t.get(i + 1)).and_then(|s| s.parse().ok()).unwrap_or(nodes);
-                let mut s = Searcher::new(n);
+                let mut s = Searcher::new(n).with_history(history.clone());
                 if let Some(net) = &net {
                     s = s.with_net(net.clone());
                 }

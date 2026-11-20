@@ -62,11 +62,32 @@ pub struct Searcher {
     pub node_limit: u64,
     stopped: bool,
     net: Option<Arc<nnue::Network>>,
+    /// Hashes of the positions played so far (game history, then the search path).
+    /// Used to score repeated positions as draws.
+    hist: Vec<u64>,
 }
 
 impl Searcher {
     pub fn new(node_limit: u64) -> Self {
-        Self { nodes: 0, node_limit, stopped: false, net: None }
+        Self { nodes: 0, node_limit, stopped: false, net: None, hist: Vec::new() }
+    }
+
+    /// Positions that occurred earlier in the game, as `Board::hash()` values, oldest
+    /// first, not including the position being searched. Without this the search can
+    /// only see repetitions inside its own tree.
+    pub fn with_history(mut self, hashes: Vec<u64>) -> Self {
+        self.hist = hashes;
+        self
+    }
+
+    /// True if `board` already occurred earlier in `hist` (same side to move, within the
+    /// reversible window set by the halfmove clock). One earlier occurrence counts as a
+    /// draw, the usual search shortcut for the threefold rule.
+    fn is_repetition(&self, board: &Board) -> bool {
+        let h = board.hash();
+        let n = self.hist.len();
+        let reach = (board.halfmove_clock() as usize).min(n);
+        (2..=reach).step_by(2).any(|k| self.hist[n - k] == h)
     }
 
     /// Use an NNUE instead of the material eval.
@@ -125,7 +146,17 @@ impl Searcher {
         alpha
     }
 
-    fn negamax(&mut self, board: &Board, acc: &Option<nnue::Accumulator>, depth: i32, mut alpha: i32, beta: i32, ply: i32) -> i32 {
+    fn negamax(&mut self, board: &Board, acc: &Option<nnue::Accumulator>, depth: i32, alpha: i32, beta: i32, ply: i32) -> i32 {
+        if self.is_repetition(board) {
+            return 0;
+        }
+        self.hist.push(board.hash());
+        let score = self.negamax_node(board, acc, depth, alpha, beta, ply);
+        self.hist.pop();
+        score
+    }
+
+    fn negamax_node(&mut self, board: &Board, acc: &Option<nnue::Accumulator>, depth: i32, mut alpha: i32, beta: i32, ply: i32) -> i32 {
         match board.status() {
             GameStatus::Won => return -MATE + ply,
             GameStatus::Drawn => return 0,
@@ -166,6 +197,7 @@ impl Searcher {
             return None;
         }
         let root_acc = self.net.as_ref().map(|n| n.new_accumulator(board));
+        self.hist.push(board.hash()); // root; popped before returning
         let mut best = (root[0], 0);
         for depth in 1..=max_depth {
             root.sort_by_key(|&m| -order_key(board, m));
@@ -195,6 +227,7 @@ impl Searcher {
                 }
             }
         }
+        self.hist.pop();
         Some(best)
     }
 }
@@ -218,6 +251,34 @@ mod tests {
         let (mv, score) = s.search(&b, 3).unwrap();
         assert_eq!(mv.to.to_string(), "f7");
         assert!(score > MATE - 10);
+    }
+
+    /// White has a queen, black only a knight. Black to move can undo its last knight move,
+    /// which repeats the position from four plies ago. Seeing the history, that draw (0) beats
+    /// every other move; without it the search just sees a lost position.
+    #[test]
+    fn repetition_is_a_draw() {
+        let mut board: Board = "4k1n1/8/8/8/8/8/8/Q3K3 w - - 0 1".parse().unwrap();
+        let mut hist = Vec::new();
+        for m in ["a1a2", "g8f6", "a2a1"] {
+            hist.push(board.hash());
+            board.play_unchecked(cozy_chess::util::parse_uci_move(&board, m).unwrap());
+        }
+        // `board` is now the position after Qa1; black to move, halfmove clock 3.
+        let (mv, score) = Searcher::new(100_000).with_history(hist).search(&board, 3).unwrap();
+        assert_eq!(mv.to_string(), "f6g8");
+        assert_eq!(score, 0);
+
+        let (_, blind) = Searcher::new(100_000).search(&board, 3).unwrap();
+        assert!(blind < -300, "without history black should see a lost position, got {blind}");
+    }
+
+    #[test]
+    fn search_does_not_leak_history() {
+        let board = Board::default();
+        let mut s = Searcher::new(5_000);
+        s.search(&board, 4).unwrap();
+        assert!(s.hist.is_empty());
     }
 
     #[test]
