@@ -132,7 +132,7 @@ fastchess -engine ... (see CLAUDE.md for the full match recipe) # 4. match new v
 ## Status
 
 Working: engine, UCI, data generation, GPU training, NNUE inference, A/B matches, four accepted net generations.
-Not done: strength levels measured in Elo, playing against outside engines, incremental NNUE updates, and the ESP32 firmware (nothing has run on a board yet).
+Not done: strength levels measured in Elo, playing against outside engines, and the ESP32 firmware (nothing has run on a board yet).
 
 ## License
 

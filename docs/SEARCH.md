@@ -112,7 +112,7 @@ let score = -self.negamax(&next, depth - 1, -beta, -alpha, ply + 1);
 ซึ่งสอดคล้องกับ datagen ที่เก็บเฉพาะตำแหน่งสงบ
 
 > **จุดที่เกี่ยวข้องกับประสิทธิภาพ:** การประเมินเกิดที่ `quiesce` ทุกครั้ง
-> และ `Network::evaluate` ปัจจุบันคำนวณใหม่ทั้งกระดาน ดู [ROADMAP.md](ROADMAP.md) ข้อ 4 (NNUE แบบ incremental)
+> accumulator ของ NNUE อัปเดตแบบ incremental ต่อหนึ่งตา ดู [ROADMAP.md](ROADMAP.md) ข้อ 4
 
 ---
 

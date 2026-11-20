@@ -18,8 +18,9 @@ Don't re-open them unless the user does. For a file-by-file tour read
 > vs wyrd-iii, +212 +/- 27 vs the material eval; 600 games, 10k nodes; gains per round +115, +81, +31). Provenance
 > and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
+> The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).
 > Next: round 5 is optional (gains are shrinking), strength levels measured in Elo,
-> incremental accumulator, then the `no_std` firmware (nothing has run on a board).
+> then the `no_std` firmware (nothing has run on a board).
 
 ## Start here — read only what your task needs
 
@@ -76,8 +77,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 ## Directory ownership
 
 - `engine/` — `wyrdmate-engine`: `cozy-chess` movegen, material eval (baseline)
-  and NNUE eval (`src/nnue.rs`, recomputed from scratch each call, not yet
-  incremental), negamax + alpha-beta + quiescence + iterative deepening,
+  and NNUE eval (`src/nnue.rs`, incremental accumulator updated per move in search), negamax + alpha-beta + quiescence + iterative deepening,
   `node_limit`. Public: `Searcher::new(node_limit).with_net(net).search(&board,
   max_depth) -> Option<(Move, cp)>`, `evaluate`, `legal_moves`. Scores are
   centipawns, side to move POV. `src/main.rs` is the UCI front end (options `Nodes`,

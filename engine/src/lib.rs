@@ -75,10 +75,18 @@ impl Searcher {
         self
     }
 
-    fn eval(&self, board: &Board) -> i32 {
-        match &self.net {
-            Some(n) => n.evaluate(board),
-            None => evaluate(board),
+    fn eval(&self, board: &Board, acc: &Option<nnue::Accumulator>) -> i32 {
+        match (&self.net, acc) {
+            (Some(n), Some(a)) => n.evaluate_accumulator(a, board.side_to_move()),
+            _ => evaluate(board),
+        }
+    }
+
+    /// Accumulators after `mv` (None when searching with the material eval).
+    fn child_acc(&self, acc: &Option<nnue::Accumulator>, board: &Board, mv: Move) -> Option<nnue::Accumulator> {
+        match (&self.net, acc) {
+            (Some(n), Some(a)) => Some(n.accumulator_after(a, board, mv)),
+            _ => None,
         }
     }
 
@@ -89,9 +97,9 @@ impl Searcher {
         }
     }
 
-    fn quiesce(&mut self, board: &Board, mut alpha: i32, beta: i32, ply: i32) -> i32 {
+    fn quiesce(&mut self, board: &Board, acc: &Option<nnue::Accumulator>, mut alpha: i32, beta: i32, ply: i32) -> i32 {
         self.tick();
-        let stand = self.eval(board);
+        let stand = self.eval(board, acc);
         if self.stopped || stand >= beta {
             return stand;
         }
@@ -104,7 +112,8 @@ impl Searcher {
         for mv in moves {
             let mut next = board.clone();
             next.play_unchecked(mv);
-            let score = -self.quiesce(&next, -beta, -alpha, ply + 1);
+            let nacc = self.child_acc(acc, board, mv);
+            let score = -self.quiesce(&next, &nacc, -beta, -alpha, ply + 1);
             if self.stopped {
                 return alpha;
             }
@@ -116,14 +125,14 @@ impl Searcher {
         alpha
     }
 
-    fn negamax(&mut self, board: &Board, depth: i32, mut alpha: i32, beta: i32, ply: i32) -> i32 {
+    fn negamax(&mut self, board: &Board, acc: &Option<nnue::Accumulator>, depth: i32, mut alpha: i32, beta: i32, ply: i32) -> i32 {
         match board.status() {
             GameStatus::Won => return -MATE + ply,
             GameStatus::Drawn => return 0,
             GameStatus::Ongoing => {}
         }
         if depth <= 0 {
-            return self.quiesce(board, alpha, beta, ply);
+            return self.quiesce(board, acc, alpha, beta, ply);
         }
         self.tick();
         if self.stopped {
@@ -135,7 +144,8 @@ impl Searcher {
         for mv in moves {
             let mut next = board.clone();
             next.play_unchecked(mv);
-            let score = -self.negamax(&next, depth - 1, -beta, -alpha, ply + 1);
+            let nacc = self.child_acc(acc, board, mv);
+            let score = -self.negamax(&next, &nacc, depth - 1, -beta, -alpha, ply + 1);
             if self.stopped {
                 return 0;
             }
@@ -155,6 +165,7 @@ impl Searcher {
         if root.is_empty() {
             return None;
         }
+        let root_acc = self.net.as_ref().map(|n| n.new_accumulator(board));
         let mut best = (root[0], 0);
         for depth in 1..=max_depth {
             root.sort_by_key(|&m| -order_key(board, m));
@@ -163,7 +174,8 @@ impl Searcher {
             for &mv in &root {
                 let mut next = board.clone();
                 next.play_unchecked(mv);
-                let score = -self.negamax(&next, depth - 1, -INF, -alpha, 1);
+                let nacc = self.child_acc(&root_acc, board, mv);
+                let score = -self.negamax(&next, &nacc, depth - 1, -INF, -alpha, 1);
                 if self.stopped {
                     break;
                 }

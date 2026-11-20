@@ -63,7 +63,7 @@ crate `wyrdmate-engine` คือเครื่องยนต์หมาก�
 |---|---|
 | `Cargo.toml` | ประกาศ crate และ dependency `cozy-chess` (ตัวสร้างตาเดินที่ถูกกติกา) |
 | `src/lib.rs` | โค้ดหลักของ engine (รายละเอียดด้านล่าง) |
-| `src/nnue.rs` | อ่านไฟล์ net (`quantised.bin`) และคำนวณคะแนนตามโครงสร้างเดียวกับ trainer ปัจจุบันคำนวณใหม่ทั้งกระดานทุกครั้ง (ยังไม่ incremental) |
+| `src/nnue.rs` | อ่านไฟล์ net (`quantised.bin`) และคำนวณคะแนนตามโครงสร้างเดียวกับ trainer accumulator เป็นแบบ incremental (`accumulator_after`) และมี test เทียบกับการคำนวณใหม่ทั้งกระดาน |
 | `src/main.rs` | หน้าด่าน UCI รองรับ option `Nodes` (ความแรง) และ `EvalFile` (ไฟล์ net) |
 | `examples/validate.rs` | เทียบคะแนนจาก net กับคะแนนที่เก็บในไฟล์ข้อมูล เพื่อตรวจว่าอ่าน net ถูกต้อง |
 | `examples/book.rs` | สร้างตำแหน่งเปิดเกมสุ่มที่สมดุลสำหรับการแข่ง A/B |
