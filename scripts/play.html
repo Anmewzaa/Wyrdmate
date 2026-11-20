@@ -6,117 +6,285 @@
 <title>Play Wyrdmate</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <style>
-  :root { --light:#f0d9b5; --dark:#b58863; --bg:#1e1e1e; --fg:#e8e8e8; --muted:#9a9a9a; --accent:#6aa84f; }
-  body { margin:0; font:14px system-ui,sans-serif; background:var(--bg); color:var(--fg); }
-  main { max-width:900px; margin:0 auto; padding:16px; display:flex; flex-wrap:wrap; gap:20px; }
-  #board { display:grid; grid-template-columns:repeat(8,1fr); width:min(92vw,480px); aspect-ratio:1; border:2px solid #444; }
-  .sq { display:flex; align-items:center; justify-content:center; font-size:min(8vw,46px); line-height:1; user-select:none; cursor:pointer; }
+  :root {
+    --bg:#1e1e1e; --panel:#2a2a2a; --line:#3a3a3a; --fg:#e8e8e8; --muted:#9a9a9a; --accent:#6aa84f;
+    --light:#f0d9b5; --dark:#b58863;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:960px; margin:0 auto; padding:20px 16px; display:flex; flex-wrap:wrap; gap:24px; justify-content:center; align-items:flex-start; }
+  .boardwrap { display:flex; gap:8px; align-items:stretch; }
+
+  .player { display:flex; align-items:center; gap:10px; padding:8px 2px; min-height:44px; }
+  .badge { width:32px; height:32px; border-radius:6px; background:var(--line); display:grid; place-items:center; font-weight:700; color:var(--muted); }
+  .pname { font-weight:600; } .psub { color:var(--muted); font-size:12px; }
+  .cap { margin-left:auto; font-size:16px; letter-spacing:-2px; color:var(--muted); min-height:20px; }
+  .dot { display:none; width:8px; height:8px; margin-left:8px; border-radius:50%; background:var(--accent); }
+  .dot.on { display:inline-block; animation:pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity:.25; } }
+
+  #evalbar { width:10px; border-radius:4px; overflow:hidden; background:#4a4a4a; display:flex; flex-direction:column; justify-content:flex-end; }
+  #evalfill { background:#f2f2f2; height:50%; transition:height .4s; }
+
+  #board { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr);
+           width:min(80vw,520px); aspect-ratio:1; border-radius:4px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.5); }
+  .sq { position:relative; aspect-ratio:1; min-width:0; min-height:0; display:flex; align-items:center; justify-content:center;
+        font-size:min(8vw,54px); line-height:1; user-select:none; cursor:pointer; }
+  body.eve .sq { cursor:default; }
   .sq.l { background:var(--light); } .sq.d { background:var(--dark); }
-  .sq.sel { box-shadow:inset 0 0 0 100vmax rgba(106,168,79,.55); }
-  .sq.last { box-shadow:inset 0 0 0 100vmax rgba(220,200,60,.4); }
-  .sq.dot::after { content:''; width:26%; height:26%; border-radius:50%; background:rgba(0,0,0,.3); position:absolute; }
-  .sq { position:relative; }
+  .sq.last::before { content:''; position:absolute; inset:0; background:rgba(155,199,0,.41); }
+  .sq.sel::before { content:''; position:absolute; inset:0; background:rgba(20,85,30,.5); }
+  .sq.check::before { content:''; position:absolute; inset:0; background:radial-gradient(circle, rgba(255,0,0,.8), rgba(255,0,0,0) 70%); }
+  .sq.target::after { content:''; position:absolute; width:26%; height:26%; border-radius:50%; background:rgba(20,85,30,.5); }
+  .sq.target.cap::after { width:90%; height:90%; background:none; border:5px solid rgba(20,85,30,.5); }
+  .sq span { position:relative; z-index:1; }
   .w { color:#fff; text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000; } .b { color:#111; }
-  aside { flex:1; min-width:240px; }
-  select, button { background:#2d2d2d; color:var(--fg); border:1px solid #555; border-radius:4px; padding:6px 10px; font:inherit; }
-  button { cursor:pointer; } button:hover { border-color:var(--accent); }
-  .row { display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap; }
-  h1 { font-size:16px; margin:0 0 8px; } #status { font-size:16px; font-weight:600; min-height:24px; }
-  #moves { height:200px; overflow:auto; background:#262626; padding:8px; border-radius:4px; line-height:1.7; }
-  .muted { color:var(--muted); }
+  .sq i { position:absolute; z-index:2; font:600 11px system-ui,sans-serif; font-style:normal; }
+  .sq.l i { color:var(--dark); } .sq.d i { color:var(--light); }
+  .sq i.rk { top:2px; left:3px; } .sq i.fl { bottom:1px; right:3px; }
+
+  aside { width:min(92vw,300px); background:var(--panel); border-radius:8px; padding:16px; }
+  h1 { font-size:16px; margin:0 0 12px; }
+  label.f { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  select { width:100%; background:var(--bg); color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:8px 10px; font:inherit; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .group { margin-top:10px; padding-top:2px; }
+  .group h2 { font-size:12px; color:var(--muted); font-weight:600; margin:8px 0 0; }
+  .btns { display:flex; gap:8px; margin-top:12px; }
+  button { flex:1; background:var(--line); color:var(--fg); border:1px solid transparent; border-radius:6px; padding:9px; font:600 13px system-ui,sans-serif; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  .hide { display:none !important; }
+  #status { margin-top:16px; font-weight:600; min-height:22px; }
+  #eval { color:var(--muted); font-size:12px; min-height:17px; }
+  #moves { margin-top:10px; height:190px; overflow:auto; border-radius:6px; background:var(--bg); padding:6px 8px; }
+  .mv { display:grid; grid-template-columns:32px 1fr 1fr; padding:2px 0; }
+  .mv .n { color:var(--muted); } .mv .cur { background:var(--line); border-radius:3px; padding:0 4px; margin-left:-4px; }
+  .note { color:var(--muted); font-size:11.5px; margin-top:12px; }
 </style>
 </head>
 <body>
 <main>
-  <div id="board"></div>
+  <section>
+    <div class="player">
+      <div class="badge" id="badgeTop">W</div>
+      <div><div class="pname"><span id="nameTop"></span><span class="dot" id="dotTop"></span></div><div class="psub" id="subTop"></div></div>
+      <div class="cap" id="capTop"></div>
+    </div>
+    <div class="boardwrap">
+      <div id="evalbar" title="Engine's view of the position (white at the top)"><div id="evalfill"></div></div>
+      <div id="board"></div>
+    </div>
+    <div class="player">
+      <div class="badge" id="badgeBot">Y</div>
+      <div><div class="pname"><span id="nameBot"></span><span class="dot" id="dotBot"></span></div><div class="psub" id="subBot"></div></div>
+      <div class="cap" id="capBot"></div>
+    </div>
+  </section>
+
   <aside>
     <h1>Play Wyrdmate</h1>
-    <div class="row">
-      <label>Level <select id="level"></select></label>
+    <label class="f" for="mode">Mode</label>
+    <select id="mode">
+      <option value="hve">You vs engine</option>
+      <option value="eve">Engine vs engine</option>
+    </select>
+    <div id="sideRow">
+      <label class="f" for="side">You play</label>
+      <select id="side"><option value="w">White</option><option value="b">Black</option></select>
     </div>
-    <div class="row">
-      <label>You play <select id="side"><option value="w">White</option><option value="b">Black</option></select></label>
-      <button id="new">New game</button><button id="undo">Take back</button>
+
+    <div class="group" id="cfgW"><h2 id="titleW">Engine</h2>
+      <div class="pair"><select id="netW" title="Net"></select><select id="levelW" title="Level (relative Elo)"></select></div>
+    </div>
+    <div class="group" id="cfgB"><h2 id="titleB">Engine</h2>
+      <div class="pair"><select id="netB" title="Net"></select><select id="levelB" title="Level (relative Elo)"></select></div>
+    </div>
+    <div id="speedRow" class="hide">
+      <label class="f" for="speed">Move delay</label>
+      <select id="speed"><option value="1200">slow</option><option value="500" selected>normal</option><option value="100">fast</option></select>
+    </div>
+
+    <div class="btns">
+      <button id="new">New game</button>
+      <button id="undo">Take back</button>
+      <button id="run" class="hide">Start</button>
     </div>
     <div id="status"></div>
-    <div class="muted" id="eval"></div>
+    <div id="eval"></div>
     <div id="moves"></div>
-    <p class="muted">Click a piece, then a square. Pawns promote to a queen.
-      Levels are relative Elo measured only between Wyrdmate's own node limits, not against outside engines.</p>
+    <div class="note">Click a piece, then a square. Pawns promote to a queen. Elo is relative between Wyrdmate's own node limits, not measured against outside engines. "material" is the baseline eval without a net.</div>
   </aside>
 </main>
 <script>
-// Relative Elo vs 1,600 nodes (docs/EVALUATION.md section 8)
+// Relative Elo vs 1,600 nodes (docs/EVALUATION.md section 8; measured with the wyrd-iv net)
 const LEVELS = [[100,-642],[200,-269],[400,-179],[800,-88],[1600,0],[3200,21],[6400,89],[12800,170],[25600,270],[51200,371]];
-const PIECE = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛', k:'♚' };
+// ︎ forces the plain text glyph; without it some browsers draw the pawn as a colour emoji
+const PIECE = { p:'♟︎', n:'♞︎', b:'♝︎', r:'♜︎', q:'♛︎', k:'♚︎' };
+const START = { p:8, n:2, b:2, r:2, q:1 };
 const el = id => document.getElementById(id);
-let game = new Chess(), me = 'w', selected = null, last = null, thinking = false, token = 0;
 
-el('level').innerHTML = LEVELS.map(([n, e], i) =>
-  `<option value="${n}" ${n === 1600 ? 'selected' : ''}>${n} nodes (${e > 0 ? '+' : ''}${e})</option>`).join('');
+let game = new Chess(), mode = 'hve', human = 'w', selected = null, last = null;
+let thinking = false, running = false, token = 0, timer = null;
+
+const levelOptions = LEVELS.map(([n, e]) =>
+  `<option value="${n}" ${n === 1600 ? 'selected' : ''}>${n.toLocaleString()} nodes (${e > 0 ? '+' : ''}${e})</option>`).join('');
+el('levelW').innerHTML = levelOptions; el('levelB').innerHTML = levelOptions;
+
+const cfg = c => ({ net: el('net' + c.toUpperCase()).value, nodes: +el('level' + c.toUpperCase()).value });
+const eloOf = nodes => (LEVELS.find(l => l[0] === nodes) || [0, 0])[1];
+const fmtElo = e => (e > 0 ? '+' : '') + e;
+
+// Where moves come from: the local play.py server by default; web/backend.js replaces
+// this with the WebAssembly engine for the hosted version.
+const backend = window.WYRD_BACKEND || {
+  nets: async () => (await fetch('/nets')).json(),
+  move: async (fen, nodes, net) =>
+    (await fetch(`/move?fen=${encodeURIComponent(fen)}&nodes=${nodes}&net=${encodeURIComponent(net)}`)).json(),
+};
+
+async function loadNets() {
+  try {
+    const j = await backend.nets();
+    const opts = j.nets.map(n => `<option value="${n}" ${n === j.default ? 'selected' : ''}>${n}</option>`).join('');
+    el('netW').innerHTML = opts; el('netB').innerHTML = opts;
+  } catch (e) { el('status').textContent = 'Cannot load the engine (is the play server running? python scripts/play.py)'; }
+}
+
+// Which colour is at the bottom of the board: the human's, or white in engine-vs-engine.
+const bottom = () => (mode === 'hve' ? human : 'w');
+const engineName = c => `Wyrdmate · ${cfg(c).net}`;
+const engineSub = c => `${cfg(c).nodes.toLocaleString()} nodes · ${fmtElo(eloOf(cfg(c).nodes))} Elo (relative)`;
+
+function captured(color) {            // pieces of `color` that have been taken
+  const have = { p:0, n:0, b:0, r:0, q:0 };
+  for (const row of game.board()) for (const p of row) if (p && p.color === color && p.type !== 'k') have[p.type]++;
+  let s = '';
+  for (const t of ['q', 'r', 'b', 'n', 'p']) s += PIECE[t].repeat(Math.max(0, START[t] - have[t]));
+  return s;
+}
+
+function engineTurn() { return !game.game_over() && (mode === 'eve' ? running : game.turn() !== human); }
 
 function render() {
-  const flip = me === 'b';
+  document.body.classList.toggle('eve', mode === 'eve');
+  const bot = bottom(), top = bot === 'w' ? 'b' : 'w', flip = bot === 'b';
+  const canPick = mode === 'hve' && !thinking && !game.game_over() && game.turn() === human;
+  const targets = selected && canPick ? game.moves({ square: selected, verbose: true }) : [];
+  const tset = new Map(targets.map(m => [m.to, m]));
+  let kingSq = null;
+  if (game.in_check()) for (const row of game.board()) for (const p of row) if (p && p.type === 'k' && p.color === game.turn()) kingSq = p.square;
   let html = '';
-  const targets = selected ? game.moves({ square: selected, verbose: true }).map(m => m.to) : [];
   for (let r = 0; r < 8; r++) for (let f = 0; f < 8; f++) {
     const rank = flip ? r + 1 : 8 - r, file = flip ? 7 - f : f;
     const s = 'abcdefgh'[file] + rank, p = game.get(s);
     const cls = ['sq', (r + f) % 2 === 0 ? 'l' : 'd'];
     if (s === selected) cls.push('sel');
     if (last && (s === last.from || s === last.to)) cls.push('last');
-    if (targets.includes(s)) cls.push('dot');
-    html += `<div class="${cls.join(' ')}" data-s="${s}"><span class="${p && p.color === 'w' ? 'w' : 'b'}">${p ? PIECE[p.type] : ''}</span></div>`;
+    if (s === kingSq) cls.push('check');
+    if (tset.has(s)) { const t = tset.get(s); cls.push('target'); if (t.captured || t.flags.includes('e')) cls.push('cap'); }
+    const coord = (f === 0 ? `<i class="rk">${rank}</i>` : '') + (r === 7 ? `<i class="fl">${'abcdefgh'[file]}</i>` : '');
+    html += `<div class="${cls.join(' ')}" data-s="${s}">${coord}<span class="${p && p.color === 'w' ? 'w' : 'b'}">${p ? PIECE[p.type] : ''}</span></div>`;
   }
   el('board').innerHTML = html;
+
   const h = game.history();
-  el('moves').innerHTML = h.map((m, i) => (i % 2 === 0 ? `<span class="muted">${i / 2 + 1}.</span> ` : '') + m + ' ').join('');
-  el('moves').scrollTop = el('moves').scrollHeight;
+  let mh = '';
+  for (let i = 0; i < h.length; i += 2) {
+    const a = i === h.length - 1 ? 'cur' : '', b = i + 1 === h.length - 1 ? 'cur' : '';
+    mh += `<div class="mv"><span class="n">${i / 2 + 1}.</span><span class="${a}">${h[i]}</span><span class="${b}">${h[i + 1] || ''}</span></div>`;
+  }
+  el('moves').innerHTML = mh; el('moves').scrollTop = el('moves').scrollHeight;
+
+  // Player cards: top is always an engine; bottom is you (hve) or the white engine (eve).
+  el('nameTop').textContent = engineName(top); el('subTop').textContent = engineSub(top);
+  el('badgeTop').textContent = top === 'w' ? '♔' : '♚'; el('badgeBot').textContent = mode === 'hve' ? 'You'.slice(0, 1) : (bot === 'w' ? '♔' : '♚');
+  if (mode === 'hve') { el('nameBot').textContent = 'You'; el('subBot').textContent = bot === 'w' ? 'White' : 'Black'; }
+  else { el('nameBot').textContent = engineName(bot); el('subBot').textContent = engineSub(bot); }
+  el('capTop').textContent = captured(bot);      // pieces of the bottom player that the top one has taken
+  el('capBot').textContent = captured(top);
+  const mover = game.turn();
+  el('dotTop').classList.toggle('on', thinking && mover === top);
+  el('dotBot').classList.toggle('on', thinking && mover === bot);
+
+  // Settings panel for the current mode
+  const hve = mode === 'hve';
+  el('sideRow').classList.toggle('hide', !hve);
+  el('speedRow').classList.toggle('hide', hve);
+  el('undo').classList.toggle('hide', !hve);
+  el('run').classList.toggle('hide', hve);
+  el('run').textContent = running ? 'Pause' : 'Start';
+  el('cfgW').classList.toggle('hide', hve && human === 'w');
+  el('cfgB').classList.toggle('hide', hve && human === 'b');
+  el('titleW').textContent = hve ? 'Engine' : 'White engine';
+  el('titleB').textContent = hve ? 'Engine' : 'Black engine';
+
   let st;
-  if (game.in_checkmate()) st = (game.turn() === me ? 'Checkmate — Wyrdmate wins' : 'Checkmate — you win!');
-  else if (game.in_draw() || game.in_stalemate()) st = 'Draw';
-  else if (thinking) st = 'Wyrdmate is thinking…';
-  else st = (game.turn() === me ? 'Your move' : '') + (game.in_check() ? ' (check)' : '');
+  if (game.in_checkmate()) {
+    const winner = game.turn() === 'w' ? 'b' : 'w';
+    st = hve ? (winner === human ? 'Checkmate — you win!' : 'Checkmate — Wyrdmate wins')
+             : `Checkmate — ${winner === 'w' ? 'White' : 'Black'} wins`;
+  } else if (game.in_draw() || game.in_stalemate()) st = 'Draw';
+  else if (hve) st = thinking ? 'Wyrdmate is thinking…' : (game.turn() === human ? 'Your move' : '') + (game.in_check() ? ' — check!' : '');
+  else st = (running ? '' : 'Paused — ') + (mover === 'w' ? 'White' : 'Black') + ' to move' + (game.in_check() ? ' — check!' : '');
   el('status').textContent = st;
 }
 
+function setEval(whiteCp) {              // white-POV centipawns -> bar (white at the top)
+  el('evalfill').style.height = (50 + 50 * Math.tanh(whiteCp / 400)) + '%';
+}
+
 async function engineMove() {
-  if (game.game_over() || game.turn() === me) return;
-  const my = ++token;
+  clearTimeout(timer);
+  if (!engineTurn() || thinking) return;
+  const my = ++token, mover = game.turn(), c = cfg(mover);
   thinking = true; render();
   try {
-    const r = await fetch(`/move?fen=${encodeURIComponent(game.fen())}&nodes=${el('level').value}`);
-    const j = await r.json();
+    const j = await backend.move(game.fen(), c.nodes, c.net);
     if (my !== token) return;            // game was reset or taken back meanwhile
     if (!j.move) throw new Error(j.error || 'no move');
     const m = game.move({ from: j.move.slice(0, 2), to: j.move.slice(2, 4), promotion: j.move[4] });
     if (!m) throw new Error('illegal engine move ' + j.move);
     last = m;
-    el('eval').textContent = j.score == null ? '' : `Engine eval: ${(j.score / 100).toFixed(2)} (its side to move before the move)`;
-  } catch (e) { el('status').textContent = 'Engine error: ' + e.message; }
+    if (j.score != null) {
+      setEval(mover === 'w' ? j.score : -j.score);   // score is for the side that just moved
+      el('eval').textContent = `${mover === 'w' ? 'White' : 'Black'} engine thinks it is ${Math.abs(j.score) < 30 ? 'about level' : j.score > 0 ? 'ahead' : 'behind'} (${j.score > 0 ? '+' : ''}${(j.score / 100).toFixed(2)} pawns)`;
+    }
+  } catch (e) { thinking = false; running = false; render(); el('status').textContent = 'Engine error: ' + e.message; return; }
   thinking = false; render();
+  if (mode === 'eve' && running && !game.game_over()) timer = setTimeout(engineMove, +el('speed').value);
+  else if (game.game_over()) { running = false; render(); }
 }
 
 el('board').onclick = e => {
-  const sq = e.target.closest('.sq'); if (!sq || thinking || game.game_over() || game.turn() !== me) return;
+  const sq = e.target.closest('.sq');
+  if (!sq || mode !== 'hve' || thinking || game.game_over() || game.turn() !== human) return;
   const s = sq.dataset.s, p = game.get(s);
   if (selected) {
     const m = game.move({ from: selected, to: s, promotion: 'q' });
     if (m) { last = m; selected = null; render(); engineMove(); return; }
   }
-  selected = p && p.color === me ? s : null; render();
+  selected = p && p.color === human ? s : null; render();
 };
+
 function newGame() {
-  token++; thinking = false; game = new Chess(); me = el('side').value; selected = null; last = null; el('eval').textContent = '';
+  token++; clearTimeout(timer); thinking = false; running = false;
+  game = new Chess(); mode = el('mode').value; human = el('side').value; selected = null; last = null;
+  el('eval').textContent = ''; setEval(0);
   render(); engineMove();
 }
-el('new').onclick = newGame; el('side').onchange = newGame;
+el('new').onclick = newGame; el('mode').onchange = newGame; el('side').onchange = newGame;
+for (const id of ['netW', 'netB', 'levelW', 'levelB']) el(id).onchange = render;
+el('run').onclick = () => {
+  running = !running;
+  if (!running) { token++; clearTimeout(timer); thinking = false; }   // drop an in-flight request
+  render(); if (running) engineMove();
+};
 el('undo').onclick = () => {
   token++; thinking = false;
-  game.undo(); if (game.turn() !== me) game.undo();
-  selected = null; last = null; render();
+  game.undo(); if (game.turn() !== human) game.undo();
+  selected = null; last = null; render(); engineMove();
 };
-newGame();
+loadNets().then(newGame);
 </script>
 </body>
 </html>

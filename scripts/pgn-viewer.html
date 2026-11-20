@@ -9,8 +9,8 @@
   :root { --light:#f0d9b5; --dark:#b58863; --bg:#1e1e1e; --fg:#e8e8e8; --muted:#9a9a9a; --accent:#6aa84f; }
   body { margin:0; font:14px system-ui,sans-serif; background:var(--bg); color:var(--fg); }
   main { max-width:980px; margin:0 auto; padding:16px; display:flex; flex-wrap:wrap; gap:20px; }
-  #board { display:grid; grid-template-columns:repeat(8,1fr); width:min(92vw,480px); aspect-ratio:1; border:2px solid #444; }
-  .sq { display:flex; align-items:center; justify-content:center; font-size:min(8vw,46px); line-height:1; user-select:none; }
+  #board { display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); width:min(92vw,480px); aspect-ratio:1; border:2px solid #444; }
+  .sq { aspect-ratio:1; min-width:0; min-height:0; display:flex; align-items:center; justify-content:center; font-size:min(8vw,46px); line-height:1; user-select:none; }
   .sq.l { background:var(--light); } .sq.d { background:var(--dark); }
   .sq.hl { box-shadow:inset 0 0 0 100vmax rgba(106,168,79,.45); }
   .w { color:#fff; text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000; } .b { color:#111; }
