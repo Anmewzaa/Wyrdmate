@@ -28,7 +28,7 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 
 | ไฟล์ | หน้าที่ |
 |---|---|
-| `Cargo.toml` | ไฟล์หลักของ Cargo workspace สมาชิกคือ `engine`, `datagen`, `trainer` ส่วน `firmware` ถูก `exclude` เพราะ build ด้วย target ของ ESP32 กำหนดค่ากลาง (version, edition, license) |
+| `Cargo.toml` | ไฟล์หลักของ Cargo workspace สมาชิกคือ `engine`, `datagen`, `trainer` ส่วน `firmware` และ `web` ถูก `exclude` (`firmware` build ด้วย target ของ ESP32, `web` เป็น engine คอมไพล์เป็น WebAssembly สำหรับหน้าเล่นบนเว็บ ดู `web/README.md`) กำหนดค่ากลาง (version, edition, license) |
 | `Cargo.lock` | ล็อกเวอร์ชันไลบรารีทุกตัว รวมถึง commit ของ bullet เพื่อให้ build ซ้ำได้ ไม่ต้องแก้ด้วยมือ |
 | `.gitignore` | ไฟล์ที่ไม่เก็บใน git: `target/`, `checkpoints/`, `data/`, `*.binpack` |
 | `README.md` | หน้าแรกของ repository (ภาษาอังกฤษ): ภาพรวม ผลการเทรน วิธีลองใช้ผ่าน UCI |
