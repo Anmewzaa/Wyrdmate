@@ -60,7 +60,7 @@
 | 2 | PVS + aspiration window | ไม่เพิ่ม | PVS ลองแล้ว **ไม่รับ** (−3 ± 22 ที่ 10k node) ลองใหม่หลังมี TT |
 | 3 | null-move pruning | ไม่เพิ่ม | **ทำแล้ว (s4)**: +20 ± 19 ที่ 10k, +44 ± 23 ที่ 50k |
 | 4 | late move reduction (LMR) | ไม่เพิ่ม | **ทำแล้ว (s5)**: +28 ± 13 ที่ 10k, +23 ± 14 ที่ 50k (ต่อ node ช้าลง ~13%) |
-| 5 | transposition table | เพิ่ม (ต้องกำหนดงบ RAM ESP32) | สูง |
+| 5 | transposition table | 64 KB (ตั้งได้) | **ทำแล้ว (s6)**: +52 ± 14 ที่ 10k, +125 ± 15 ที่ 50k; 64 KB ได้ผลเกือบเต็ม (EVALUATION.md ข้อ 10) |
 | 6 | check extension, futility, delta pruning | ไม่เพิ่ม | เล็ก–ปานกลาง |
 
 - **ตรวจแล้ว:** engine ไม่รู้จักการเดินซ้ำเลย (กฎ 50 ตามี) แก้แล้วเป็น search รุ่น s2: +44 ± 11 Elo, 600 เกม (EVALUATION.md ข้อ 10) ยังไม่ตรวจเสมอเพราะหมากไม่พอ

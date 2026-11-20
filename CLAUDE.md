@@ -111,7 +111,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
   match the trainer's layout, quantisation (QA/QB/scale) and feature order.
   Change both sides together and retrain.
 - **Search public API** — used by datagen, the UCI front end and `web/`. `with_history(hashes)` is optional
-  (repetition draws); without it only repetitions inside the search tree are seen.
+  (repetition draws); without it only repetitions inside the search tree are seen. `with_tt_kb(kb)` sets the
+  transposition table (default 64 KB, 0 = off; UCI option `Hash`).
 
 ## Verification
 

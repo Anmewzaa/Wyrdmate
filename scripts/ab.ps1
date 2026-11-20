@@ -17,7 +17,8 @@ param(
     [int]$Nodes = 10000,
     [int]$Rounds = 300,
     [int]$Concurrency = 12,
-    [string]$Tag = ''
+    [string]$Tag = '',
+    [int]$NewHash = -1   # transposition table size in KiB for the new engine only (default: the engine's own)
 )
 $ErrorActionPreference = 'Continue'
 $root = Split-Path -Parent $PSScriptRoot
@@ -84,6 +85,7 @@ $fc = @(
     '-draw', 'movenumber=30', 'movecount=8', 'score=10', '-resign', 'movecount=4', 'score=800',
     '-pgnout', "file=$pgn"
 )
+if ($NewHash -ge 0) { $fc = $fc[0..4] + @("option.Hash=$NewHash") + $fc[5..($fc.Count - 1)] }
 # old engine: a net unless OldNet is 'material'
 if ($OldNet -ne 'material') { $fc = $fc[0..8] + @("option.EvalFile=$root\$OldNet") + $fc[9..($fc.Count - 1)] }
 

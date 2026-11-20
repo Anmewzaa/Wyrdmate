@@ -3,6 +3,7 @@
 pub mod nnue;
 
 pub use cozy_chess::{Board, Color, GameStatus, Move, Piece};
+use cozy_chess::Square;
 use std::sync::Arc;
 
 pub const MATE: i32 = 30_000;
@@ -66,6 +67,70 @@ const NULL_REDUCTION: i32 = 2;
 const LMR_MIN_DEPTH: i32 = 3;
 const LMR_MIN_INDEX: usize = 2;
 
+const TT_EXACT: u8 = 1;
+const TT_LOWER: u8 = 2; // score is a lower bound (a beta cutoff happened)
+const TT_UPPER: u8 = 3; // score is an upper bound (nothing beat alpha)
+const TT_MOVE_SCORE: i32 = 30_000;
+/// Default transposition table size in KiB (8 bytes per entry).
+pub const DEFAULT_TT_KB: usize = 64;
+
+/// One transposition-table slot, 8 bytes. `flag == 0` means empty.
+#[derive(Clone, Copy, Default)]
+struct TtEntry {
+    key: u16, // upper 16 bits of the position hash
+    mv: u16,  // best move: from | to << 6 | promotion << 12 (0 = none)
+    score: i16,
+    depth: i8,
+    flag: u8,
+}
+
+fn encode_move(mv: Move) -> u16 {
+    let promo = match mv.promotion {
+        None => 0,
+        Some(Piece::Knight) => 1,
+        Some(Piece::Bishop) => 2,
+        Some(Piece::Rook) => 3,
+        _ => 4,
+    };
+    (mv.from as u16) | ((mv.to as u16) << 6) | (promo << 12)
+}
+
+fn decode_move(code: u16) -> Option<Move> {
+    if code == 0 {
+        return None;
+    }
+    let promotion = match code >> 12 {
+        0 => None,
+        1 => Some(Piece::Knight),
+        2 => Some(Piece::Bishop),
+        3 => Some(Piece::Rook),
+        _ => Some(Piece::Queen),
+    };
+    Some(Move { from: Square::index((code & 63) as usize), to: Square::index(((code >> 6) & 63) as usize), promotion })
+}
+
+/// Mate scores depend on the distance from the root, so store them relative to the node.
+fn score_to_tt(score: i32, ply: i32) -> i16 {
+    (if score >= MATE - 1_000 {
+        score + ply
+    } else if score <= -MATE + 1_000 {
+        score - ply
+    } else {
+        score
+    }) as i16
+}
+
+fn score_from_tt(score: i16, ply: i32) -> i32 {
+    let s = i32::from(score);
+    if s >= MATE - 1_000 {
+        s - ply
+    } else if s <= -MATE + 1_000 {
+        s + ply
+    } else {
+        s
+    }
+}
+
 pub struct Searcher {
     pub nodes: u64,
     pub node_limit: u64,
@@ -80,11 +145,51 @@ pub struct Searcher {
     history: [[[i16; 64]; 64]; 2],
     /// Set just before searching a null-move child so that child does not try a null move too.
     after_null: bool,
+    /// Transposition table: buckets of two entries; empty means the table is disabled.
+    tt: Vec<TtEntry>,
+}
+
+/// Number of table entries for `kb` KiB: the largest power of two that fits (0 disables the table).
+fn tt_entries(kb: usize) -> usize {
+    let n = kb * 1024 / std::mem::size_of::<TtEntry>();
+    if n < 2 { 0 } else { 1 << (usize::BITS - 1 - n.leading_zeros()) }
 }
 
 impl Searcher {
+    /// Set the transposition table size in KiB (0 turns it off). Replaces the current table.
+    pub fn with_tt_kb(mut self, kb: usize) -> Self {
+        self.tt = vec![TtEntry::default(); tt_entries(kb)];
+        self
+    }
+
+    fn tt_probe(&self, hash: u64) -> Option<TtEntry> {
+        if self.tt.is_empty() {
+            return None;
+        }
+        let base = (hash as usize) & (self.tt.len() - 1) & !1;
+        let key = (hash >> 48) as u16;
+        self.tt[base..base + 2].iter().copied().find(|e| e.flag != 0 && e.key == key)
+    }
+
+    fn tt_store(&mut self, hash: u64, mv: Option<Move>, score: i32, depth: i32, flag: u8, ply: i32) {
+        if self.tt.is_empty() {
+            return;
+        }
+        let base = (hash as usize) & (self.tt.len() - 1) & !1;
+        let key = (hash >> 48) as u16;
+        // Reuse this position's slot, else an empty one, else replace the shallower entry.
+        let slot = (0..2)
+            .find(|&i| self.tt[base + i].flag != 0 && self.tt[base + i].key == key)
+            .or_else(|| (0..2).find(|&i| self.tt[base + i].flag == 0))
+            .unwrap_or_else(|| usize::from(self.tt[base + 1].depth < self.tt[base].depth));
+        let old = self.tt[base + slot];
+        // Keep the old best move when this entry has none (an upper bound).
+        let mv_code = mv.map_or(if old.flag != 0 && old.key == key { old.mv } else { 0 }, encode_move);
+        self.tt[base + slot] = TtEntry { key, mv: mv_code, score: score_to_tt(score, ply), depth: depth.clamp(-127, 127) as i8, flag };
+    }
+
     pub fn new(node_limit: u64) -> Self {
-        Self { nodes: 0, node_limit, stopped: false, net: None, hist: Vec::new(), killers: [[None; 2]; MAX_PLY], history: [[[0; 64]; 64]; 2], after_null: false }
+        Self { nodes: 0, node_limit, stopped: false, net: None, hist: Vec::new(), killers: [[None; 2]; MAX_PLY], history: [[[0; 64]; 64]; 2], after_null: false, tt: vec![TtEntry::default(); tt_entries(DEFAULT_TT_KB)] }
     }
 
     /// Positions that occurred earlier in the game, as `Board::hash()` values, oldest
@@ -96,7 +201,10 @@ impl Searcher {
     }
 
     /// Move ordering score: captures/promotions by the static key, then killers, then history.
-    fn move_score(&self, board: &Board, mv: Move, ply: i32) -> i32 {
+    fn move_score(&self, board: &Board, mv: Move, ply: i32, tt_move: Option<Move>) -> i32 {
+        if tt_move == Some(mv) {
+            return TT_MOVE_SCORE;
+        }
         let k = order_key(board, mv);
         if k > 0 {
             return k;
@@ -224,6 +332,21 @@ impl Searcher {
         if self.stopped {
             return 0;
         }
+        let hash = board.hash();
+        let alpha0 = alpha;
+        let mut tt_move = None;
+        if let Some(e) = self.tt_probe(hash) {
+            tt_move = decode_move(e.mv);
+            if ply > 0 && i32::from(e.depth) >= depth {
+                let s = score_from_tt(e.score, ply);
+                match e.flag {
+                    TT_EXACT => return s,
+                    TT_LOWER if s >= beta => return s,
+                    TT_UPPER if s <= alpha => return s,
+                    _ => {}
+                }
+            }
+        }
         // Null-move pruning: if passing the move still leaves us at or above beta after a
         // reduced search, a real move would too. Not in check, not twice in a row, and only
         // with some piece besides pawns and the king (otherwise zugzwang makes it unsound).
@@ -244,8 +367,9 @@ impl Searcher {
             }
         }
         let mut moves = legal_moves(board);
-        moves.sort_by_cached_key(|&m| -self.move_score(board, m, ply)); // each score computed once
+        moves.sort_by_cached_key(|&m| -self.move_score(board, m, ply, tt_move)); // each score computed once
         let mut best = -INF;
+        let mut best_mv: Option<Move> = None;
         let mut tried_quiet: Vec<Move> = Vec::new();
         let in_check = !board.checkers().is_empty();
         for (i, mv) in moves.into_iter().enumerate() {
@@ -270,7 +394,10 @@ impl Searcher {
             if self.stopped {
                 return 0;
             }
-            best = best.max(score);
+            if score > best {
+                best = score;
+                best_mv = Some(mv);
+            }
             alpha = alpha.max(score);
             if alpha >= beta {
                 if quiet {
@@ -282,6 +409,14 @@ impl Searcher {
                 tried_quiet.push(mv);
             }
         }
+        let flag = if best >= beta {
+            TT_LOWER
+        } else if best > alpha0 {
+            TT_EXACT
+        } else {
+            TT_UPPER
+        };
+        self.tt_store(hash, if flag == TT_UPPER { None } else { best_mv }, best, depth, flag, ply);
         best
     }
 
@@ -387,6 +522,41 @@ mod tests {
         }
         let bottom = s.history[Color::White as usize][mv.from as usize][mv.to as usize];
         assert!(i32::from(bottom) >= -HIST_LIMIT && bottom < 0, "bottom = {bottom}");
+    }
+
+    #[test]
+    fn tt_move_encoding_round_trips() {
+        for from in Square::ALL {
+            for to in Square::ALL {
+                for promotion in [None, Some(Piece::Knight), Some(Piece::Bishop), Some(Piece::Rook), Some(Piece::Queen)] {
+                    let mv = Move { from, to, promotion };
+                    // a1a1 with no promotion encodes to 0, which means "no move"; it is never a legal move
+                    if encode_move(mv) != 0 {
+                        assert_eq!(decode_move(encode_move(mv)), Some(mv));
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn tt_mate_scores_are_stored_relative_to_the_node() {
+        // a mate found 5 plies from the root, stored at ply 3 and read back at ply 7, is 2 plies further away
+        let stored = score_to_tt(MATE - 5, 3);
+        assert_eq!(score_from_tt(stored, 7), MATE - 9);
+        let stored = score_to_tt(-MATE + 5, 3);
+        assert_eq!(score_from_tt(stored, 7), -MATE + 9);
+        assert_eq!(score_from_tt(score_to_tt(123, 9), 4), 123);
+    }
+
+    #[test]
+    fn table_sizes_round_down_to_a_power_of_two() {
+        assert_eq!(tt_entries(0), 0);
+        assert_eq!(tt_entries(64), 8192);
+        assert_eq!(tt_entries(100), 8192);
+        let mut s = Searcher::new(10).with_tt_kb(0);
+        assert!(s.tt.is_empty());
+        assert!(s.search(&Board::default(), 2).is_some()); // searching works with the table off
     }
 
     #[test]
