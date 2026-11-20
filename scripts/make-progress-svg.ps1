@@ -1,6 +1,9 @@
-# Regenerates two charts from docs/progress/data.json:
+# Regenerates the charts from docs/progress/data.json:
 #   docs/progress/training-process.svg  (head-to-head match results per net)
 #   docs/progress/loss.svg              (training loss curves, with version/timestamp)
+#   docs/progress/ladder.svg            (strength by node limit, first search vs current search)
+#   docs/progress/search-steps.svg      (what each search step added, per node limit)
+#   docs/progress/stockfish.svg         (our levels placed on the Stockfish UCI_Elo scale)
 # Run from the repo root:  powershell -File scripts/make-progress-svg.ps1
 $ErrorActionPreference = 'Stop'
 $inv = [Globalization.CultureInfo]::InvariantCulture
@@ -144,3 +147,145 @@ A (T (($lx0 + $lx1) / 2) ($by + 40) 12 $mute $ui.lossX 'middle')
 A "<text transform=`"translate(24 $(F ($lossTop + $lossH / 2))) rotate(-90)`" font-size=`"12`" fill=`"$mute`" text-anchor=`"middle`">$(Esc $ui.lossY)</text>"
 A (T 24 ($H - 12) 10 $mute $ui.generated)
 Save-Svg $s $W $H $ui.lossTitle 'docs/progress/loss.svg'
+
+# =====================================================================
+# 3) Strength by node limit: first search vs current search
+# =====================================================================
+$s = New-Object Text.StringBuilder
+$px0 = 90; $px1 = 860; $top = 128; $ph = 340; $by = $top + $ph; $H = $by + 90
+$ymin = -350; $ymax = 600
+$nmin = [double]$d.ladder[0].nodes; $nmax = [double]$d.ladder[$d.ladder.Count - 1].nodes
+function GY($v) { $top + (1 - ($v - $ymin) / ($ymax - $ymin)) * $ph }
+function GX($n) { $px0 + ([math]::Log($n, 2) - [math]::Log($nmin, 2)) / ([math]::Log($nmax, 2) - [math]::Log($nmin, 2)) * ($px1 - $px0) }
+A (T 24 38 22 $ink $ui.ladderTitle 'start' '700')
+A (T 24 58 13 $mute $ui.ladderSub)
+A "<rect x=`"24`" y=`"72`" width=`"$($W - 48)`" height=`"28`" rx=`"6`" fill=`"$band`"/>"
+A (T 40 91 11 $ink $ui.ladderNote)
+for ($t = -300; $t -le 600; $t += 100) {
+  $y = GY $t
+  $sw = if ($t -eq 0) { 1.5 } else { 1 }; $c = if ($t -eq 0) { $ink } else { $grid }  # not $w: PowerShell names are case-insensitive and $W is the page width
+  A "<line x1=`"$px0`" y1=`"$(F $y)`" x2=`"$px1`" y2=`"$(F $y)`" stroke=`"$c`" stroke-width=`"$sw`"/>"
+  A (T ($px0 - 8) ($y + 4) 11 $mute $t 'end')
+}
+foreach ($r in $d.ladder) { A (T (GX $r.nodes) ($by + 18) 11 $mute (([int]$r.nodes).ToString('N0', $inv)) 'middle') }
+A (T (($px0 + $px1) / 2) ($by + 42) 12 $mute $ui.ladderX 'middle')
+A "<text transform=`"translate(24 $(F ($top + $ph / 2))) rotate(-90)`" font-size=`"12`" fill=`"$mute`" text-anchor=`"middle`">$(Esc $ui.ladderY)</text>"
+foreach ($ser in @(@('s1', $gray, -4), @('s6', $blue, 4))) {
+  $key = $ser[0]; $c = $ser[1]; $dx = $ser[2]
+  $pts = ($d.ladder | ForEach-Object { "$(F ((GX $_.nodes) + $dx)),$(F (GY $_.$key[0]))" }) -join ' '
+  A "<polyline points=`"$pts`" fill=`"none`" stroke=`"$c`" stroke-width=`"2.5`" stroke-linejoin=`"round`"/>"
+  foreach ($r in $d.ladder) {
+    $x = (GX $r.nodes) + $dx; $e = $r.$key[0]; $err = $r.$key[1]
+    A "<path d=`"M$(F $x) $(F (GY ($e - $err)))V$(F (GY ($e + $err)))`" stroke=`"$c`" stroke-width=`"1.5`" fill=`"none`"/>"
+    A "<circle cx=`"$(F $x)`" cy=`"$(F (GY $e))`" r=`"4`" fill=`"$c`"/>"
+  }
+  $last = $d.ladder[$d.ladder.Count - 1]
+  $lv = $last.$key[0]; $sign = if ($lv -gt 0) { '+' } else { '' }
+  $up = 0; if ($key -eq 's6') { $up = 8 }
+  A (T ((GX $last.nodes) + $dx - 10) ((GY $lv) - 10 - $up) 12 $c "$sign$lv" 'end' '700')
+}
+A "<rect x=`"110`" y=`"$($top + 10)`" width=`"14`" height=`"14`" rx=`"3`" fill=`"$gray`"/>"
+A (T 132 ($top + 22) 12 $ink $ui.ladderS1)
+A "<rect x=`"110`" y=`"$($top + 32)`" width=`"14`" height=`"14`" rx=`"3`" fill=`"$blue`"/>"
+A (T 132 ($top + 44) 12 $ink $ui.ladderS6)
+A (T 24 ($H - 12) 10 $mute $ui.generated)
+Save-Svg $s $W $H $ui.ladderTitle 'docs/progress/ladder.svg'
+
+# =====================================================================
+# 4) What each search step added, per node limit
+# =====================================================================
+$s = New-Object Text.StringBuilder
+$px0 = 90; $px1 = 880; $top = 128; $ph = 300; $by = $top + $ph; $H = $by + 110
+$ymin = -80; $ymax = 160
+function SY($v) { $top + (1 - ($v - $ymin) / ($ymax - $ymin)) * $ph }
+A (T 24 38 22 $ink $ui.stepsTitle 'start' '700')
+A (T 24 58 13 $mute $ui.stepsSub)
+A "<rect x=`"24`" y=`"72`" width=`"$($W - 48)`" height=`"28`" rx=`"6`" fill=`"$band`"/>"
+A (T 40 91 11 $ink $ui.stepsNote)
+for ($t = -80; $t -le 160; $t += 40) {
+  $y = SY $t
+  $sw = if ($t -eq 0) { 1.5 } else { 1 }; $c = if ($t -eq 0) { $ink } else { $grid }  # not $w: PowerShell names are case-insensitive and $W is the page width
+  A "<line x1=`"$px0`" y1=`"$(F $y)`" x2=`"$px1`" y2=`"$(F $y)`" stroke=`"$c`" stroke-width=`"$sw`"/>"
+  A (T ($px0 - 8) ($y + 4) 11 $mute $t 'end')
+}
+A "<text transform=`"translate(24 $(F ($top + $ph / 2))) rotate(-90)`" font-size=`"12`" fill=`"$mute`" text-anchor=`"middle`">$(Esc $ui.stepsY)</text>"
+$okCols = @('#9cc3ee', '#2a78d6', '#16427c'); $noCols = @('#d7d5ce', '#aeaca5', '#7d7b75')
+$levels = @(@('n1k', '1,000'), @('n10k', '10,000'), @('n50k', '50,000'))
+$gw = ($px1 - $px0) / @($d.steps).Count; $bw = 24; $gap = 4
+$gi = 0
+foreach ($st in $d.steps) {
+  $cx = $px0 + $gw * ($gi + 0.5)
+  $cols = $okCols; if ($st.rejected) { $cols = $noCols }
+  for ($li = 0; $li -lt 3; $li++) {
+    $v = $st.($levels[$li][0])
+    if ($null -eq $v) { continue }
+    $x = $cx + ($li - 1) * ($bw + $gap) - $bw / 2
+    $e = $v[0]; $err = $v[1]
+    $y0 = SY 0; $y1 = SY $e
+    A "<rect x=`"$(F $x)`" y=`"$(F ([math]::Min($y0, $y1)))`" width=`"$bw`" height=`"$(F ([math]::Max(1, [math]::Abs($y1 - $y0))))`" rx=`"2`" fill=`"$($cols[$li])`"/>"
+    $xm = $x + $bw / 2
+    A "<path d=`"M$(F $xm) $(F (SY ($e - $err)))V$(F (SY ($e + $err)))M$(F ($xm - 4)) $(F (SY ($e - $err)))H$(F ($xm + 4))M$(F ($xm - 4)) $(F (SY ($e + $err)))H$(F ($xm + 4))`" stroke=`"$ink`" stroke-width=`"1.2`" fill=`"none`"/>"
+    $sign = if ($e -gt 0) { '+' } else { '' }
+    if ($e -ge 0) { $ly = (SY ($e + $err)) - 5 } else { $ly = (SY ($e - $err)) + 14 }
+    A (T $xm $ly 10 $ink "$sign$e" 'middle' '700')
+  }
+  A (T $cx ($by + 20) 13 $ink $st.id 'middle' '700')
+  A (T $cx ($by + 36) 10 $mute $st.what 'middle')
+  if ($st.rejected) { A (T $cx ($by + 50) 10 $red $ui.stepsRejected 'middle' '700') }
+  $gi++
+}
+$lx = 110
+for ($li = 0; $li -lt 3; $li++) {
+  A "<rect x=`"$lx`" y=`"$($top - 18)`" width=`"12`" height=`"12`" rx=`"2`" fill=`"$($okCols[$li])`"/>"
+  A (T ($lx + 18) ($top - 8) 11 $ink "$($levels[$li][1]) $($ui.nodes)")
+  $lx += 130
+}
+A (T 24 ($H - 12) 10 $mute $ui.generated)
+Save-Svg $s $W $H $ui.stepsTitle 'docs/progress/search-steps.svg'
+
+# =====================================================================
+# 5) Our levels placed on the Stockfish UCI_Elo scale (rough)
+# =====================================================================
+$s = New-Object Text.StringBuilder
+$sx0 = 220; $sx1 = 820; $smin = 1250; $smax = 1650
+$rowH = 58; $top = 164; $rows = @($d.stockfish.levels)
+$by = $top + $rows.Count * $rowH; $H = $by + 90
+function SX($v) { $sx0 + ($v - $smin) / ($smax - $smin) * ($sx1 - $sx0) }
+A (T 24 38 22 $ink $ui.sfTitle 'start' '700')
+A (T 24 58 13 $mute $ui.sfSub)
+A "<rect x=`"24`" y=`"72`" width=`"$($W - 48)`" height=`"28`" rx=`"6`" fill=`"$band`"/>"
+A (T 40 91 11 $ink $ui.sfNote)
+foreach ($ru in $d.stockfish.rulers) {
+  $x = SX $ru
+  A "<line x1=`"$(F $x)`" y1=`"$($top - 14)`" x2=`"$(F $x)`" y2=`"$by`" stroke=`"$grid`" stroke-width=`"1.5`" stroke-dasharray=`"4 3`"/>"
+  A (T $x ($top - 20) 11 $mute "SF $ru" 'middle' '700')
+}
+A (T (($sx0 + $sx1) / 2) ($by + 40) 12 $mute $ui.sfX 'middle')
+for ($v = 1300; $v -le 1600; $v += 100) { A (T (SX $v) ($by + 18) 11 $mute $v 'middle') }
+$err = [double]$d.stockfish.err
+$i = 0
+foreach ($r in $rows) {
+  $cy = $top + $i * $rowH + $rowH / 2
+  if ($i % 2 -eq 0) { A "<rect x=`"24`" y=`"$($top + $i * $rowH)`" width=`"$($W - 48)`" height=`"$rowH`" fill=`"$band`" opacity=`"0.7`"/>" }
+  A (T 36 ($cy + 5) 13 $ink "$(([int]$r.nodes).ToString('N0', $inv)) $($ui.nodes)" 'start' '700')
+  foreach ($ser in @(@('s1', $gray, -9), @('s6', $blue, 9))) {
+    $v = $r.($ser[0]); $c = $ser[1]; $y = $cy + $ser[2]
+    if ($null -eq $v -or $v -lt 1320) {
+      $x = SX 1320
+      A "<path d=`"M$(F ($x - 2)) $(F $y)l-10 -6v12z`" fill=`"$c`"/>"
+      A (T ($x - 18) ($y + 4) 10 $c $ui.sfBelow 'end')
+    } else {
+      $x = SX $v
+      A "<path d=`"M$(F (SX ($v - $err))) $(F $y)H$(F (SX ($v + $err)))`" stroke=`"$c`" stroke-width=`"1.5`" fill=`"none`"/>"
+      A "<circle cx=`"$(F $x)`" cy=`"$(F $y)`" r=`"5`" fill=`"$c`"/>"
+      A (T ($x + 9) ($y - 7) 11 $c "~$v" 'start' '700')
+    }
+  }
+  $i++
+}
+A "<rect x=`"600`" y=`"$($top - 54)`" width=`"12`" height=`"12`" rx=`"3`" fill=`"$gray`"/>"
+A (T 618 ($top - 44) 11 $ink $ui.ladderS1)
+A "<rect x=`"730`" y=`"$($top - 54)`" width=`"12`" height=`"12`" rx=`"3`" fill=`"$blue`"/>"
+A (T 748 ($top - 44) 11 $ink $ui.ladderS6)
+A (T 24 ($H - 12) 10 $mute $ui.generated)
+Save-Svg $s $W $H $ui.sfTitle 'docs/progress/stockfish.svg'

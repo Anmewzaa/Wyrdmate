@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="538" viewBox="0 0 940 538" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · What each search step added">
+<rect width="940" height="538" fill="#ffffff"/>
+<text x="24" y="38" font-size="22" font-weight="700" fill="#1f1f1e" text-anchor="start">Wyrdmate · What each search step added</text>
+<text x="24" y="58" font-size="13" font-weight="400" fill="#6b6a66" text-anchor="start">Elo against the previous search version at the same node limit (wyrd-iv on both sides, whiskers = error margin)</text>
+<rect x="24" y="72" width="892" height="28" rx="6" fill="#f6f5f0"/>
+<text x="40" y="91" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">The steps do not add up: each is measured against the version before it. Nothing was measured at 1,000 nodes for s2, or at 50,000 nodes for s2.</text>
+<line x1="90" y1="428" x2="880" y2="428" stroke="#e1e0d9" stroke-width="1"/>
+<text x="82" y="432" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">-80</text>
+<line x1="90" y1="378" x2="880" y2="378" stroke="#e1e0d9" stroke-width="1"/>
+<text x="82" y="382" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">-40</text>
+<line x1="90" y1="328" x2="880" y2="328" stroke="#1f1f1e" stroke-width="1.5"/>
+<text x="82" y="332" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0</text>
+<line x1="90" y1="278" x2="880" y2="278" stroke="#e1e0d9" stroke-width="1"/>
+<text x="82" y="282" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">40</text>
+<line x1="90" y1="228" x2="880" y2="228" stroke="#e1e0d9" stroke-width="1"/>
+<text x="82" y="232" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">80</text>
+<line x1="90" y1="178" x2="880" y2="178" stroke="#e1e0d9" stroke-width="1"/>
+<text x="82" y="182" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">120</text>
+<line x1="90" y1="128" x2="880" y2="128" stroke="#e1e0d9" stroke-width="1"/>
+<text x="82" y="132" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">160</text>
+<text transform="translate(24 278) rotate(-90)" font-size="12" fill="#6b6a66" text-anchor="middle">Elo vs previous version</text>
+<rect x="143.83" y="273" width="24" height="55" rx="2" fill="#2a78d6"/>
+<path d="M155.83 286.75V259.25M151.83 286.75H159.83M151.83 259.25H159.83" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="155.83" y="254.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+44</text>
+<text x="155.83" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s2</text>
+<text x="155.83" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">repeat detection</text>
+<rect x="247.5" y="308" width="24" height="20" rx="2" fill="#9cc3ee"/>
+<path d="M259.5 338V278M255.5 338H263.5M255.5 278H263.5" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="259.5" y="273" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+16</text>
+<rect x="275.5" y="229.25" width="24" height="99" rx="2" fill="#2a78d6"/>
+<path d="M287.5 260.5V198M283.5 260.5H291.5M283.5 198H291.5" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="287.5" y="193" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+79</text>
+<rect x="303.5" y="213" width="24" height="115" rx="2" fill="#16427c"/>
+<path d="M315.5 243V183M311.5 243H319.5M311.5 183H319.5" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="315.5" y="178" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+92</text>
+<text x="287.5" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s3</text>
+<text x="287.5" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">killer + history ordering</text>
+<rect x="379.17" y="328" width="24" height="1" rx="2" fill="#9cc3ee"/>
+<path d="M391.17 330.5V325.5M387.17 330.5H395.17M387.17 325.5H395.17" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="391.17" y="320.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">0</text>
+<rect x="407.17" y="303" width="24" height="25" rx="2" fill="#2a78d6"/>
+<path d="M419.17 326.75V279.25M415.17 326.75H423.17M415.17 279.25H423.17" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="419.17" y="274.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+20</text>
+<rect x="435.17" y="273" width="24" height="55" rx="2" fill="#16427c"/>
+<path d="M447.17 301.75V244.25M443.17 301.75H451.17M443.17 244.25H451.17" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="447.17" y="239.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+44</text>
+<text x="419.17" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s4</text>
+<text x="419.17" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">null-move pruning</text>
+<rect x="510.83" y="325.5" width="24" height="2" rx="2" fill="#9cc3ee"/>
+<path d="M522.83 329.25V321.75M518.83 329.25H526.83M518.83 321.75H526.83" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="522.83" y="316.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+2</text>
+<rect x="538.83" y="293" width="24" height="35" rx="2" fill="#2a78d6"/>
+<path d="M550.83 309.25V276.75M546.83 309.25H554.83M546.83 276.75H554.83" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="550.83" y="271.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+28</text>
+<rect x="566.83" y="299.25" width="24" height="29" rx="2" fill="#16427c"/>
+<path d="M578.83 316.75V281.75M574.83 316.75H582.83M574.83 281.75H582.83" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="578.83" y="276.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+23</text>
+<text x="550.83" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s5</text>
+<text x="550.83" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">late move reductions</text>
+<rect x="642.5" y="328" width="24" height="1" rx="2" fill="#9cc3ee"/>
+<path d="M654.5 343V315.5M650.5 343H658.5M650.5 315.5H658.5" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="654.5" y="357" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-1</text>
+<rect x="670.5" y="263" width="24" height="65" rx="2" fill="#2a78d6"/>
+<path d="M682.5 280.5V245.5M678.5 280.5H686.5M678.5 245.5H686.5" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="682.5" y="240.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+52</text>
+<rect x="698.5" y="171.75" width="24" height="156" rx="2" fill="#16427c"/>
+<path d="M710.5 190.5V153M706.5 190.5H714.5M706.5 153H714.5" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="710.5" y="148" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+125</text>
+<text x="682.5" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s6</text>
+<text x="682.5" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">transposition table 64 KB</text>
+<rect x="774.17" y="328" width="24" height="45" rx="2" fill="#d7d5ce"/>
+<path d="M786.17 401.75V344.25M782.17 401.75H790.17M782.17 344.25H790.17" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="786.17" y="415.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-36</text>
+<rect x="802.17" y="328" width="24" height="12" rx="2" fill="#aeaca5"/>
+<path d="M814.17 368V313M810.17 368H818.17M810.17 313H818.17" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="814.17" y="382" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-10</text>
+<rect x="830.17" y="328" width="24" height="1" rx="2" fill="#7d7b75"/>
+<path d="M842.17 360.5V298M838.17 360.5H846.17M838.17 298H846.17" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="842.17" y="374.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-1</text>
+<text x="814.17" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">PVS</text>
+<text x="814.17" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">principal variation search</text>
+<text x="814.17" y="478" font-size="10" font-weight="700" fill="#e34948" text-anchor="middle">tried, not accepted</text>
+<rect x="110" y="110" width="12" height="12" rx="2" fill="#9cc3ee"/>
+<text x="128" y="120" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">1,000 nodes</text>
+<rect x="240" y="110" width="12" height="12" rx="2" fill="#2a78d6"/>
+<text x="258" y="120" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">10,000 nodes</text>
+<rect x="370" y="110" width="12" height="12" rx="2" fill="#16427c"/>
+<text x="388" y="120" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">50,000 nodes</text>
+<text x="24" y="526" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
+</svg>

@@ -27,6 +27,25 @@
     "lossFinal": "final",
     "trainedAt": "trained",
     "data": "data",
+    "ladderTitle": "Wyrdmate · Strength by node limit",
+    "ladderSub": "Elo of each level relative to the same search at 1,600 nodes (round-robin, 300 games per pair)",
+    "ladderNote": "Both curves are zero at 1,600 nodes, so they show the shape of each search, not that the two are equally strong there. 100 nodes (floor) is left out.",
+    "ladderX": "Node limit per move (log scale)",
+    "ladderY": "Elo relative to 1,600 nodes",
+    "ladderS1": "first search (s1)",
+    "ladderS6": "current search (s6)",
+    "stepsTitle": "Wyrdmate · What each search step added",
+    "stepsSub": "Elo against the previous search version at the same node limit (wyrd-iv on both sides, whiskers = error margin)",
+    "stepsNote": "The steps do not add up: each is measured against the version before it. Nothing was measured at 1,000 nodes for s2, or at 50,000 nodes for s2.",
+    "stepsY": "Elo vs previous version",
+    "stepsRejected": "tried, not accepted",
+    "sfTitle": "Wyrdmate · Placed on the Stockfish scale",
+    "sfSub": "Approximate UCI_Elo of a strength-limited Stockfish that scores the same against our levels",
+    "sfNote": "Rough: straight-line between Stockfish levels, UCI_Elo is calibrated at a longer time control and is compressed here. Not a standard Elo. Whiskers = about +/-90.",
+    "sfBelow": "below 1320 (lowest Stockfish setting)",
+    "sfX": "Stockfish UCI_Elo with the same results",
+    "sfRef": "Stockfish levels used as rulers",
+    "nodes": "nodes",
     "generated": "Generated from docs/progress/data.json by scripts/make-progress-svg.ps1"
   },
   "matches": [
@@ -344,5 +363,35 @@
         [200,0.001057]
       ]
     }
-  ]
+  ],
+  "ladder": [
+    {"nodes": 200,   "s1": [-269, 19], "s6": [-282, 24]},
+    {"nodes": 400,   "s1": [-179, 17], "s6": [-189, 21]},
+    {"nodes": 800,   "s1": [-88, 16],  "s6": [-89, 18]},
+    {"nodes": 1600,  "s1": [0, 15],    "s6": [0, 17]},
+    {"nodes": 3200,  "s1": [21, 15],   "s6": [58, 16]},
+    {"nodes": 6400,  "s1": [89, 14],   "s6": [159, 18]},
+    {"nodes": 12800, "s1": [170, 16],  "s6": [241, 19]},
+    {"nodes": 25600, "s1": [270, 17],  "s6": [325, 21]},
+    {"nodes": 51200, "s1": [371, 18],  "s6": [515, 25]}
+  ],
+  "steps": [
+    {"id": "s2", "what": "repeat detection",            "rejected": false, "n1k": null,       "n10k": [44, 11],  "n50k": null},
+    {"id": "s3", "what": "killer + history ordering",   "rejected": false, "n1k": [16, 24],   "n10k": [79, 25],  "n50k": [92, 24]},
+    {"id": "s4", "what": "null-move pruning",           "rejected": false, "n1k": [0, 2],     "n10k": [20, 19],  "n50k": [44, 23]},
+    {"id": "s5", "what": "late move reductions",        "rejected": false, "n1k": [2, 3],     "n10k": [28, 13],  "n50k": [23, 14]},
+    {"id": "s6", "what": "transposition table 64 KB",   "rejected": false, "n1k": [-1, 11],   "n10k": [52, 14],  "n50k": [125, 15]},
+    {"id": "PVS", "what": "principal variation search", "rejected": true,  "n1k": [-36, 23],  "n10k": [-10, 22], "n50k": [-1, 25]}
+  ],
+  "stockfish": {
+    "err": 90,
+    "rulers": [1320, 1500, 1700],
+    "levels": [
+      {"nodes": 3200,  "s1": null,  "s6": 1310},
+      {"nodes": 6400,  "s1": null,  "s6": 1360},
+      {"nodes": 12800, "s1": null,  "s6": 1485},
+      {"nodes": 25600, "s1": 1395,  "s6": 1515},
+      {"nodes": 51200, "s1": 1415,  "s6": 1530}
+    ]
+  }
 }
