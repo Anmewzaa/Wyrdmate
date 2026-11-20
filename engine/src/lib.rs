@@ -63,6 +63,8 @@ const KILLER_2: i32 = 7_000;
 const HIST_LIMIT: i32 = 16_384;
 const NULL_MIN_DEPTH: i32 = 3;
 const NULL_REDUCTION: i32 = 2;
+const LMR_MIN_DEPTH: i32 = 3;
+const LMR_MIN_INDEX: usize = 2;
 
 pub struct Searcher {
     pub nodes: u64,
@@ -245,12 +247,26 @@ impl Searcher {
         moves.sort_by_cached_key(|&m| -self.move_score(board, m, ply)); // each score computed once
         let mut best = -INF;
         let mut tried_quiet: Vec<Move> = Vec::new();
-        for mv in moves {
+        let in_check = !board.checkers().is_empty();
+        for (i, mv) in moves.into_iter().enumerate() {
             let quiet = !is_capture(board, mv) && mv.promotion.is_none();
             let mut next = board.clone();
             next.play_unchecked(mv);
             let nacc = self.child_acc(acc, board, mv);
-            let score = -self.negamax(&next, &nacc, depth - 1, -beta, -alpha, ply + 1);
+            // Late move reductions: ordinary quiet moves far down the list are probably bad, so
+            // search them shallower first and only redo the full depth if they beat alpha.
+            let is_killer = self.killers.get(ply as usize).is_some_and(|k| k[0] == Some(mv) || k[1] == Some(mv));
+            let reduce = depth >= LMR_MIN_DEPTH && i >= LMR_MIN_INDEX && quiet && !is_killer && !in_check && next.checkers().is_empty();
+            let mut score;
+            if reduce {
+                let r = 1 + i32::from(i >= 5 && depth >= 5);
+                score = -self.negamax(&next, &nacc, depth - 1 - r, -beta, -alpha, ply + 1);
+                if !self.stopped && score > alpha {
+                    score = -self.negamax(&next, &nacc, depth - 1, -beta, -alpha, ply + 1);
+                }
+            } else {
+                score = -self.negamax(&next, &nacc, depth - 1, -beta, -alpha, ply + 1);
+            }
             if self.stopped {
                 return 0;
             }

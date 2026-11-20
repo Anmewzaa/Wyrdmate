@@ -59,7 +59,7 @@
 | 1 | จัดลำดับท่า (killer, history, ท่าดีสุดรอบก่อน) | +16 KB (ตาราง history) | **ทำแล้ว (s3)**: +79 ± 25 Elo ที่ 10k node, +92 ± 24 ที่ 50k (EVALUATION.md ข้อ 10) |
 | 2 | PVS + aspiration window | ไม่เพิ่ม | PVS ลองแล้ว **ไม่รับ** (−3 ± 22 ที่ 10k node) ลองใหม่หลังมี TT |
 | 3 | null-move pruning | ไม่เพิ่ม | **ทำแล้ว (s4)**: +20 ± 19 ที่ 10k, +44 ± 23 ที่ 50k |
-| 4 | late move reduction (LMR) | ไม่เพิ่ม | สูง |
+| 4 | late move reduction (LMR) | ไม่เพิ่ม | **ทำแล้ว (s5)**: +28 ± 13 ที่ 10k, +23 ± 14 ที่ 50k (ต่อ node ช้าลง ~13%) |
 | 5 | transposition table | เพิ่ม (ต้องกำหนดงบ RAM ESP32) | สูง |
 | 6 | check extension, futility, delta pruning | ไม่เพิ่ม | เล็ก–ปานกลาง |
 
