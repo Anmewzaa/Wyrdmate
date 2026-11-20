@@ -5,7 +5,8 @@
 #   powershell -File scripts/ab.ps1 -Net nets/wyrd-v.bin -OldNet nets/wyrd-iv.bin   # net vs net (same engine build)
 #
 # -New / -Old: a git ref (built once from a temporary worktree and cached in tools/engines),
-# or WORKTREE for the uncommitted code in this checkout (always rebuilt).
+# WORKTREE for the uncommitted code in this checkout (always rebuilt), or the path of a .exe
+# (e.g. a snapshot of an uncommitted baseline copied to tools/engines/).
 # Needs tools/fastchess (see CLAUDE.md) and the opening book data/book.epd (made if missing).
 # The verdict line applies the project rule: accept only if the lower bound of the Elo range is above 0.
 param(
@@ -27,6 +28,7 @@ if (-not $OldNet) { $OldNet = $Net }
 New-Item -ItemType Directory -Force "$root\tools\engines", "$root\logs" | Out-Null
 
 function Get-Engine([string]$ref) {
+    if ($ref -like '*.exe' -and (Test-Path $ref)) { return (Resolve-Path $ref).Path }   # a ready-made binary
     Push-Location $root
     try {
         if ($ref -eq 'WORKTREE') {

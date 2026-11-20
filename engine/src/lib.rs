@@ -57,6 +57,13 @@ fn order_key(board: &Board, mv: Move) -> i32 {
     k
 }
 
+const MAX_PLY: usize = 128;
+const KILLER_1: i32 = 8_000;
+const KILLER_2: i32 = 7_000;
+const HIST_LIMIT: i32 = 16_384;
+const NULL_MIN_DEPTH: i32 = 3;
+const NULL_REDUCTION: i32 = 2;
+
 pub struct Searcher {
     pub nodes: u64,
     pub node_limit: u64,
@@ -65,11 +72,17 @@ pub struct Searcher {
     /// Hashes of the positions played so far (game history, then the search path).
     /// Used to score repeated positions as draws.
     hist: Vec<u64>,
+    /// Two quiet moves per ply that recently caused a beta cutoff.
+    killers: [[Option<Move>; 2]; MAX_PLY],
+    /// Cutoff statistics for quiet moves, indexed [side][from][to] (16 KB).
+    history: [[[i16; 64]; 64]; 2],
+    /// Set just before searching a null-move child so that child does not try a null move too.
+    after_null: bool,
 }
 
 impl Searcher {
     pub fn new(node_limit: u64) -> Self {
-        Self { nodes: 0, node_limit, stopped: false, net: None, hist: Vec::new() }
+        Self { nodes: 0, node_limit, stopped: false, net: None, hist: Vec::new(), killers: [[None; 2]; MAX_PLY], history: [[[0; 64]; 64]; 2], after_null: false }
     }
 
     /// Positions that occurred earlier in the game, as `Board::hash()` values, oldest
@@ -78,6 +91,46 @@ impl Searcher {
     pub fn with_history(mut self, hashes: Vec<u64>) -> Self {
         self.hist = hashes;
         self
+    }
+
+    /// Move ordering score: captures/promotions by the static key, then killers, then history.
+    fn move_score(&self, board: &Board, mv: Move, ply: i32) -> i32 {
+        let k = order_key(board, mv);
+        if k > 0 {
+            return k;
+        }
+        if let Some(slot) = self.killers.get(ply as usize) {
+            if slot[0] == Some(mv) {
+                return KILLER_1;
+            }
+            if slot[1] == Some(mv) {
+                return KILLER_2;
+            }
+        }
+        i32::from(self.history[board.side_to_move() as usize][mv.from as usize][mv.to as usize]) / 8
+    }
+
+    fn bump_history(&mut self, side: Color, mv: Move, bonus: i32) {
+        let h = &mut self.history[side as usize][mv.from as usize][mv.to as usize];
+        let v = i32::from(*h);
+        *h = (v + bonus - v * bonus.abs() / HIST_LIMIT) as i16; // gravity keeps |h| < HIST_LIMIT
+    }
+
+    /// A quiet move caused a cutoff: remember it as a killer and reward it; penalise the quiet
+    /// moves tried before it.
+    fn reward_cutoff(&mut self, board: &Board, mv: Move, tried: &[Move], depth: i32, ply: i32) {
+        if let Some(slot) = self.killers.get_mut(ply as usize) {
+            if slot[0] != Some(mv) {
+                slot[1] = slot[0];
+                slot[0] = Some(mv);
+            }
+        }
+        let bonus = (depth * depth).min(400);
+        let side = board.side_to_move();
+        self.bump_history(side, mv, bonus);
+        for &m in tried {
+            self.bump_history(side, m, -bonus);
+        }
     }
 
     /// True if `board` already occurred earlier in `hist` (same side to move, within the
@@ -169,10 +222,31 @@ impl Searcher {
         if self.stopped {
             return 0;
         }
+        // Null-move pruning: if passing the move still leaves us at or above beta after a
+        // reduced search, a real move would too. Not in check, not twice in a row, and only
+        // with some piece besides pawns and the king (otherwise zugzwang makes it unsound).
+        let allow_null = !std::mem::take(&mut self.after_null);
+        let stm = board.side_to_move();
+        let has_pieces = !(board.colors(stm) & !(board.pieces(Piece::Pawn) | board.pieces(Piece::King))).is_empty();
+        if allow_null && depth >= NULL_MIN_DEPTH && has_pieces && beta.abs() < MATE - 1_000 {
+            if let Some(null_board) = board.null_move() {
+                self.after_null = true;
+                let score = -self.negamax(&null_board, acc, depth - 1 - NULL_REDUCTION, -beta, -beta + 1, ply + 1);
+                self.after_null = false;
+                if self.stopped {
+                    return 0;
+                }
+                if score >= beta {
+                    return beta;
+                }
+            }
+        }
         let mut moves = legal_moves(board);
-        moves.sort_by_key(|&m| -order_key(board, m));
+        moves.sort_by_cached_key(|&m| -self.move_score(board, m, ply)); // each score computed once
         let mut best = -INF;
+        let mut tried_quiet: Vec<Move> = Vec::new();
         for mv in moves {
+            let quiet = !is_capture(board, mv) && mv.promotion.is_none();
             let mut next = board.clone();
             next.play_unchecked(mv);
             let nacc = self.child_acc(acc, board, mv);
@@ -183,7 +257,13 @@ impl Searcher {
             best = best.max(score);
             alpha = alpha.max(score);
             if alpha >= beta {
+                if quiet {
+                    self.reward_cutoff(board, mv, &tried_quiet, depth, ply);
+                }
                 break;
+            }
+            if quiet {
+                tried_quiet.push(mv);
             }
         }
         best
@@ -198,9 +278,11 @@ impl Searcher {
         }
         let root_acc = self.net.as_ref().map(|n| n.new_accumulator(board));
         self.hist.push(board.hash()); // root; popped before returning
+        self.killers = [[None; 2]; MAX_PLY];
+        self.history = [[[0; 64]; 64]; 2];
         let mut best = (root[0], 0);
+        root.sort_by_key(|&m| -order_key(board, m));
         for depth in 1..=max_depth {
-            root.sort_by_key(|&m| -order_key(board, m));
             let mut iter_best: Option<(Move, i32)> = None;
             let mut alpha = -INF;
             for &mv in &root {
@@ -221,9 +303,10 @@ impl Searcher {
             }
             if let Some(b) = iter_best {
                 best = b;
-                // put the best move first for the next iteration
+                // Best move first for the next iteration; the others keep their order.
+                // (The old code re-sorted by the static key every iteration, which undid this.)
                 if let Some(i) = root.iter().position(|&m| m == b.0) {
-                    root.swap(0, i);
+                    root[..=i].rotate_right(1);
                 }
             }
         }
@@ -271,6 +354,23 @@ mod tests {
 
         let (_, blind) = Searcher::new(100_000).search(&board, 3).unwrap();
         assert!(blind < -300, "without history black should see a lost position, got {blind}");
+    }
+
+    #[test]
+    fn history_scores_stay_bounded() {
+        let board = Board::default();
+        let mv = legal_moves(&board)[0];
+        let mut s = Searcher::new(1);
+        for _ in 0..100_000 {
+            s.bump_history(Color::White, mv, 400);
+        }
+        let top = s.history[Color::White as usize][mv.from as usize][mv.to as usize];
+        assert!(i32::from(top) <= HIST_LIMIT && top > 0, "top = {top}"); // converges towards HIST_LIMIT
+        for _ in 0..100_000 {
+            s.bump_history(Color::White, mv, -400);
+        }
+        let bottom = s.history[Color::White as usize][mv.from as usize][mv.to as usize];
+        assert!(i32::from(bottom) >= -HIST_LIMIT && bottom < 0, "bottom = {bottom}");
     }
 
     #[test]
