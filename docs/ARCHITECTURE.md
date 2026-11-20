@@ -34,7 +34,7 @@ firmware ◀──(ฝังไฟล์ net)── nets/ ◀── checkpoints/
 
 ## 4. การค้นหา
 
-- อัลกอริทึม: negamax พร้อม alpha-beta, quiescence search และ iterative deepening
+- อัลกอริทึม (อธิบายละเอียดที่ [SEARCH.md](SEARCH.md)): negamax พร้อม alpha-beta, quiescence search และ iterative deepening
 - ขีดจำกัด: `Searcher::new(node_limit)` เมื่อนับ node ถึงขีดจำกัด การค้นหาจะหยุดและคืนผลของความลึกล่าสุดที่เสร็จสมบูรณ์
 - ค่าตั้งต้นของ UCI option `Nodes` คือ 20,000 และสั่ง `go nodes N` เพื่อเปลี่ยนเฉพาะตาเดียวได้
 - คะแนนเป็นเซนติเบี้ย (centipawn) จากมุมมองฝ่ายที่ถึงตา รุกฆาตใช้ค่า `MATE = 30000`

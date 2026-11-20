@@ -6,6 +6,7 @@
 
 | ต้องการ | อ่าน |
 |---|---|
+| เข้าใจวิธีที่ engine เลือกตาเดิน | [SEARCH.md](SEARCH.md) |
 | เข้าใจภาพรวมและการออกแบบระบบ | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | รู้ว่าแต่ละไฟล์ทำหน้าที่อะไร | [STRUCTURE.md](STRUCTURE.md) |
 | เทรน net ใหม่ | [TRAINING.md](TRAINING.md) |
@@ -20,6 +21,7 @@
 | ไฟล์ | เนื้อหา | ผู้อ่านหลัก |
 |---|---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | องค์ประกอบของระบบ การไหลของข้อมูล โครงสร้างและรูปแบบไฟล์ net | ผู้พัฒนา |
+| [SEARCH.md](SEARCH.md) | กระบวนการค้นหา: negamax, alpha-beta, quiescence, iterative deepening | ผู้พัฒนา |
 | [STRUCTURE.md](STRUCTURE.md) | คำอธิบายรายไฟล์และรายโฟลเดอร์ | ผู้เริ่มต้น |
 | [TRAINING.md](TRAINING.md) | ขั้นตอนสร้าง net ตั้งแต่ข้อมูลจนถึงไฟล์ผลลัพธ์ | ผู้เทรน |
 | [EVALUATION.md](EVALUATION.md) | วิธีแข่ง A/B เกณฑ์การรับ net และการบันทึกผล | ผู้เทรน |
