@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wyrdmate PGN viewer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<style>
+  :root { --light:#f0d9b5; --dark:#b58863; --bg:#1e1e1e; --fg:#e8e8e8; --muted:#9a9a9a; --accent:#6aa84f; }
+  body { margin:0; font:14px system-ui,sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:980px; margin:0 auto; padding:16px; display:flex; flex-wrap:wrap; gap:20px; }
+  #board { display:grid; grid-template-columns:repeat(8,1fr); width:min(92vw,480px); aspect-ratio:1; border:2px solid #444; }
+  .sq { display:flex; align-items:center; justify-content:center; font-size:min(8vw,46px); line-height:1; user-select:none; }
+  .sq.l { background:var(--light); } .sq.d { background:var(--dark); }
+  .sq.hl { box-shadow:inset 0 0 0 100vmax rgba(106,168,79,.45); }
+  .w { color:#fff; text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000; } .b { color:#111; }
+  aside { flex:1; min-width:260px; }
+  select, button, input[type=file] { background:#2d2d2d; color:var(--fg); border:1px solid #555; border-radius:4px; padding:6px 10px; font:inherit; }
+  button { cursor:pointer; } button:hover { border-color:var(--accent); }
+  .row { display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap; }
+  #players { font-size:16px; font-weight:600; } #result { color:var(--muted); }
+  #moves { height:220px; overflow:auto; background:#262626; padding:8px; border-radius:4px; line-height:1.7; }
+  #moves span { padding:1px 4px; border-radius:3px; cursor:pointer; } #moves span.cur { background:var(--accent); color:#000; }
+  #moves .n { color:var(--muted); cursor:default; padding-right:0; }
+  input[type=range] { width:100%; } h1 { font-size:16px; margin:0 0 8px; }
+</style>
+</head>
+<body>
+<main>
+  <div id="board"></div>
+  <aside>
+    <h1>Wyrdmate PGN viewer</h1>
+    <div class="row">
+      <select id="games" style="max-width:100%"></select>
+    </div>
+    <div class="row">
+      <input type="file" id="file" accept=".pgn">
+      <button id="reload" title="Re-read the PGN (new games appear as fastchess finishes them)">Reload</button>
+      <label><input type="checkbox" id="live"> follow latest game</label>
+    </div>
+    <div id="players"></div><div id="result"></div>
+    <div class="row">
+      <button id="first">|&lt;</button><button id="prev">&lt;</button>
+      <button id="play">Play</button>
+      <button id="next">&gt;</button><button id="last">&gt;|</button>
+      <select id="speed"><option value="1500">slow</option><option value="700" selected>normal</option><option value="250">fast</option></select>
+    </div>
+    <input type="range" id="slider" min="0" value="0">
+    <div id="moves"></div>
+  </aside>
+</main>
+<script>
+const PIECE = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛', k:'♚' };
+const el = id => document.getElementById(id);
+let games = [], cur = null, positions = [], sans = [], ply = 0, timer = null, source = 'levels.pgn';
+
+function splitPgn(text) {
+  return text.replace(/\r/g, '').split(/\n\s*\n(?=\[Event )/).map(s => s.trim()).filter(Boolean);
+}
+function tag(pgn, name) { const m = pgn.match(new RegExp('\\[' + name + ' "([^"]*)"\\]')); return m ? m[1] : '?'; }
+
+function loadText(text, keepIndex) {
+  games = splitPgn(text);
+  const prev = el('games').selectedIndex;
+  el('games').innerHTML = games.map((g, i) =>
+    `<option value="${i}">#${i + 1} ${tag(g,'White')} vs ${tag(g,'Black')} (${tag(g,'Result')})</option>`).join('');
+  if (!games.length) return;
+  const idx = el('live').checked ? games.length - 1 : (keepIndex && prev >= 0 && prev < games.length ? prev : 0);
+  el('games').selectedIndex = idx;
+  select(idx);
+}
+
+function select(i) {
+  stop();
+  const pgn = games[i];
+  const c = new Chess();
+  const fenTag = pgn.match(/\[FEN "([^"]+)"\]/);
+  if (!c.load_pgn(pgn)) { el('players').textContent = 'Could not parse game'; return; }
+  const moves = c.history({ verbose: true });
+  const g = new Chess(fenTag ? fenTag[1] : undefined);
+  positions = [{ fen: g.fen(), move: null }];
+  sans = [];
+  for (const m of moves) { g.move(m.san); positions.push({ fen: g.fen(), move: m }); sans.push(m.san); }
+  el('players').textContent = `${tag(pgn,'White')} (white) vs ${tag(pgn,'Black')} (black)`;
+  el('result').textContent = `${tag(pgn,'Result')} · ${tag(pgn,'Termination')} · ${moves.length} plies`;
+  el('slider').max = moves.length;
+  const startWhite = (fenTag ? fenTag[1].split(' ')[1] : 'w') === 'w';
+  el('moves').innerHTML = sans.map((s, k) => {
+    const white = startWhite ? k % 2 === 0 : k % 2 === 1;
+    const num = Math.floor((k + (startWhite ? 0 : 1)) / 2) + 1;
+    return (white ? `<span class="n">${num}.</span>` : '') + `<span data-p="${k + 1}">${s}</span> `;
+  }).join('');
+  el('moves').onclick = e => { if (e.target.dataset.p) { stop(); show(+e.target.dataset.p); } };
+  show(0);
+}
+
+function show(n) {
+  ply = Math.max(0, Math.min(n, positions.length - 1));
+  const { fen, move } = positions[ply];
+  const rows = fen.split(' ')[0].split('/');
+  let html = '';
+  for (let r = 0; r < 8; r++) {
+    let f = 0;
+    for (const ch of rows[r]) {
+      if (/\d/.test(ch)) { for (let k = 0; k < +ch; k++, f++) html += sq(r, f, ''); }
+      else { html += sq(r, f, ch); f++; }
+    }
+  }
+  el('board').innerHTML = html;
+  if (move) for (const s of [move.from, move.to]) {
+    const f = s.charCodeAt(0) - 97, r = 8 - +s[1];
+    el('board').children[r * 8 + f].classList.add('hl');
+  }
+  el('slider').value = ply;
+  document.querySelectorAll('#moves span').forEach(s => s.classList.toggle('cur', +s.dataset.p === ply));
+  const c = document.querySelector('#moves .cur'); if (c) c.scrollIntoView({ block: 'nearest' });
+}
+function sq(r, f, ch) {
+  const light = (r + f) % 2 === 0;
+  const white = ch && ch === ch.toUpperCase();
+  return `<div class="sq ${light ? 'l' : 'd'}"><span class="${white ? 'w' : 'b'}">${ch ? PIECE[ch.toLowerCase()] : ''}</span></div>`;
+}
+
+function stop() { if (timer) clearInterval(timer); timer = null; el('play').textContent = 'Play'; }
+function play() {
+  if (timer) return stop();
+  if (ply >= positions.length - 1) show(0);
+  el('play').textContent = 'Pause';
+  timer = setInterval(() => { if (ply >= positions.length - 1) stop(); else show(ply + 1); }, +el('speed').value);
+}
+
+async function fetchPgn(keep) {
+  try {
+    const r = await fetch(source + '?t=' + Date.now());
+    if (!r.ok) throw new Error(r.status);
+    loadText(await r.text(), keep);
+  } catch (e) { el('players').textContent = 'Could not fetch ' + source + ' — use the file picker.'; }
+}
+
+el('games').onchange = e => select(+e.target.value);
+el('first').onclick = () => { stop(); show(0); };
+el('prev').onclick = () => { stop(); show(ply - 1); };
+el('next').onclick = () => { stop(); show(ply + 1); };
+el('last').onclick = () => { stop(); show(positions.length - 1); };
+el('play').onclick = play;
+el('speed').onchange = () => { if (timer) { stop(); play(); } };
+el('slider').oninput = e => { stop(); show(+e.target.value); };
+el('reload').onclick = () => fetchPgn(true);
+el('file').onchange = async e => { const f = e.target.files[0]; if (f) loadText(await f.text(), false); };
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') el('next').click(); else if (e.key === 'ArrowLeft') el('prev').click();
+  else if (e.key === ' ') { e.preventDefault(); play(); }
+});
+const q = new URLSearchParams(location.search).get('pgn'); if (q) source = q;
+fetchPgn(false);
+setInterval(() => { if (el('live').checked) fetchPgn(false); }, 15000);
+show(0);
+</script>
+</body>
+</html>

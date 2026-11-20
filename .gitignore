@@ -6,3 +6,4 @@ data/
 *.binpack
 logs/
 config.json
+tools/
