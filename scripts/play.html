@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Play Wyrdmate</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<style>
+  :root { --light:#f0d9b5; --dark:#b58863; --bg:#1e1e1e; --fg:#e8e8e8; --muted:#9a9a9a; --accent:#6aa84f; }
+  body { margin:0; font:14px system-ui,sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:900px; margin:0 auto; padding:16px; display:flex; flex-wrap:wrap; gap:20px; }
+  #board { display:grid; grid-template-columns:repeat(8,1fr); width:min(92vw,480px); aspect-ratio:1; border:2px solid #444; }
+  .sq { display:flex; align-items:center; justify-content:center; font-size:min(8vw,46px); line-height:1; user-select:none; cursor:pointer; }
+  .sq.l { background:var(--light); } .sq.d { background:var(--dark); }
+  .sq.sel { box-shadow:inset 0 0 0 100vmax rgba(106,168,79,.55); }
+  .sq.last { box-shadow:inset 0 0 0 100vmax rgba(220,200,60,.4); }
+  .sq.dot::after { content:''; width:26%; height:26%; border-radius:50%; background:rgba(0,0,0,.3); position:absolute; }
+  .sq { position:relative; }
+  .w { color:#fff; text-shadow:0 0 2px #000,0 0 2px #000,0 0 1px #000; } .b { color:#111; }
+  aside { flex:1; min-width:240px; }
+  select, button { background:#2d2d2d; color:var(--fg); border:1px solid #555; border-radius:4px; padding:6px 10px; font:inherit; }
+  button { cursor:pointer; } button:hover { border-color:var(--accent); }
+  .row { display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap:wrap; }
+  h1 { font-size:16px; margin:0 0 8px; } #status { font-size:16px; font-weight:600; min-height:24px; }
+  #moves { height:200px; overflow:auto; background:#262626; padding:8px; border-radius:4px; line-height:1.7; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <div id="board"></div>
+  <aside>
+    <h1>Play Wyrdmate</h1>
+    <div class="row">
+      <label>Level <select id="level"></select></label>
+    </div>
+    <div class="row">
+      <label>You play <select id="side"><option value="w">White</option><option value="b">Black</option></select></label>
+      <button id="new">New game</button><button id="undo">Take back</button>
+    </div>
+    <div id="status"></div>
+    <div class="muted" id="eval"></div>
+    <div id="moves"></div>
+    <p class="muted">Click a piece, then a square. Pawns promote to a queen.
+      Levels are relative Elo measured only between Wyrdmate's own node limits, not against outside engines.</p>
+  </aside>
+</main>
+<script>
+// Relative Elo vs 1,600 nodes (docs/EVALUATION.md section 8)
+const LEVELS = [[100,-642],[200,-269],[400,-179],[800,-88],[1600,0],[3200,21],[6400,89],[12800,170],[25600,270],[51200,371]];
+const PIECE = { p:'♟', n:'♞', b:'♝', r:'♜', q:'♛', k:'♚' };
+const el = id => document.getElementById(id);
+let game = new Chess(), me = 'w', selected = null, last = null, thinking = false, token = 0;
+
+el('level').innerHTML = LEVELS.map(([n, e], i) =>
+  `<option value="${n}" ${n === 1600 ? 'selected' : ''}>${n} nodes (${e > 0 ? '+' : ''}${e})</option>`).join('');
+
+function render() {
+  const flip = me === 'b';
+  let html = '';
+  const targets = selected ? game.moves({ square: selected, verbose: true }).map(m => m.to) : [];
+  for (let r = 0; r < 8; r++) for (let f = 0; f < 8; f++) {
+    const rank = flip ? r + 1 : 8 - r, file = flip ? 7 - f : f;
+    const s = 'abcdefgh'[file] + rank, p = game.get(s);
+    const cls = ['sq', (r + f) % 2 === 0 ? 'l' : 'd'];
+    if (s === selected) cls.push('sel');
+    if (last && (s === last.from || s === last.to)) cls.push('last');
+    if (targets.includes(s)) cls.push('dot');
+    html += `<div class="${cls.join(' ')}" data-s="${s}"><span class="${p && p.color === 'w' ? 'w' : 'b'}">${p ? PIECE[p.type] : ''}</span></div>`;
+  }
+  el('board').innerHTML = html;
+  const h = game.history();
+  el('moves').innerHTML = h.map((m, i) => (i % 2 === 0 ? `<span class="muted">${i / 2 + 1}.</span> ` : '') + m + ' ').join('');
+  el('moves').scrollTop = el('moves').scrollHeight;
+  let st;
+  if (game.in_checkmate()) st = (game.turn() === me ? 'Checkmate — Wyrdmate wins' : 'Checkmate — you win!');
+  else if (game.in_draw() || game.in_stalemate()) st = 'Draw';
+  else if (thinking) st = 'Wyrdmate is thinking…';
+  else st = (game.turn() === me ? 'Your move' : '') + (game.in_check() ? ' (check)' : '');
+  el('status').textContent = st;
+}
+
+async function engineMove() {
+  if (game.game_over() || game.turn() === me) return;
+  const my = ++token;
+  thinking = true; render();
+  try {
+    const r = await fetch(`/move?fen=${encodeURIComponent(game.fen())}&nodes=${el('level').value}`);
+    const j = await r.json();
+    if (my !== token) return;            // game was reset or taken back meanwhile
+    if (!j.move) throw new Error(j.error || 'no move');
+    const m = game.move({ from: j.move.slice(0, 2), to: j.move.slice(2, 4), promotion: j.move[4] });
+    if (!m) throw new Error('illegal engine move ' + j.move);
+    last = m;
+    el('eval').textContent = j.score == null ? '' : `Engine eval: ${(j.score / 100).toFixed(2)} (its side to move before the move)`;
+  } catch (e) { el('status').textContent = 'Engine error: ' + e.message; }
+  thinking = false; render();
+}
+
+el('board').onclick = e => {
+  const sq = e.target.closest('.sq'); if (!sq || thinking || game.game_over() || game.turn() !== me) return;
+  const s = sq.dataset.s, p = game.get(s);
+  if (selected) {
+    const m = game.move({ from: selected, to: s, promotion: 'q' });
+    if (m) { last = m; selected = null; render(); engineMove(); return; }
+  }
+  selected = p && p.color === me ? s : null; render();
+};
+function newGame() {
+  token++; thinking = false; game = new Chess(); me = el('side').value; selected = null; last = null; el('eval').textContent = '';
+  render(); engineMove();
+}
+el('new').onclick = newGame; el('side').onchange = newGame;
+el('undo').onclick = () => {
+  token++; thinking = false;
+  game.undo(); if (game.turn() !== me) game.undo();
+  selected = null; last = null; render();
+};
+newGame();
+</script>
+</body>
+</html>
