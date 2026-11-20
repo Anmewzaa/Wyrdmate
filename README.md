@@ -86,6 +86,12 @@ go
 
 The engine answers `bestmove ...`. `go nodes N` overrides the budget for one move.
 
+### Play it in a browser
+
+- **Hosted:** <https://anmewzaa.github.io/Wyrdmate/> runs the engine in your browser as WebAssembly (you vs engine, or engine vs engine, any net, any level). Nothing is sent to a server.
+- **Locally:** `cargo build --release -p wyrdmate-engine`, then `python scripts/play.py` and open <http://localhost:8001/>.
+- The levels in the menu are node limits with a relative Elo measured only between Wyrdmate's own levels ([EVALUATION.md](docs/EVALUATION.md), section 8), not against outside engines.
+
 ## Repository layout
 
 | Path | Contents |
@@ -96,7 +102,8 @@ The engine answers `bestmove ...`. `go nodes N` overrides the budget for one mov
 | `firmware/` | `no_std` ESP32 inference. **Skeleton only**, built separately |
 | `nets/` | Accepted nets (`wyrd-i` to `wyrd-iv`) and their [records](nets/RECORDS.md) |
 | `docs/` | [Training guide](docs/TRAINING.md), [file-by-file tour](docs/STRUCTURE.md), [decisions](docs/decisions.md), progress data |
-| `scripts/` | Generates the progress charts |
+| `web/` | The engine as WebAssembly plus the build for the GitHub Pages demo ([web/README.md](web/README.md)). Not a workspace member |
+| `scripts/` | Progress charts, the browser play page (`play.py`/`play.html`), a PGN game viewer |
 
 ## Build it from scratch
 
@@ -132,7 +139,9 @@ fastchess -engine ... (see CLAUDE.md for the full match recipe) # 4. match new v
 ## Status
 
 Working: engine, UCI, data generation, GPU training, NNUE inference, A/B matches, four accepted net generations.
-Not done: strength levels measured in Elo, playing against outside engines, and the ESP32 firmware (nothing has run on a board yet).
+Strength levels are measured as relative Elo between our own node limits (100 to 51,200 nodes).
+Measured against Stockfish (strength-limited, used only as a ruler, never as a teacher): the top level (51,200 nodes) plays at roughly Stockfish `UCI_Elo` 1415, a rough figure, not a standard Elo ([EVALUATION.md](docs/EVALUATION.md), section 9).
+Not done: the ESP32 firmware (nothing has run on a board yet).
 
 ## License
 

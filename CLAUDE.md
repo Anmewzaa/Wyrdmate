@@ -19,8 +19,11 @@ Don't re-open them unless the user does. For a file-by-file tour read
 > and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
 > The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).
-> Next: round 5 is optional (gains are shrinking), strength levels measured in Elo,
-> then the `no_std` firmware (nothing has run on a board).
+> Strength levels are measured: relative Elo per node limit, 100 to 51,200 nodes (docs/EVALUATION.md section 8).
+> A browser demo exists (`web/`, WebAssembly, deployed to GitHub Pages by `.github/workflows/pages.yml`).
+> Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher): 51,200 nodes ~ `UCI_Elo` 1415
+> (rough, docs/EVALUATION.md section 9). Next: search improvements (docs/ROADMAP.md), then the `no_std` firmware
+> (nothing has run on a board). Round 5 is optional (gains are shrinking).
 
 ## Start here — read only what your task needs
 
@@ -94,7 +97,11 @@ Don't re-open them unless the user does. For a file-by-file tour read
 - `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).
 - `docs/` — `STRUCTURE.md` (human tour), `TRAINING.md` (how a net is made),
   `decisions.md`, `progress/` (chart data + generated SVGs).
-- `scripts/` — `make-progress-svg.ps1`.
+- `scripts/` — `make-progress-svg.ps1`; `play.py` + `play.html` (local browser play page, engine vs
+  engine too); `pgn-viewer.html` (replays fastchess PGN).
+- `web/` — the engine as WebAssembly (`cdylib`, plain C ABI) + `backend.js` + `build.ps1`/`build.sh` →
+  `web/dist`. Not a workspace member (excluded like `firmware/`); engine code is unchanged by it.
+  `scripts/play.html` is the one page used by both `play.py` and the web build.
 - Git-ignored: `target/`, `checkpoints/`, `data/`, `*.binpack`.
 
 ## Compatibility surfaces (preserve or migrate; don't break silently)
