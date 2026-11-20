@@ -119,8 +119,12 @@ fastchess -engine ... (see CLAUDE.md for the full match recipe) # 4. match new v
 
 ## Documentation
 
+- [docs/README.md](docs/README.md): index of all documentation (Thai)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): system design and the net file format (Thai)
 - [docs/TRAINING.md](docs/TRAINING.md): how the net is made, step by step (Thai)
+- [docs/EVALUATION.md](docs/EVALUATION.md): A/B match procedure and acceptance rule (Thai)
 - [docs/STRUCTURE.md](docs/STRUCTURE.md): what every file does (Thai)
+- [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/GLOSSARY.md](docs/GLOSSARY.md): status, remaining work, terms (Thai)
 - [docs/decisions.md](docs/decisions.md): why the project is shaped this way
 - [nets/RECORDS.md](nets/RECORDS.md): provenance of every net
 - [CLAUDE.md](CLAUDE.md): the contributing guide and hard rules (it is also what coding agents read)

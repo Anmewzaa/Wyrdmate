@@ -1,6 +1,31 @@
-# Decisions
+# Decision log
 
-Append new entries; never rewrite old ones (supersede with a new D-xxx).
+Records the significant design decisions of Wyrdmate and the reasons behind them.
+
+**Rules**
+
+- Append new entries; never rewrite old ones (supersede with a new `D-xxx`).
+- Each entry states the decision first, then the reason or evidence.
+- Where evidence is a hypothesis rather than a tested fact, the entry says so.
+
+**Index**
+
+| ID | Topic |
+|---|---|
+| D-001 | Project name |
+| D-002 | Training approach (bullet, supervised) |
+| D-003 | Repository layout |
+| D-004 | Move generation |
+| D-005 | Development loop |
+| D-006 | Net architecture |
+| D-007 | Which files are committed |
+| D-008 | Process discipline for nets |
+| D-009 | Documentation layout |
+| D-010 | Training recipe |
+
+Related: [ARCHITECTURE.md](ARCHITECTURE.md) (Thai), [`../nets/RECORDS.md`](../nets/RECORDS.md).
+
+---
 
 - **D-001 Name: Wyrdmate** (wyrd = fate + mate). Rejected: Hexmate (existing
   hex-chess, used Lichess account), Spellmate (itch.io game). Crates.io/GitHub/
