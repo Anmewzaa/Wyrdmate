@@ -14,8 +14,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: engine (search s1-s9 + NNUE eval + UCI), datagen and the bullet trainer work.
-> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-vi`, and `wyrd-vii` (current, trained on data from search s10): +34 +/- 25 Elo vs wyrd-vi at 10k nodes
-> and about +29 +/- 18 at 50k (two independent 600-game sets pooled by hand; first set alone +23 +/- 24, lower bound -2). Gains per round: +115, +81, +31, +64, +47, +34; round 8 (`r8a`, 7.6M positions, search s11) was NOT accepted (-9 / -12 Elo at 10k / 50k): the loop has plateaued.
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-vi`, `wyrd-vii`, and `wyrd-viii` (current): +57 +/- 26 Elo vs wyrd-vii at 10k nodes and +80 +/- 25 at 50k (+79 / +63 on a second opening book). Earlier, `wyrd-vii` (data from search s10): +34 +/- 25 Elo vs wyrd-vi at 10k nodes
+> and about +29 +/- 18 at 50k (two independent 600-game sets pooled by hand; first set alone +23 +/- 24, lower bound -2). Gains per round: +115, +81, +31, +64, +47, +34; round 8 with `wdl 0.0` (`r8a`) was NOT accepted (-9 / -12), but the same data trained with `wdl 0.1` gave `wyrd-viii` (+57 / +80); `wdl` 0.2 gave +20 / +38, 0.3 and 0.4 were much worse (D-012).
 > Failed round-7 candidates `r7a` (5,000 nodes/move, s9 data) and `r7b` (20,000 nodes/move) were NOT accepted. Provenance and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
 > The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).
@@ -98,7 +98,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
   `wyrdmate-datagen [games] [nodes] [seed] [out] [net.bin]` (net optional: it plays).
 - `trainer/` — bullet driver: `(768 -> 32)x2 -> 1`, screlu, i16 quantisation
   (QA 255, QB 64, scale 400). Usage: `wyrdmate-trainer <data.data> [superbatches]
-  [batches_per_sb] [batch_size] [wdl=0.5] [net_id=wyrd] [hidden=32]` (use wdl 0.0, D-010).
+  [batches_per_sb] [batch_size] [wdl=0.5] [net_id=wyrd] [hidden=32]` (use wdl 0.1, D-012; was 0.0 under D-010).
   Feature `cuda` enables the GPU backend.
 - `firmware/` — `no_std` ESP32 inference. Not a workspace member. Skeleton only.
 - `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).

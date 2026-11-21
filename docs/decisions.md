@@ -62,3 +62,10 @@ Related: [ARCHITECTURE.md](ARCHITECTURE.md) (Thai), [`../nets/RECORDS.md`](../ne
   document and the others link to it (measurements in `EVALUATION.md`, net structure in
   the new `NET.md`, file tour in `STRUCTURE.md`). Reason: translated terms such as
   "ชั้นซ่อน" for hidden layer made the documents harder to match with outside material.
+- **D-012 Training recipe update (supersedes the `wdl 0.0` part of D-010):** train with `wdl 0.1` from round 8 on
+  (the rest of D-010 stays: 200 superbatches, all rounds' data combined). Evidence, same round-8 data and recipe, vs `wyrd-vii`, 600
+  games each: wdl 0.0 gave -9 +/- 25 (10k nodes) and -12 +/- 24 (50k); wdl 0.1 gave +57 +/- 26 / +80 +/- 25 (and +79 / +63 on a
+  second opening book); wdl 0.2 +20 / +38; wdl 0.3 -60 / -22; wdl 0.4 -114 / -113. A small share of the real game result helps,
+  a large one hurts. Hypothesis (not tested separately): the search scores come from the previous net, so a little real outcome
+  information corrects its bias; the game results are noisy, so more than a little hurts. One training run per value: the
+  run-to-run variation is not known. D-010's reason for wdl 0.0 (most games drawn) no longer holds (about 46% draws now).

@@ -2,7 +2,7 @@
 
 Usage (from the repo root):
     cargo build --release -p wyrdmate-engine
-    python scripts/play.py [port] [net]        # default: 8001 nets/wyrd-vii.bin
+    python scripts/play.py [port] [net]        # default: 8001 nets/wyrd-viii.bin
 then open http://localhost:8001/
 
 Serves scripts/play.html, lists nets at /nets and answers
@@ -19,7 +19,7 @@ import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8001
-NET = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "nets", "wyrd-vii.bin")
+NET = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "nets", "wyrd-viii.bin")
 ENGINE = os.path.join(ROOT, "target", "release", "wyrdmate-engine.exe" if os.name == "nt" else "wyrdmate-engine")
 
 

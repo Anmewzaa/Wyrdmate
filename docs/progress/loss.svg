@@ -1,94 +1,110 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="940" height="898" viewBox="0 0 940 898" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Training loss">
-<rect width="940" height="898" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="952" viewBox="0 0 940 952" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Training loss">
+<rect width="940" height="952" fill="#ffffff"/>
 <text x="24" y="38" font-size="22" font-weight="700" fill="#1f1f1e" text-anchor="start">Wyrdmate · Training loss</text>
 <text x="24" y="58" font-size="13" font-weight="400" fill="#6b6a66" text-anchor="start">How far the net’s guesses are from the stored answers while training (lower = closer).</text>
 <rect x="24" y="72" width="892" height="28" rx="6" fill="#f6f5f0"/>
 <text x="40" y="91" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">Low loss does NOT mean it plays well (wyrd-iii has higher loss than wyrd-ii yet is stronger). Match results decide.</text>
-<line x1="450" y1="120" x2="450" y2="498" stroke="#e1e0d9"/>
-<text x="450" y="514" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0000</text>
-<line x1="545" y1="120" x2="545" y2="498" stroke="#e1e0d9"/>
-<text x="545" y="514" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0005</text>
-<line x1="640" y1="120" x2="640" y2="498" stroke="#e1e0d9"/>
-<text x="640" y="514" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0010</text>
-<line x1="735" y1="120" x2="735" y2="498" stroke="#e1e0d9"/>
-<text x="735" y="514" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0015</text>
-<line x1="830" y1="120" x2="830" y2="498" stroke="#e1e0d9"/>
-<text x="830" y="514" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0020</text>
+<line x1="450" y1="120" x2="450" y2="552" stroke="#e1e0d9"/>
+<text x="450" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0000</text>
+<line x1="504.29" y1="120" x2="504.29" y2="552" stroke="#e1e0d9"/>
+<text x="504.29" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0005</text>
+<line x1="558.57" y1="120" x2="558.57" y2="552" stroke="#e1e0d9"/>
+<text x="558.57" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0010</text>
+<line x1="612.86" y1="120" x2="612.86" y2="552" stroke="#e1e0d9"/>
+<text x="612.86" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0015</text>
+<line x1="667.14" y1="120" x2="667.14" y2="552" stroke="#e1e0d9"/>
+<text x="667.14" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0020</text>
+<line x1="721.43" y1="120" x2="721.43" y2="552" stroke="#e1e0d9"/>
+<text x="721.43" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0025</text>
+<line x1="775.71" y1="120" x2="775.71" y2="552" stroke="#e1e0d9"/>
+<text x="775.71" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0030</text>
+<line x1="830" y1="120" x2="830" y2="552" stroke="#e1e0d9"/>
+<text x="830" y="568" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0.0035</text>
 <rect x="24" y="120" width="892" height="54" fill="#f6f5f0" opacity="0.7"/>
-<rect x="36" y="125" width="12" height="12" rx="3" fill="#2a78d6"/>
-<text x="56" y="136" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-vii</text>
-<text x="36" y="152" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2-7 self-play (round 7 with search s10), 6,597,914 po…</text>
-<text x="36" y="167" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r7c · wdl 0.0 · 200 superbatches x 403 batches · trained 2026-11-21 16:36 · commit 0b31292</text>
-<rect x="450" y="137" width="301.34" height="20" rx="3" fill="#2a78d6"/>
-<text x="759.34" y="152" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001586</text>
-<rect x="36" y="179" width="12" height="12" rx="3" fill="#c43f8c"/>
-<text x="56" y="190" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-vi</text>
-<text x="36" y="206" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2+3+4+5+6 self-play (rounds 5-6 with search s9), 5,56…</text>
-<text x="36" y="221" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r6a · wdl 0.0 · 200 superbatches x 339 batches · trained 2026-11-21 13:26 · commit 0cbd1a6</text>
-<rect x="450" y="191" width="272.84" height="20" rx="3" fill="#c43f8c"/>
-<text x="730.84" y="206" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001436</text>
+<rect x="36" y="125" width="12" height="12" rx="3" fill="#eb6834"/>
+<text x="56" y="136" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-viii</text>
+<text x="36" y="152" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2-8 self-play (rounds 7-8 with search s10/s11), 7,647…</text>
+<text x="36" y="167" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r8w1 · wdl 0.1 · 200 superbatches x 467 batches · trained 2026-11-21 17:32 · commit 652f0bc</text>
+<rect x="450" y="137" width="286.74" height="20" rx="3" fill="#eb6834"/>
+<text x="744.74" y="152" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.002641</text>
+<rect x="36" y="179" width="12" height="12" rx="3" fill="#2a78d6"/>
+<text x="56" y="190" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-vii</text>
+<text x="36" y="206" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2-7 self-play (round 7 with search s10), 6,597,914 po…</text>
+<text x="36" y="221" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r7c · wdl 0.0 · 200 superbatches x 403 batches · trained 2026-11-21 16:36 · commit 0b31292</text>
+<rect x="450" y="191" width="172.19" height="20" rx="3" fill="#2a78d6"/>
+<text x="630.19" y="206" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001586</text>
 <rect x="24" y="228" width="892" height="54" fill="#f6f5f0" opacity="0.7"/>
-<rect x="36" y="233" width="12" height="12" rx="3" fill="#c99a06"/>
-<text x="56" y="244" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-v</text>
-<text x="36" y="260" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2+3+4+5 self-play (round 5 played by wyrd-iv with sea…</text>
-<text x="36" y="275" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r5a · wdl 0.0 · 200 superbatches x 277 batches · trained 2026-11-21 13:10 · commit 3a32a05</text>
-<rect x="450" y="245" width="245.67" height="20" rx="3" fill="#c99a06"/>
-<text x="703.67" y="260" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001293</text>
-<rect x="36" y="287" width="12" height="12" rx="3" fill="#6250d6"/>
-<text x="56" y="298" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-iv</text>
-<text x="36" y="314" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2+3+4 self-play, 3,477,195 positions</text>
-<text x="36" y="329" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r234a · wdl 0.0 · 200 superbatches x 212 batches · trained 2026-11-19 23:56 · commit c3ed243</text>
-<rect x="450" y="299" width="200.83" height="20" rx="3" fill="#6250d6"/>
-<text x="658.83" y="314" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001057</text>
+<rect x="36" y="233" width="12" height="12" rx="3" fill="#c43f8c"/>
+<text x="56" y="244" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-vi</text>
+<text x="36" y="260" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2+3+4+5+6 self-play (rounds 5-6 with search s9), 5,56…</text>
+<text x="36" y="275" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r6a · wdl 0.0 · 200 superbatches x 339 batches · trained 2026-11-21 13:26 · commit 0cbd1a6</text>
+<rect x="450" y="245" width="155.91" height="20" rx="3" fill="#c43f8c"/>
+<text x="613.91" y="260" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001436</text>
+<rect x="36" y="287" width="12" height="12" rx="3" fill="#c99a06"/>
+<text x="56" y="298" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-v</text>
+<text x="36" y="314" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2+3+4+5 self-play (round 5 played by wyrd-iv with sea…</text>
+<text x="36" y="329" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r5a · wdl 0.0 · 200 superbatches x 277 batches · trained 2026-11-21 13:10 · commit 3a32a05</text>
+<rect x="450" y="299" width="140.38" height="20" rx="3" fill="#c99a06"/>
+<text x="598.38" y="314" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001293</text>
 <rect x="24" y="336" width="892" height="54" fill="#f6f5f0" opacity="0.7"/>
-<rect x="36" y="341" width="12" height="12" rx="3" fill="#1baf7a"/>
-<text x="56" y="352" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-iii</text>
-<text x="36" y="368" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">round 2+3 self-play, 2,414,058 positions</text>
-<text x="36" y="383" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r23a · wdl 0.0 · 200 superbatches · trained 2026-11-19 23:38 · commit c3ed243</text>
-<rect x="450" y="353" width="182.21" height="20" rx="3" fill="#1baf7a"/>
-<text x="640.21" y="368" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.000959</text>
-<rect x="36" y="395" width="12" height="12" rx="3" fill="#eb6834"/>
-<text x="56" y="406" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">r3a</text>
-<text x="36" y="422" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">round-3 self-play only</text>
-<text x="36" y="437" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r3a · wdl 0.0 · 200 superbatches · trained 2026-11-19 23:38 · commit c3ed243</text>
-<rect x="450" y="407" width="176.89" height="20" rx="3" fill="#eb6834"/>
-<text x="634.89" y="422" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.000931</text>
+<rect x="36" y="341" width="12" height="12" rx="3" fill="#6250d6"/>
+<text x="56" y="352" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-iv</text>
+<text x="36" y="368" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">rounds 2+3+4 self-play, 3,477,195 positions</text>
+<text x="36" y="383" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r234a · wdl 0.0 · 200 superbatches x 212 batches · trained 2026-11-19 23:56 · commit c3ed243</text>
+<rect x="450" y="353" width="114.76" height="20" rx="3" fill="#6250d6"/>
+<text x="572.76" y="368" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.001057</text>
+<rect x="36" y="395" width="12" height="12" rx="3" fill="#1baf7a"/>
+<text x="56" y="406" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-iii</text>
+<text x="36" y="422" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">round 2+3 self-play, 2,414,058 positions</text>
+<text x="36" y="437" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r23a · wdl 0.0 · 200 superbatches · trained 2026-11-19 23:38 · commit c3ed243</text>
+<rect x="450" y="407" width="104.12" height="20" rx="3" fill="#1baf7a"/>
+<text x="562.12" y="422" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.000959</text>
 <rect x="24" y="444" width="892" height="54" fill="#f6f5f0" opacity="0.7"/>
-<rect x="36" y="449" width="12" height="12" rx="3" fill="#2a78d6"/>
-<text x="56" y="460" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-ii</text>
-<text x="36" y="476" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">round-2 self-play, 1,274,079 positions</text>
-<text x="36" y="491" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r2a · wdl 0.0 · 200 superbatches · trained 2026-11-19 23:11 · commit c3ed243</text>
-<rect x="450" y="461" width="156.37" height="20" rx="3" fill="#2a78d6"/>
-<text x="614.37" y="476" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.000823</text>
-<text x="24" y="544" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">Final loss per net (newest first). Datasets differ, so only look at the size of each bar, not the order.</text>
-<text x="24" y="574" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">How the loss fell during training (the first superbatches are cut off so the curves are readable)</text>
-<line x1="90" y1="814.45" x2="860" y2="814.45" stroke="#e1e0d9"/>
-<text x="82" y="818.45" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0008</text>
-<line x1="90" y1="759.5" x2="860" y2="759.5" stroke="#e1e0d9"/>
-<text x="82" y="763.5" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0010</text>
-<line x1="90" y1="714.6" x2="860" y2="714.6" stroke="#e1e0d9"/>
-<text x="82" y="718.6" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0012</text>
-<line x1="90" y1="659.65" x2="860" y2="659.65" stroke="#e1e0d9"/>
-<text x="82" y="663.65" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0015</text>
-<polyline points="90,715.83 109.74,742.38 129.49,756.32 149.23,765.23 168.97,771.61 188.72,776.05 208.46,779.76 228.21,782.72 247.95,785.44 267.69,786.81 287.44,789.3 307.18,790.42 326.92,791.82 346.67,792.1 366.41,793.51 386.15,794.36 405.9,795.21 425.64,795.78 445.38,796.64 465.13,797.79 484.87,797.5 504.62,798.94 524.36,799.52 544.1,799.23 563.85,799.81 583.59,800.39 603.33,800.97 623.08,801.26 642.82,801.55 662.56,801.55 682.31,806.87 702.05,806.87 721.79,806.27 741.54,807.17 761.28,807.17 781.03,806.57 800.77,806.87 820.51,807.17 840.26,807.17 860,807.47" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="860" cy="807.47" r="4" fill="#2a78d6"/>
-<polyline points="90,683.24 109.74,712.35 129.49,725.51 149.23,734.46 168.97,741.69 188.72,745.61 208.46,748.19 228.21,753.66 247.95,750.31 267.69,753.9 287.44,756.32 307.18,757.78 326.92,763.47 346.67,761.72 366.41,768.27 386.15,767 405.9,766.49 425.64,768.53 445.38,766.74 465.13,766.49 484.87,771.09 504.62,763.72 524.36,768.02 544.1,768.53 563.85,768.78 583.59,774.21 603.33,770.06 623.08,775.78 642.82,773.95 662.56,773.69 682.31,778.7 702.05,777.37 721.79,775.52 741.54,780.57 761.28,772.65 781.03,776.84 800.77,776.84 820.51,776.57 840.26,781.1 860,777.1" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="860" cy="777.1" r="4" fill="#eb6834"/>
-<polyline points="90,707.52 109.74,731.81 129.49,744.45 149.23,745.61 168.97,743.3 188.72,753.42 208.46,754.14 228.21,755.35 247.95,761.48 267.69,754.86 287.44,753.66 307.18,756.8 326.92,762.47 346.67,755.83 366.41,766.49 386.15,762.22 405.9,756.8 425.64,757.05 445.38,765.98 465.13,759.99 484.87,762.97 504.62,767 524.36,761.23 544.1,756.32 563.85,764.98 583.59,762.22 603.33,763.47 623.08,768.27 642.82,760.98 662.56,758.51 682.31,766.49 702.05,770.32 721.79,765.48 741.54,773.95 761.28,769.55 781.03,764.98 800.77,764.47 820.51,773.69 840.26,767 860,769.81" fill="none" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="860" cy="769.81" r="4" fill="#1baf7a"/>
-<polyline points="90,695.46 109.74,714.39 129.49,722.1 149.23,726.37 168.97,729.4 188.72,731.59 208.46,733.13 228.21,734.24 247.95,735.36 267.69,736.03 287.44,736.7 307.18,737.37 326.92,737.82 346.67,738.28 366.41,738.5 386.15,738.95 405.9,739.18 425.64,739.41 445.38,739.64 465.13,739.86 484.87,740.09 504.62,740.09 524.36,740.32 544.1,740.55 563.85,740.55 583.59,740.77 603.33,740.77 623.08,741 642.82,741 662.56,741.23 682.31,745.61 702.05,745.61 721.79,745.61 741.54,745.61 761.28,745.61 781.03,745.61 800.77,745.61 820.51,745.61 840.26,745.85 860,745.85" fill="none" stroke="#6250d6" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="860" cy="745.85" r="4" fill="#6250d6"/>
-<polyline points="90,660.31 109.74,674.36 129.49,679.65 149.23,683.06 168.97,685.23 188.72,686.51 208.46,687.79 228.21,689.09 247.95,689.83 267.69,691.32 287.44,692.81 307.18,693.19 326.92,694.13 346.67,693.94 366.41,694.89 386.15,693.57 405.9,692.81 425.64,692.06 445.38,693.19 465.13,693 484.87,693.19 504.62,693.57 524.36,693.57 544.1,693.94 563.85,693.19 583.59,693.94 603.33,694.32 623.08,694.13 642.82,693.19 662.56,693.94 682.31,698.32 702.05,699.67 721.79,698.9 741.54,699.67 761.28,698.32 781.03,697.36 800.77,697.94 820.51,696.41 840.26,696.41 860,696.22" fill="none" stroke="#c99a06" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="860" cy="696.22" r="4" fill="#c99a06"/>
-<polyline points="90,635.58 109.74,646.39 129.49,650.94 149.23,654.29 168.97,657.53 188.72,658.67 208.46,659.98 228.21,659.65 247.95,663.12 267.69,662.62 287.44,665.46 307.18,667.83 326.92,665.63 346.67,665.3 366.41,667.32 386.15,668.34 405.9,669.36 425.64,669.19 445.38,669.7 465.13,670.22 484.87,670.22 504.62,669.02 524.36,668.51 544.1,667.83 563.85,667.66 583.59,668.17 603.33,667.83 623.08,668.68 642.82,669.19 662.56,670.05 682.31,676.99 702.05,676.99 721.79,677.87 741.54,676.82 761.28,674.36 781.03,674.02 800.77,673.67 820.51,674.02 840.26,672.28 860,670.39" fill="none" stroke="#c43f8c" stroke-width="2" stroke-linejoin="round"/>
-<circle cx="860" cy="670.39" r="4" fill="#c43f8c"/>
-<polyline points="90,616.95 109.74,629.84 129.49,635.88 149.23,637.83 168.97,640.55 188.72,642.38 208.46,641.92 228.21,641.46 247.95,642.99 267.69,643.14 287.44,644.37 307.18,644.68 326.92,643.91 346.67,643.91 366.41,646.23 386.15,647.79 405.9,646.86 425.64,646.54 445.38,646.23 465.13,645.46 484.87,646.23 504.62,644.37 524.36,644.99 544.1,645.92 563.85,647.32 583.59,647.48 603.33,646.23 623.08,645.61 642.82,646.54 662.56,644.99 682.31,650.94 702.05,651.73 721.79,650.15 741.54,650.62 761.28,648.89 781.03,648.42 800.77,647.32 820.51,646.7 840.26,647.17 860,645.92" fill="none" stroke="#2a78d6" stroke-width="3" stroke-linejoin="round"/>
-<circle cx="860" cy="645.92" r="4" fill="#2a78d6"/>
-<text x="90" y="846" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">5</text>
-<text x="267.69" y="846" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">50</text>
-<text x="465.13" y="846" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">100</text>
-<text x="662.56" y="846" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">150</text>
-<text x="860" y="846" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">200</text>
-<text x="475" y="868" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">superbatch (training round; each point = last logged batch of that superbatch)</text>
-<text x="24" y="886" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
+<rect x="36" y="449" width="12" height="12" rx="3" fill="#eb6834"/>
+<text x="56" y="460" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">r3a</text>
+<text x="36" y="476" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">round-3 self-play only</text>
+<text x="36" y="491" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r3a · wdl 0.0 · 200 superbatches · trained 2026-11-19 23:38 · commit c3ed243</text>
+<rect x="450" y="461" width="101.08" height="20" rx="3" fill="#eb6834"/>
+<text x="559.08" y="476" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.000931</text>
+<rect x="36" y="503" width="12" height="12" rx="3" fill="#2a78d6"/>
+<text x="56" y="514" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-ii</text>
+<text x="36" y="530" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">round-2 self-play, 1,274,079 positions</text>
+<text x="36" y="545" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">run r2a · wdl 0.0 · 200 superbatches · trained 2026-11-19 23:11 · commit c3ed243</text>
+<rect x="450" y="515" width="89.35" height="20" rx="3" fill="#2a78d6"/>
+<text x="547.35" y="530" font-size="12" font-weight="700" fill="#1f1f1e" text-anchor="start">0.000823</text>
+<text x="24" y="598" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">Final loss per net (newest first). Datasets differ, so only look at the size of each bar, not the order.</text>
+<text x="24" y="628" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">How the loss fell during training (the first superbatches are cut off so the curves are readable)</text>
+<line x1="90" y1="872.93" x2="860" y2="872.93" stroke="#e1e0d9"/>
+<text x="82" y="876.93" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0008</text>
+<line x1="90" y1="836.17" x2="860" y2="836.17" stroke="#e1e0d9"/>
+<text x="82" y="840.17" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0010</text>
+<line x1="90" y1="806.14" x2="860" y2="806.14" stroke="#e1e0d9"/>
+<text x="82" y="810.14" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0012</text>
+<line x1="90" y1="769.38" x2="860" y2="769.38" stroke="#e1e0d9"/>
+<text x="82" y="773.38" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0015</text>
+<line x1="90" y1="721.98" x2="860" y2="721.98" stroke="#e1e0d9"/>
+<text x="82" y="725.98" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">0.0020</text>
+<polyline points="90,806.96 109.74,824.72 129.49,834.04 149.23,840.01 168.97,844.28 188.72,847.24 208.46,849.73 228.21,851.71 247.95,853.53 267.69,854.45 287.44,856.11 307.18,856.86 326.92,857.79 346.67,857.98 366.41,858.93 386.15,859.49 405.9,860.06 425.64,860.45 445.38,861.02 465.13,861.79 484.87,861.59 504.62,862.56 524.36,862.95 544.1,862.75 563.85,863.14 583.59,863.53 603.33,863.92 623.08,864.11 642.82,864.31 662.56,864.31 682.31,867.86 702.05,867.86 721.79,867.46 741.54,868.06 761.28,868.06 781.03,867.66 800.77,867.86 820.51,868.06 840.26,868.06 860,868.26" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="868.26" r="4" fill="#2a78d6"/>
+<polyline points="90,785.15 109.74,804.63 129.49,813.43 149.23,819.43 168.97,824.26 188.72,826.88 208.46,828.61 228.21,832.26 247.95,830.03 267.69,832.43 287.44,834.04 307.18,835.02 326.92,838.83 346.67,837.66 366.41,842.04 386.15,841.19 405.9,840.85 425.64,842.21 445.38,841.02 465.13,840.85 484.87,843.93 504.62,839 524.36,841.87 544.1,842.21 563.85,842.38 583.59,846.02 603.33,843.24 623.08,847.07 642.82,845.84 662.56,845.67 682.31,849.02 702.05,848.13 721.79,846.89 741.54,850.27 761.28,844.97 781.03,847.77 800.77,847.77 820.51,847.6 840.26,850.63 860,847.95" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="847.95" r="4" fill="#eb6834"/>
+<polyline points="90,801.4 109.74,817.65 129.49,826.11 149.23,826.88 168.97,825.33 188.72,832.1 208.46,832.59 228.21,833.39 247.95,837.5 267.69,833.07 287.44,832.26 307.18,834.37 326.92,838.16 346.67,833.72 366.41,840.85 386.15,837.99 405.9,834.37 425.64,834.53 445.38,840.51 465.13,836.5 484.87,838.49 504.62,841.19 524.36,837.33 544.1,834.04 563.85,839.84 583.59,837.99 603.33,838.83 623.08,842.04 642.82,837.16 662.56,835.51 682.31,840.85 702.05,843.41 721.79,840.17 741.54,845.84 761.28,842.9 781.03,839.84 800.77,839.5 820.51,845.67 840.26,841.19 860,843.07" fill="none" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="843.07" r="4" fill="#1baf7a"/>
+<polyline points="90,793.33 109.74,806 129.49,811.15 149.23,814.01 168.97,816.04 188.72,817.5 208.46,818.53 228.21,819.28 247.95,820.02 267.69,820.47 287.44,820.92 307.18,821.37 326.92,821.67 346.67,821.97 366.41,822.13 386.15,822.43 405.9,822.58 425.64,822.73 445.38,822.88 465.13,823.04 484.87,823.19 504.62,823.19 524.36,823.34 544.1,823.49 563.85,823.49 583.59,823.65 603.33,823.65 623.08,823.8 642.82,823.8 662.56,823.95 682.31,826.88 702.05,826.88 721.79,826.88 741.54,826.88 761.28,826.88 781.03,826.88 800.77,826.88 820.51,826.88 840.26,827.04 860,827.04" fill="none" stroke="#6250d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="827.04" r="4" fill="#6250d6"/>
+<polyline points="90,769.81 109.74,779.22 129.49,782.75 149.23,785.03 168.97,786.49 188.72,787.34 208.46,788.2 228.21,789.07 247.95,789.56 267.69,790.56 287.44,791.56 307.18,791.81 326.92,792.44 346.67,792.32 366.41,792.95 386.15,792.07 405.9,791.56 425.64,791.06 445.38,791.81 465.13,791.69 484.87,791.81 504.62,792.07 524.36,792.07 544.1,792.32 563.85,791.81 583.59,792.32 603.33,792.57 623.08,792.44 642.82,791.81 662.56,792.32 682.31,795.25 702.05,796.15 721.79,795.63 741.54,796.15 761.28,795.25 781.03,794.61 800.77,794.99 820.51,793.97 840.26,793.97 860,793.84" fill="none" stroke="#c99a06" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="793.84" r="4" fill="#c99a06"/>
+<polyline points="90,753.27 109.74,760.5 129.49,763.55 149.23,765.79 168.97,767.95 188.72,768.72 208.46,769.59 228.21,769.38 247.95,771.7 267.69,771.36 287.44,773.26 307.18,774.85 326.92,773.38 346.67,773.15 366.41,774.51 386.15,775.19 405.9,775.87 425.64,775.76 445.38,776.1 465.13,776.44 484.87,776.44 504.62,775.64 524.36,775.3 544.1,774.85 563.85,774.73 583.59,775.07 603.33,774.85 623.08,775.42 642.82,775.76 662.56,776.33 682.31,780.98 702.05,780.98 721.79,781.57 741.54,780.86 761.28,779.22 781.03,778.99 800.77,778.75 820.51,778.99 840.26,777.83 860,776.56" fill="none" stroke="#c43f8c" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="776.56" r="4" fill="#c43f8c"/>
+<polyline points="90,740.81 109.74,749.44 129.49,753.47 149.23,754.78 168.97,756.59 188.72,757.82 208.46,757.51 228.21,757.21 247.95,758.23 267.69,758.33 287.44,759.16 307.18,759.36 326.92,758.85 346.67,758.85 366.41,760.4 386.15,761.44 405.9,760.82 425.64,760.61 445.38,760.4 465.13,759.88 484.87,760.4 504.62,759.16 524.36,759.57 544.1,760.19 563.85,761.13 583.59,761.23 603.33,760.4 623.08,759.98 642.82,760.61 662.56,759.57 682.31,763.55 702.05,764.08 721.79,763.02 741.54,763.34 761.28,762.18 781.03,761.86 800.77,761.13 820.51,760.71 840.26,761.02 860,760.19" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="860" cy="760.19" r="4" fill="#2a78d6"/>
+<polyline points="90,664.68 109.74,670.84 129.49,672.54 149.23,673.52 168.97,673.46 188.72,674.14 208.46,675.25 228.21,674.88 247.95,674.75 267.69,675.87 287.44,676.24 307.18,676.06 326.92,676.06 346.67,676.12 366.41,675.81 386.15,675.75 405.9,675.99 425.64,676.31 445.38,676.68 465.13,677.43 484.87,676.87 504.62,676.68 524.36,676.93 544.1,676.31 563.85,676.56 583.59,676.43 603.33,675.75 623.08,675.81 642.82,676.74 662.56,676.56 682.31,678.7 702.05,677.94 721.79,678.13 741.54,677.37 761.28,677.06 781.03,676.74 800.77,676.37 820.51,676.31 840.26,676.31 860,676.18" fill="none" stroke="#eb6834" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="860" cy="676.18" r="4" fill="#eb6834"/>
+<text x="90" y="900" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">5</text>
+<text x="267.69" y="900" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">50</text>
+<text x="465.13" y="900" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">100</text>
+<text x="662.56" y="900" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">150</text>
+<text x="860" y="900" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">200</text>
+<text x="475" y="922" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">superbatch (training round; each point = last logged batch of that superbatch)</text>
+<text x="24" y="940" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
 </svg>

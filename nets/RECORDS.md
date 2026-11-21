@@ -97,7 +97,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Gain per round: +115, +81, +31, +64, +47. Still positive after the label/search change, not yet shrinking
   clearly; two data points since s9 are too few to call a trend.
 
-## wyrd-vii.bin — ACCEPTED (current best; checkpoint run `r7c`; round 8 `r8a` did not beat it)
+## wyrd-vii.bin — ACCEPTED (previous best, superseded by wyrd-viii; checkpoint run `r7c`)
 
 - Tooling: commit `0b31292` (search s10; datagen and trainer code unchanged since `69d4dcb`).
 - Data: round-7 self-play (4 runs x 2500 games, seeds 101-104, 5000 nodes/move, played by `wyrd-vi.bin` with
@@ -114,7 +114,35 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Not run: ladder and Stockfish measurements with this net (the ladder in docs/EVALUATION.md section 5 is wyrd-vi + s10).
 - Gain per round: +115, +81, +31, +64, +47, +34.
 
-## r8a (round 8 candidate) — NOT ACCEPTED
+## wyrd-viii.bin — ACCEPTED (current best; checkpoint run `r8w1`, round 8 data with wdl 0.1)
+
+- Tooling: commit `0558764` (search s11; datagen and trainer code unchanged since `69d4dcb`). Data: the same round-8 data as `r8a`
+  (round-8 self-play, 4 x 2500 games, seeds 111-114, 5000 nodes/move, played by `wyrd-vii.bin` with search s11; 1,049,269 positions)
+  **plus all round-2 to round-7 data** = 7,647,183 positions (`data/r8train.data`).
+- Training: `wyrdmate-trainer data/r8train.data 200 467 16384 0.1 r8w1` (**wdl 0.1**, `--features cuda`). Final running loss 0.002605
+  (not comparable with other wdl values or datasets). This is the only change from `r8a` (wdl 0.0) and from D-010; see D-012.
+- Match vs `wyrd-vii` (fastchess, same engine s11, 600 games each, two independent opening books): 10,000 nodes **+57 +/- 26**
+  (lower bound +31) and **+79 +/- 26** (`data/book2.epd`, lower bound +52); 50,000 nodes **+80 +/- 25** (lower bound +55) and
+  **+63 +/- 25** (`data/book2.epd`, lower bound +38). All four sets pass rule 2 by a wide margin.
+  Raw logs `logs/ab-net-r8w1-10000.txt`, `-50000.txt`, `-10000-book2.txt`, `-50000-book2.txt` (git-ignored).
+- One training run only: the run-to-run variation of training is not known. Not run: ladder and Stockfish with this net.
+- Gain per round: +115, +81, +31, +64, +47, +34, +57..+80 (this one comes from the target mix, not from new data: the same data gave -9 / -12 at wdl 0.0).
+
+## wdl experiment on the round-8 data (r8a, r8w1, r8w2, r8w3, r8w4)
+
+Same data and recipe, only the 5th trainer argument changes; all vs `wyrd-vii`, 600 games each (first opening book):
+
+| wdl | net | final running loss | 10,000 nodes | 50,000 nodes |
+|---:|---|---:|---|---|
+| 0.0 | r8a | 0.001656 | -9 +/- 25 | -12 +/- 24 |
+| **0.1** | **r8w1 = wyrd-viii** | 0.002605 | **+57 +/- 26** | **+80 +/- 25** |
+| 0.2 | r8w2 | 0.005226 | +20 +/- 25 | +38 +/- 26 |
+| 0.3 | r8w3 | 0.009397 | -60 +/- 26 | -22 +/- 26 |
+| 0.4 | r8w4 | 0.015218 | -114 +/- 26 | -113 +/- 27 |
+
+Only `r8w1` was re-checked on a second opening book. Details: docs/EVALUATION.md section 8.3.
+
+## r8a (round 8 candidate, wdl 0.0) — NOT ACCEPTED
 
 - Tooling: commit `0558764` (search s11). Data: round-8 self-play (4 x 2500 games, seeds 111-114, 5000 nodes/move, played by
   `wyrd-vii.bin` with search s11; 1,049,269 positions) **plus all round-2 to round-7 data** (`data/r7call.txt`) = 7,647,183 positions.
