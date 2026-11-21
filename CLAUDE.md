@@ -99,7 +99,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 - `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).
 - `docs/` — `STRUCTURE.md` (human tour), `TRAINING.md` (how a net is made),
   `decisions.md`, `progress/` (chart data + generated SVGs).
-- `scripts/` — `make-progress-svg.ps1`; `play.py` + `play.html` (local browser play page, engine vs
+- `scripts/` — `make-progress-svg.ps1`; `monitor.py` (local progress page for datagen/training/matches, read-only); `play.py` + `play.html` (local browser play page, engine vs
   engine too); `pgn-viewer.html` (replays fastchess PGN).
 - `web/` — the engine as WebAssembly (`cdylib`, plain C ABI) + `backend.js` + `build.ps1`/`build.sh` →
   `web/dist`. Not a workspace member (excluded like `firmware/`); engine code is unchanged by it.

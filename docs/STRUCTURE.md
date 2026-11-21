@@ -36,6 +36,7 @@ firmware ◀──(ฝัง net ที่ quantise แล้ว)── nets/ �
 | `CLAUDE.md` | คู่มือและกฎเหล็กของโครงการ ผู้ช่วย AI โหลดอัตโนมัติ |
 | `docs/` | เอกสารทั้งหมด ดู [README.md](README.md) ของโฟลเดอร์นี้ |
 | `scripts/make-progress-svg.ps1` | สคริปต์ PowerShell สร้างกราฟความคืบหน้าจาก `docs/progress/data.json` |
+| `scripts/monitor.py` | หน้าเว็บในเครื่อง (`python scripts/monitor.py` แล้วเปิด http://localhost:8765) ดูความคืบหน้า datagen, การเทรน และแมตช์ A/B จากไฟล์ log แบบอ่านอย่างเดียว รีเฟรชทุก 3 วินาที |
 
 ### เอกสารใน `docs/`
 
