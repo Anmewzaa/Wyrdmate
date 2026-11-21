@@ -25,6 +25,8 @@
     "lossTitle": "Wyrdmate · Training loss",
     "lossSub": "How far the net’s guesses are from the stored answers while training (lower = closer).",
     "lossNote": "Low loss does NOT mean it plays well (wyrd-iii has higher loss than wyrd-ii yet is stronger). Match results decide.",
+    "lossBars": "Final loss per net (newest first). Datasets differ, so only look at the size of each bar, not the order.",
+    "lossCurves": "How the loss fell during training (the first superbatches are cut off so the curves are readable)",
     "lossX": "superbatch (training round; each point = last logged batch of that superbatch)",
     "lossY": "loss (log scale)",
     "lossFinal": "final",

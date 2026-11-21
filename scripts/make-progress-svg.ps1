@@ -1,6 +1,6 @@
 # Regenerates the charts from docs/progress/data.json:
 #   docs/progress/training-process.svg  (leaderboard: one row per accepted net, vs previous net and vs material eval)
-#   docs/progress/loss.svg              (training loss curves, with version/timestamp)
+#   docs/progress/loss.svg              (final loss per net + loss curves)
 #   docs/progress/ladder.svg            (leaderboard: strength per node limit, first vs current search)
 #   docs/progress/search-steps.svg      (leaderboard: what each search step added)
 #   docs/progress/stockfish.svg         (leaderboard: our levels on the Stockfish UCI_Elo scale)
@@ -105,60 +105,73 @@ A (T 24 ($H - 12) 10 $mute $ui.generated)
 Save-Svg $s $W $H $ui.procTitle 'docs/progress/training-process.svg'
 
 # =====================================================================
-# 2) Loss curves, labelled with net version + timestamp + commit
+# 2) Loss: final loss per net (rows double as the legend) + curves
 # =====================================================================
 $s = New-Object Text.StringBuilder
-$pal = @('#2a78d6', '#eb6834', '#1baf7a', '#6250d6')
-$n = @($d.loss).Count
-$legTop = 118
-$lossTop = $legTop + $n * 44 + 30; $lossH = 260
-$by = $lossTop + $lossH
-$H = $by + 80
-$lx0 = 90; $lx1 = 860; $ymin = 0.0005; $ymax = 0.02
-function LY($v) { $lossTop + (1 - ([math]::Log10($v) - [math]::Log10($ymin)) / ([math]::Log10($ymax) - [math]::Log10($ymin))) * $lossH }
+function A($line) { [void]$s.AppendLine($line) }
+$pal = @('#2a78d6', '#eb6834', '#1baf7a', '#6250d6', '#c99a06', '#c43f8c')
+$series = @($d.loss)
+$n = $series.Count
+$rowH = 54; $top = 120; $bx0 = 450; $bx1 = 830
+$fin = @($series | ForEach-Object { [double]$_.points[$_.points.Count - 1][1] })
+$vmax = [math]::Ceiling((($fin | Measure-Object -Maximum).Maximum) * 1.15 / 0.0005) * 0.0005
+function BX($v) { $bx0 + $v / $vmax * ($bx1 - $bx0) }
+$barsEnd = $top + $n * $rowH
 
 A (T 24 38 22 $ink $ui.lossTitle 'start' '700')
 A (T 24 58 13 $mute $ui.lossSub)
 A "<rect x=`"24`" y=`"72`" width=`"$($W - 48)`" height=`"28`" rx=`"6`" fill=`"$band`"/>"
-A (T 40 91 12 $ink $ui.lossNote)
+A (T 40 91 11 $ink $ui.lossNote)
 
-$k = 0; $ly = $legTop + 22
-foreach ($ser in $d.loss) {
-  $c = $pal[$k % 4]
-  A "<rect x=`"24`" y=`"$($ly - 12)`" width=`"16`" height=`"16`" rx=`"3`" fill=`"$c`"/>"
-  A (T 48 $ly 13 $ink "$($ser.name) $dot $($ser.detail)" 'start' '700')
-  A (T 48 ($ly + 17) 11 $mute "$($ui.data): $($ser.data) $dot $($ui.trainedAt) $($ser.finished) $dot $($ui.commit) $($ser.commit)")
-  $ly += 44; $k++
+for ($v = 0; $v -le $vmax + 1e-9; $v += 0.0005) {
+  $x = BX $v
+  A "<line x1=`"$(F $x)`" y1=`"$top`" x2=`"$(F $x)`" y2=`"$barsEnd`" stroke=`"$grid`"/>"
+  A (T $x ($barsEnd + 16) 11 $mute ([double]$v).ToString('0.0000', $inv) 'middle')
 }
-foreach ($t in 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02) {
-  $y = LY $t
-  A "<line x1=`"$lx0`" y1=`"$(F $y)`" x2=`"$lx1`" y2=`"$(F $y)`" stroke=`"$grid`"/>"
-  A (T ($lx0 - 8) ($y + 4) 11 $mute ([double]$t).ToString('0.####', $inv) 'end')
+for ($r = 0; $r -lt $n; $r++) {
+  $k = $n - 1 - $r                        # newest first
+  $ser = $series[$k]; $c = $pal[$k % 6]
+  $cy = $top + $r * $rowH + $rowH / 2
+  if ($r % 2 -eq 0) { A "<rect x=`"24`" y=`"$($top + $r * $rowH)`" width=`"$($W - 48)`" height=`"$rowH`" fill=`"$band`" opacity=`"0.7`"/>" }
+  A "<rect x=`"36`" y=`"$($cy - 22)`" width=`"12`" height=`"12`" rx=`"3`" fill=`"$c`"/>"
+  A (T 56 ($cy - 11) 14 $ink $ser.name 'start' '700')
+  $dt = [string]$ser.data; if ($dt.Length -gt 62) { $dt = $dt.Substring(0, 60) + [char]0x2026 }
+  A (T 36 ($cy + 5) 11 $ink $dt)
+  A (T 36 ($cy + 20) 10 $mute "$($ser.detail) $dot $($ui.trainedAt) $($ser.finished) $dot $($ui.commit) $($ser.commit)")
+  $v = $fin[$k]
+  A "<rect x=`"$bx0`" y=`"$($cy - 10)`" width=`"$(F ((BX $v) - $bx0))`" height=`"20`" rx=`"3`" fill=`"$c`"/>"
+  A (T ((BX $v) + 8) ($cy + 5) 12 $ink $v.ToString('0.000000', $inv) 'start' '700')
 }
-$maxX = 1
-foreach ($ser in $d.loss) { foreach ($p in $ser.points) { if ($p[0] -gt $maxX) { $maxX = $p[0] } } }
-$k = 0
-foreach ($ser in $d.loss) {
-  $c = $pal[$k % 4]
-  $pts = ($ser.points | ForEach-Object { "$(F ($lx0 + $_[0] / $maxX * ($lx1 - $lx0))),$(F (LY $_[1]))" }) -join ' '
-  A "<polyline points=`"$pts`" fill=`"none`" stroke=`"$c`" stroke-width=`"2.5`" stroke-linejoin=`"round`"/>"
-  $last = $ser.points[$ser.points.Count - 1]
-  $ex = $lx0 + $last[0] / $maxX * ($lx1 - $lx0); $ey = LY $last[1]
-  A "<circle cx=`"$(F $ex)`" cy=`"$(F $ey)`" r=`"4`" fill=`"$c`"/>"
-  $k++
+A (T 24 ($barsEnd + 46) 13 $ink $ui.lossBars 'start' '700')
+
+# curves, first superbatches cut off so the spike does not flatten everything
+$cut = 5
+$cTop = $barsEnd + 100; $cH = 230; $cBy = $cTop + $cH
+$lx0 = 90; $lx1 = 860
+$vals = @(); foreach ($ser in $series) { foreach ($p in $ser.points) { if ($p[0] -ge $cut) { $vals += [double]$p[1] } } }
+$ymin = ($vals | Measure-Object -Minimum).Minimum * 0.92; $ymax = ($vals | Measure-Object -Maximum).Maximum * 1.08
+$maxX = 1; foreach ($ser in $series) { foreach ($p in $ser.points) { if ($p[0] -gt $maxX) { $maxX = $p[0] } } }
+function LY($v) { $cTop + (1 - ([math]::Log10($v) - [math]::Log10($ymin)) / ([math]::Log10($ymax) - [math]::Log10($ymin))) * $cH }
+function LXc($sb) { $lx0 + ($sb - $cut) / ($maxX - $cut) * ($lx1 - $lx0) }
+A (T 24 ($cTop - 24) 13 $ink $ui.lossCurves 'start' '700')
+foreach ($t in 0.0008, 0.001, 0.0012, 0.0015, 0.002) {
+  if ($t -ge $ymin -and $t -le $ymax) {
+    $y = LY $t
+    A "<line x1=`"$lx0`" y1=`"$(F $y)`" x2=`"$lx1`" y2=`"$(F $y)`" stroke=`"$grid`"/>"
+    A (T ($lx0 - 8) ($y + 4) 11 $mute ([double]$t).ToString('0.0000', $inv) 'end')
+  }
 }
-# final-value labels, stacked so they never overlap
-$ly = $lossTop + 14
-$k = 0
-foreach ($ser in $d.loss) {
-  $c = $pal[$k % 4]
-  $last = $ser.points[$ser.points.Count - 1]
-  A (T ($lx1 + 6) ($ly) 11 $c "$($ser.name) $($ui.lossFinal) $(([double]$last[1]).ToString('0.000000', $inv))" 'end' '700')
-  $ly += 16; $k++
+for ($k = 0; $k -lt $n; $k++) {
+  $c = $pal[$k % 6]
+  $pts = ($series[$k].points | Where-Object { $_[0] -ge $cut } | ForEach-Object { "$(F (LXc $_[0])),$(F (LY $_[1]))" }) -join ' '
+  $sw = if ($k -eq $n - 1) { 3 } else { 2 }
+  A "<polyline points=`"$pts`" fill=`"none`" stroke=`"$c`" stroke-width=`"$sw`" stroke-linejoin=`"round`"/>"
+  $last = $series[$k].points[$series[$k].points.Count - 1]
+  A "<circle cx=`"$(F (LXc $last[0]))`" cy=`"$(F (LY $last[1]))`" r=`"4`" fill=`"$c`"/>"
 }
-foreach ($t in 0, 50, 100, 150, 200) { if ($t -le $maxX) { A (T ($lx0 + $t / $maxX * ($lx1 - $lx0)) ($by + 18) 11 $mute $t 'middle') } }
-A (T (($lx0 + $lx1) / 2) ($by + 40) 12 $mute $ui.lossX 'middle')
-A "<text transform=`"translate(24 $(F ($lossTop + $lossH / 2))) rotate(-90)`" font-size=`"12`" fill=`"$mute`" text-anchor=`"middle`">$(Esc $ui.lossY)</text>"
+foreach ($t in $cut, 50, 100, 150, 200) { if ($t -le $maxX) { A (T (LXc $t) ($cBy + 18) 11 $mute $t 'middle') } }
+A (T (($lx0 + $lx1) / 2) ($cBy + 40) 12 $mute $ui.lossX 'middle')
+$H = $cBy + 70
 A (T 24 ($H - 12) 10 $mute $ui.generated)
 Save-Svg $s $W $H $ui.lossTitle 'docs/progress/loss.svg'
 
