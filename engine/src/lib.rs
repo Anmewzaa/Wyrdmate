@@ -67,6 +67,7 @@ const NULL_REDUCTION: i32 = 2;
 const LMR_MIN_DEPTH: i32 = 3;
 const LMR_MIN_INDEX: usize = 2;
 const DELTA_MARGIN: i32 = 200; // centipawns of slack for delta pruning in quiescence
+const CHECK_EXT_MAX_PLY: usize = 32; // no check extensions deeper than this, so a checking chain stays bounded
 const FUT_MAX_DEPTH: i32 = 2;
 const FUT_MARGIN: i32 = 150; // centipawns per remaining ply
 
@@ -406,7 +407,9 @@ impl Searcher {
                     score = -self.negamax(&next, &nacc, depth - 1, -beta, -alpha, ply + 1);
                 }
             } else {
-                score = -self.negamax(&next, &nacc, depth - 1, -beta, -alpha, ply + 1);
+                // Check extension: a move that gives check is searched one ply deeper.
+                let ext = i32::from(!next.checkers().is_empty() && (ply as usize) < CHECK_EXT_MAX_PLY);
+                score = -self.negamax(&next, &nacc, depth - 1 + ext, -beta, -alpha, ply + 1);
             }
             if self.stopped {
                 return 0;
