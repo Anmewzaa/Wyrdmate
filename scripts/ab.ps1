@@ -18,6 +18,7 @@ param(
     [int]$Rounds = 300,
     [int]$Concurrency = 12,
     [string]$Tag = '',
+    [string]$Book = 'data\book.epd',   # opening book (EPD), relative to the repo root; use another seed for an independent second set
     [int]$NewHash = -1   # transposition table size in KiB for the new engine only (default: the engine's own)
 )
 $ErrorActionPreference = 'Continue'
@@ -66,10 +67,15 @@ function Get-Engine([string]$ref) {
 $newExe = Get-Engine $New
 $oldExe = Get-Engine $Old
 
-if (-not (Test-Path "$root\data\book.epd")) {
+if (($Book -eq 'data\book.epd') -and -not (Test-Path "$root\data\book.epd")) {
     Push-Location $root
     cargo run --release -p wyrdmate-engine --example book -- 300 99 data\book.epd 2>&1 | Out-Host
     Pop-Location
+}
+
+$bookLines = @(Get-Content "$root\$Book" | Where-Object { $_.Trim() }).Count
+if ($Rounds -gt $bookLines) {
+    Write-Warning "Rounds ($Rounds) is more than the $bookLines openings in ${Book}: openings repeat and node-limited games repeat exactly, so the extra games are copies and the error bar is too small. Use more openings (-Book) instead."
 }
 
 $name = if ($Tag) { $Tag } else { "$([IO.Path]::GetFileNameWithoutExtension($newExe))-vs-$([IO.Path]::GetFileNameWithoutExtension($oldExe))" }
@@ -80,7 +86,7 @@ $fc = @(
     '-engine', 'name=new', "cmd=$newExe", "option.EvalFile=$root\$Net", "option.Nodes=$Nodes",
     '-engine', 'name=old', "cmd=$oldExe", "option.Nodes=$Nodes",
     '-each', 'proto=uci', 'tc=inf', "nodes=$Nodes",
-    '-openings', "file=$root\data\book.epd", 'format=epd', 'order=random',
+    '-openings', "file=$root\$Book", 'format=epd', 'order=random',
     '-rounds', $Rounds, '-games', 2, '-repeat', '-concurrency', $Concurrency, '-maxmoves', 120,
     '-draw', 'movenumber=30', 'movecount=8', 'score=10', '-resign', 'movecount=4', 'score=800',
     '-pgnout', "file=$pgn"
@@ -92,6 +98,9 @@ if ($OldNet -ne 'material') { $fc = $fc[0..8] + @("option.EvalFile=$root\$OldNet
 Write-Host "new: $newExe ($Net)"
 Write-Host "old: $oldExe ($OldNet)"
 Write-Host "nodes=$Nodes, $($Rounds * 2) games, log: $txt"
+# sidecar for scripts/monitor.py: which nets played, so the page can name them
+[ordered]@{ new = $Net; old = $OldNet; nodes = $Nodes; games = $Rounds * 2; book = $Book; started = (Get-Date -Format 'yyyy-MM-dd HH:mm') } |
+    ConvertTo-Json | Set-Content -Encoding UTF8 "$root\logs\ab-$name.meta.json"
 & $fastchess @fc > $txt 2>&1
 
 $tail = Get-Content $txt -Tail 25

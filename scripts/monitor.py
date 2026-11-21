@@ -103,6 +103,19 @@ def train_status(total_sb):
             "reference": reference_loss(), "running": age(p) < RUNNING_SECS}
 
 
+def net_label(path):
+    """'nets/wyrd-vi.bin' -> 'wyrd-vi'; 'checkpoints/r7a-200/quantised.bin' -> 'r7a-200 (new checkpoint)'."""
+    if not path:
+        return None
+    norm = str(path).replace("\\", "/")
+    if norm == "material":
+        return "material eval (no net)"
+    stem = os.path.splitext(os.path.basename(norm))[0]
+    if norm.startswith("checkpoints/") or stem == "quantised":
+        return os.path.basename(os.path.dirname(norm)) + " (new checkpoint)"
+    return stem
+
+
 def match_status():
     logs = glob.glob(os.path.join(ROOT, "logs", "ab-*.txt"))
     if not logs:
@@ -114,6 +127,13 @@ def match_status():
     finished = "Finished match" in text
     out = {"name": os.path.basename(p)[3:-4], "finished": finished,
            "running": (not finished) and age(p) < 60}
+    try:  # sidecar written by scripts/ab.ps1: which nets played
+        with open(p[:-4] + ".meta.json", encoding="utf-8-sig") as f:
+            meta = json.load(f)
+        out.update(new=net_label(meta.get("new")), old=net_label(meta.get("old")),
+                   nodes=meta.get("nodes"), planned=meta.get("games"), book=meta.get("book"))
+    except (OSError, ValueError):
+        pass
     if games:
         g, w, l, d = map(int, games[-1])
         out.update(games=g, wins=w, losses=l, draws=d)
@@ -202,7 +222,8 @@ function mtView(m,full){
   if(!m)return'<h2>A/B match</h2><div class="empty">no match logs yet</div>';
   const gm=m.games||0,pass=m.elo!=null&&m.elo-m.err>0;
   let h=`<h2>A/B match ${pill(m.running,m.running?"running":(m.finished?"finished":"idle"))}<span class="mute">${m.name}</span></h2>
-  <div class="big">${m.elo==null?"-":(m.elo>0?"+":"")+m.elo.toFixed(1)+" ± "+m.err.toFixed(1)} Elo</div><div class="mute">${gm} games · W ${m.wins||0} / D ${m.draws||0} / L ${m.losses||0}</div>`;
+  ${m.new?`<div style="margin:2px 0 6px"><b>${m.new}</b> <span class="mute">(new)</span> vs <b>${m.old||"?"}</b> <span class="mute">(old)</span>${m.nodes?` · <span class="mute">${fmt(m.nodes)} nodes per move</span>`:""}</div>`:`<div class="mute" style="margin:2px 0 6px">net names not recorded for this run (older log)</div>`}
+  <div class="big">${m.elo==null?"-":(m.elo>0?"+":"")+m.elo.toFixed(1)+" ± "+m.err.toFixed(1)} Elo</div><div class="mute">${gm}${m.planned?" / "+m.planned:""} games · W ${m.wins||0} / D ${m.draws||0} / L ${m.losses||0}</div>`;
   if(full&&gm){
     const sc=(m.wins+m.draws/2)/gm*100;
     h+=`<div class="grid">${stat(sc.toFixed(1)+"%","score")}${stat(m.elo==null?"-":(m.elo-m.err).toFixed(1),"lower bound (Elo)")}${stat(m.elo==null?"-":`<span class="${pass?'ok':'bad'}">${pass?"passes":"does not pass"}</span>`,"rule 2: lower bound above 0")}</div>

@@ -96,3 +96,18 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Not run: match against the material eval or `wyrd-iv`; ladder and Stockfish measurements with this net.
 - Gain per round: +115, +81, +31, +64, +47. Still positive after the label/search change, not yet shrinking
   clearly; two data points since s9 are too few to call a trend.
+
+## r7a (round 7 candidate) — NOT ACCEPTED YET (undecided)
+
+- Tooling: commit `684c637` (search s9). Data: round-7 self-play (4 x 2500 games, seeds 81-84, 5000 nodes/move,
+  played by `wyrd-vi.bin` with search s9; 1,023,103 positions) **plus all round-2 to round-6 data** = 6,579,953 positions.
+  Training: `wyrdmate-trainer data/r7train.data 200 402 16384 0.0 r7a` (final running loss 0.001576).
+  The net is only in `checkpoints/r7a-200/quantised.bin` (git-ignored); it was not copied to `nets/`.
+- Match vs `wyrd-vi` (fastchess, same engine, 600 games each): 10,000 nodes **+39 +/- 26** (lower bound +14, passes);
+  50,000 nodes **+17 +/- 25** (lower bound -9, does not pass). A second, independent 600 games at 50,000 nodes with
+  another opening book (`data/book2.epd`, seed 100): **+20 +/- 24** (lower bound -3). Pooling the two independent
+  50k sets by hand (trinomial, 1200 games): about +18 +/- 18, lower bound about +0.7, i.e. borderline.
+- A first attempt at 1200 games on one 300-position book is **invalid**: openings repeated and node-limited games repeat
+  exactly, so every game was played twice (Elo identical to the 600-game run, error bar falsely smaller).
+  `scripts/ab.ps1` now warns when `-Rounds` exceeds the book size and takes `-Book` for another opening set.
+- Gain per round: +115, +81, +31, +64, +47, then +39 (10k) / about +18 (50k) for this candidate: shrinking again.
