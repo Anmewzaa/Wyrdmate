@@ -9,12 +9,12 @@
 | engine | search s1–s10 + UCI + node limit ([SEARCH.md](SEARCH.md)) |
 | net inference | NNUE พร้อม accumulator แบบ incremental ([NET.md](NET.md)) |
 | datagen / trainer | self-play และ training ด้วย bullet บน GPU ([TRAINING.md](TRAINING.md)) |
-| net 6 รุ่น | `wyrd-i` (ผู้เล่นสร้างข้อมูลเท่านั้น) ถึง `wyrd-vi` (**ปัจจุบัน**: +47 ± 25 Elo เทียบ wyrd-v) |
+| net 7 รุ่น | `wyrd-i` (ผู้เล่นสร้างข้อมูลเท่านั้น) ถึง `wyrd-vii` (**ปัจจุบัน**: +34 ± 25 Elo เทียบ wyrd-vi ที่ 10k, ราว +29 ± 18 ที่ 50k) |
 | เครื่องมือวัดผล | `ab.ps1` (A/B, เวลาเท่ากัน), ladder, เทียบ Stockfish, หน้า `monitor.py` ([EVALUATION.md](EVALUATION.md)) |
-| เว็บเดโม | `web/` + GitHub Pages ใช้ `wyrd-vi` เป็นค่าเริ่มต้น |
-| ladder ปัจจุบัน | วัดแล้วกับ `wyrd-vi` + s10: 51,200 node = +547 Elo เทียบ 1,600 node ([EVALUATION.md](EVALUATION.md) ข้อ 5) |
+| เว็บเดโม | `web/` + GitHub Pages ใช้ `wyrd-vii` เป็นค่าเริ่มต้น |
+| ladder ปัจจุบัน | วัดแล้วกับ `wyrd-vi` + s10 (ยังไม่ได้วัดซ้ำกับ `wyrd-vii`): 51,200 node = +547 Elo เทียบ 1,600 node ([EVALUATION.md](EVALUATION.md) ข้อ 5) |
 
-ผลที่เพิ่มต่อรอบ: +115, +81, +31, +64, +47 Elo และรอบ 7 (`r7a`) ไม่ผ่านเกณฑ์ที่ 50,000 node จึงไม่รับ ([TRAINING.md](TRAINING.md) ข้อ 5)
+ผลที่เพิ่มต่อรอบ: +115, +81, +31, +64, +47, +34 Elo (รอบ 7 ลอง 3 ครั้ง: `r7a` และ `r7b` ไม่รับ `r7c` ที่ใช้ข้อมูลจาก s10 ได้รับเป็น `wyrd-vii`) ([TRAINING.md](TRAINING.md) ข้อ 5)
 
 ## 2. งานที่เหลือ
 

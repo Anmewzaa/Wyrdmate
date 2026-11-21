@@ -14,12 +14,12 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: engine (search s1-s9 + NNUE eval + UCI), datagen and the bullet trainer work.
-> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-v`, and `wyrd-vi` (current): +47 +/- 25 Elo vs wyrd-v at 10k nodes
-> and +42 +/- 25 at 50k (600 games each). Gains per round: +115, +81, +31, +64, +47. Round 7 (`r7a`) was NOT accepted
-> (passes at 10k, not at 50k). Provenance and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-vi`, and `wyrd-vii` (current, trained on data from search s10): +34 +/- 25 Elo vs wyrd-vi at 10k nodes
+> and about +29 +/- 18 at 50k (two independent 600-game sets pooled by hand; first set alone +23 +/- 24, lower bound -2). Gains per round: +115, +81, +31, +64, +47, +34.
+> Failed round-7 candidates `r7a` (5,000 nodes/move, s9 data) and `r7b` (20,000 nodes/move) were NOT accepted. Provenance and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
 > The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).
-> Strength levels (ladder) are measured with wyrd-vi + s10: relative Elo per node limit (docs/EVALUATION.md section 5).
+> Strength levels (ladder) are measured with wyrd-vi + s10 (not re-measured with wyrd-vii): relative Elo per node limit (docs/EVALUATION.md section 5).
 > Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher) only with wyrd-iv + s6, not re-measured:
 > 51,200 nodes ~ `UCI_Elo` 1530 (rough, docs/EVALUATION.md section 6).
 > Search is at s10 (docs/SEARCH.md section 9): s9 added futility, delta pruning and check extension on top of s6 (~29% slower

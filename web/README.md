@@ -26,5 +26,5 @@ python -m http.server 8002 --directory web/dist
 ## ข้อควรรู้
 
 - ผลต้องตรงกับ engine บนพีซี: ตรวจแล้วที่ 1 ตำแหน่ง (3,000 node, `wyrd-iv`; ยังไม่ได้ตรวจซ้ำกับ `wyrd-vi`) ได้ `e7e6` คะแนน +5 เหมือนกัน
-- ตัวเลข Elo ในเมนูวัดด้วย `wyrd-vi` และ search s9 (EVALUATION.md ข้อ 8.2)
+- ตัวเลข Elo ในเมนูวัดด้วย `wyrd-vi` และ search s10 (EVALUATION.md ข้อ 5) ไม่ได้วัดซ้ำกับ `wyrd-vii`
 - ยังไม่ได้ deploy ที่ใดเลย

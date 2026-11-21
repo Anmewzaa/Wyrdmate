@@ -81,7 +81,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Not run: match against the material eval; ladder and Stockfish measurements with this net.
 - Gain per round: +115, +81, +31, +64 (the last round also changed the search used to make labels).
 
-## wyrd-vi.bin — ACCEPTED (current best)
+## wyrd-vi.bin — ACCEPTED (previous best, superseded by wyrd-vii)
 
 - Tooling: commit `0cbd1a6` (search s9; datagen and trainer code unchanged since `c3ed243`).
 - Data: round-6 self-play (4 runs x 2500 games, seeds 71-74, 5000 nodes/move, played by `wyrd-v.bin`
@@ -96,6 +96,23 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Not run: match against the material eval or `wyrd-iv`; ladder and Stockfish measurements with this net.
 - Gain per round: +115, +81, +31, +64, +47. Still positive after the label/search change, not yet shrinking
   clearly; two data points since s9 are too few to call a trend.
+
+## wyrd-vii.bin — ACCEPTED (current best; checkpoint run `r7c`)
+
+- Tooling: commit `0b31292` (search s10; datagen and trainer code unchanged since `69d4dcb`).
+- Data: round-7 self-play (4 runs x 2500 games, seeds 101-104, 5000 nodes/move, played by `wyrd-vi.bin` with
+  **search s10**; 1,037,064 positions) **plus all round-2 to round-6 data** (`data/r6all.txt`, made with older search
+  versions) = 6,597,914 positions. `wyrdmate-datagen 2500 5000 <seed> data/r7cpartSEED.txt nets/wyrd-vi.bin`, concatenated
+  after `data/r6all.txt`, then `bullet-utils convert --from text`, `shuffle --mem-used-mb 2048`.
+- Training: `wyrdmate-trainer data/r7ctrain.data 200 403 16384 0.0 r7c` (wdl 0.0, `--features cuda`). Final running loss
+  0.001560 as printed by the trainer (not comparable across datasets).
+- Match vs `wyrd-vi` (fastchess, same engine `0b31292` = s10 on both sides, 600 games each): 10,000 nodes **+34 +/- 25 Elo**
+  (lower bound +8); 50,000 nodes **+23 +/- 24** (lower bound -2, does not pass alone). A second independent 600 games at
+  50,000 nodes with another opening book (`data/book2.epd`): **+35 +/- 24** (lower bound +11). Pooling the two independent 50k sets by
+  hand (trinomial, 1200 games): about +29 +/- 18, lower bound about +11.5. Owner accepted it on this evidence (2026-11-21).
+  Raw logs `logs/ab-net-r7c-10000.txt`, `logs/ab-net-r7c-50000.txt`, `logs/ab-net-r7c-50k-book2.txt` (git-ignored).
+- Not run: ladder and Stockfish measurements with this net (the ladder in docs/EVALUATION.md section 5 is wyrd-vi + s10).
+- Gain per round: +115, +81, +31, +64, +47, +34.
 
 ## r7a (round 7 candidate) — NOT ACCEPTED (owner decision 2026-11-21: the 50k result does not clearly pass)
 

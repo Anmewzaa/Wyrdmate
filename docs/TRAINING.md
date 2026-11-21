@@ -44,7 +44,7 @@ rnb1kbnr/ppqppp2/6p1/1Bp4p/4P3/5P2/PPPP2PP/RNBQK1NR w KQkq h6 0 5 | 0 | 0.5
 
 ```bash
 wyrdmate-datagen [เกม] [nodes] [seed] [ไฟล์ออก] [net.bin (ไม่บังคับ)]
-wyrdmate-datagen 2500 5000 81 data/r7part81.txt nets/wyrd-vi.bin   # ตัวอย่างรอบ 7
+wyrdmate-datagen 2500 5000 81 data/r7part81.txt nets/wyrd-vi.bin   # ตัวอย่างรอบ 7 (r7a)
 ```
 
 ระบุ `net.bin` เพื่อให้ engine ใช้ net นั้นประเมินระหว่างเล่น (ตั้งแต่รอบ 2) รันได้หลายโปรเซสพร้อมกันโดยใช้ seed ต่างกัน
@@ -157,6 +157,8 @@ bullet ทำกระบวนการต่อไปนี้ซ้ำกั�
 | 5 | wyrd-iv (search s9) | 1,058,916 | 4,536,111 | wyrd-v | +64 ± 25 |
 | 6 | wyrd-v (search s9) | 1,024,739 | 5,560,850 | wyrd-vi | +47 ± 25 |
 | 7 | wyrd-vi (search s9) | 1,023,103 | 6,579,953 | r7a (ไม่รับ) | +39 ± 26 ที่ 10k แต่ ~+18 ± 18 ที่ 50k ไม่ผ่านชัดเจน |
+| 7 | wyrd-vi (search s9), 20,000 node ต่อ move | 1,033,756 | 6,594,606 | r7b (ไม่รับ) | +22 ± 25 ที่ 10k, +14 ± 24 ที่ 50k |
+| 7 | wyrd-vi (**search s10**) | 1,037,064 | 6,597,914 | **wyrd-vii** | +34 ± 25 ที่ 10k, ~+29 ± 18 ที่ 50k (รวม 2 ชุด) |
 
 รอบ 2–4 เล่นด้วย search รุ่นเก่า (s1) ตั้งแต่รอบ 5 ใช้ s9 ผลของรอบ 5 จึงปนกันระหว่างข้อมูลที่ label ดีขึ้นกับข้อมูลที่มากขึ้น ไม่ได้แยก
 รายละเอียดของแต่ละ net (คำสั่ง, seed, commit) อยู่ใน [`../nets/RECORDS.md`](../nets/RECORDS.md)

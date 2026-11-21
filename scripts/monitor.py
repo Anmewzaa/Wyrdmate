@@ -52,6 +52,9 @@ def datagen_status():
     name = max(groups, key=lambda g: max(os.path.getmtime(p) for _, p in groups[g]))
     jobs = []
     for seed, p in sorted(groups[name]):
+        err = p[:-4] + ".err"  # progress goes to stderr; if the .log is empty, read the .err next to it
+        if os.path.exists(err) and os.path.getsize(err) > 0 and os.path.getsize(p) == 0:
+            p = err
         last = [l for l in read_text(p, 4000).splitlines() if l.strip()][-1:] or [""]
         m = re.match(r"(\d+)/(\d+) games, (\d+) positions", last[0])
         done = last[0].startswith("done")

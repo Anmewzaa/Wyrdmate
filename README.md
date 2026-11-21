@@ -77,7 +77,7 @@ The search was improved in steps after the nets (see [SEARCH.md](docs/SEARCH.md)
 
 </div>
 
-Latest accepted net, **`wyrd-vi`** (self-play round 6): **+47 ± 25 Elo** against `wyrd-v` at 10,000 nodes (+42 ± 25 at 50,000). The gain per round is shrinking (+115, +81, +31, +64, +47) and round 7 was not accepted, so the loop is nearing its plateau. What a net is and how it works: [NET.md](docs/NET.md).
+Latest accepted net, **`wyrd-vii`** (self-play round 7, data played with search s10): **+34 ± 25 Elo** against `wyrd-vi` at 10,000 nodes (about +29 ± 18 at 50,000, two independent 600-game sets pooled). The gain per round is shrinking (+115, +81, +31, +64, +47, +34); two other round-7 attempts (`r7a`, `r7b`) were not accepted, so the loop is nearing its plateau. What a net is and how it works: [NET.md](docs/NET.md).
 Full history, including experiments that failed (a net trained to also fit game results lost to the baseline), is in [`nets/RECORDS.md`](nets/RECORDS.md).
 The charts are generated from [`docs/progress/data.json`](docs/progress/data.json) by `scripts/make-progress-svg.ps1`.
 
@@ -92,7 +92,7 @@ cargo build --release -p wyrdmate-engine
 
 ```text
 uci
-setoption name EvalFile value nets/wyrd-vi.bin      # the trained net (omit for the material-only baseline)
+setoption name EvalFile value nets/wyrd-vii.bin      # the trained net (omit for the material-only baseline)
 setoption name Nodes value 5000                      # strength: fewer nodes = weaker
 position startpos moves e2e4 e7e5
 go
@@ -114,7 +114,7 @@ The engine answers `bestmove ...`. `go nodes N` overrides the budget for one mov
 | `datagen/` | Self-play data generator (optionally played by a net) |
 | `trainer/` | [bullet](https://github.com/jw1912/bullet) training driver (pinned to a git revision) |
 | `firmware/` | `no_std` ESP32 inference. **Skeleton only**, built separately |
-| `nets/` | Accepted nets (`wyrd-i` to `wyrd-vi`) and their [records](nets/RECORDS.md) |
+| `nets/` | Accepted nets (`wyrd-i` to `wyrd-vii`) and their [records](nets/RECORDS.md) |
 | `docs/` | [Training guide](docs/TRAINING.md), [file-by-file tour](docs/STRUCTURE.md), [decisions](docs/decisions.md), progress data |
 | `web/` | The engine as WebAssembly plus the build for the GitHub Pages demo ([web/README.md](web/README.md)). Not a workspace member |
 | `scripts/` | Progress charts, the browser play page (`play.py`/`play.html`), a PGN game viewer |
@@ -125,7 +125,7 @@ You need Rust (stable). Training also needs an NVIDIA GPU with the CUDA Toolkit;
 
 ```bash
 cargo test -p wyrdmate-engine                  # engine tests
-cargo run --release -p wyrdmate-engine --example validate -- nets/wyrd-vi.bin data/some.txt   # net vs stored scores
+cargo run --release -p wyrdmate-engine --example validate -- nets/wyrd-vii.bin data/some.txt   # net vs stored scores
 ```
 
 One round of the loop (see the [training guide](docs/TRAINING.md) for what each step does):
