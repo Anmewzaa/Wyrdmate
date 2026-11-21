@@ -97,7 +97,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Gain per round: +115, +81, +31, +64, +47. Still positive after the label/search change, not yet shrinking
   clearly; two data points since s9 are too few to call a trend.
 
-## r7a (round 7 candidate) — NOT ACCEPTED YET (undecided)
+## r7a (round 7 candidate) — NOT ACCEPTED (owner decision 2026-11-21: the 50k result does not clearly pass)
 
 - Tooling: commit `684c637` (search s9). Data: round-7 self-play (4 x 2500 games, seeds 81-84, 5000 nodes/move,
   played by `wyrd-vi.bin` with search s9; 1,023,103 positions) **plus all round-2 to round-6 data** = 6,579,953 positions.
