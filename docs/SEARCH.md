@@ -133,6 +133,8 @@ let score = -self.negamax(&next, depth - 1, -beta, -alpha, ply + 1);
 | **Delta pruning** | s8 | ใน quiescence ถ้าคะแนน `stand` + มูลค่าหมากที่กิน + margin ยังไม่ถึง alpha ข้าม capture นั้น | margin 200, ไม่ถูกรุก, ไม่ใช่ promotion, en passant นับเป็น pawn |
 | **Check extension** | s9 | move ที่รุกคิงค้นลึกขึ้น 1 ply | ply < 32 และเฉพาะ move ที่ไม่ผ่าน LMR ยังไม่ใช้ที่ move ระดับราก |
 
+| **SEE** (static exchange evaluation) | s10 | คำนวณผลลัพธ์ของการแลกหมากต่อเนื่องบนช่องที่ถูกกิน (ใช้หมากที่มูลค่าต่ำสุดกินก่อน แต่ละฝ่ายหยุดได้) ใช้ 2 ที่: (1) move ordering: capture ที่ SEE < 0 ถูกลองหลัง killer และ quiet move (2) quiescence: ข้าม capture ที่ SEE < 0 | ไม่ถูกรุก, ไม่ใช่ promotion (ใน quiescence); capture ที่กินของมูลค่า ≥ ตัวที่กินไม่ต้องคำนวณ SEE (ผลไม่ติดลบเสมอ); en passant ยังไม่ผ่าน SEE |
+
 ลองแล้วไม่รับ: **PVS** (ลอง 2 ครั้ง ก่อนและหลังมี TT ไม่ผ่านกฎทั้งคู่)
 
 ค่า margin/ขนาดทั้งหมดข้างบนเป็นค่าที่ลองครั้งเดียว ไม่ได้ปรับอย่างเป็นระบบ
@@ -171,10 +173,12 @@ Elo คือผล A/B match ที่ node เท่ากันเทีย�
 | s7 | futility pruning | +25 | +37 | ช้าลง ~12% | 0 |
 | s8 | delta pruning | +33 | +31 | ช้าลง ~12% (ตัวเลขนี้ไม่แน่ชัด ดู EVALUATION.md) | 0 |
 | s9 | check extension | +53 | +31 | ไม่ต่าง | 0 |
+| s10 | SEE ใน move ordering และ quiescence | +97 (`wyrd-vi`) | +65 (`wyrd-vi`) | ช้าลง ~20–24% (วัดจากเวลาต่อ move ใน A/B) | 0 |
 
 - ที่ 1,000 node ทุกขั้นตั้งแต่ s3 ขึ้นไปได้ผลใกล้ศูนย์ (node ต่ำไม่ได้ประโยชน์จาก search ใหม่)
 - Elo รายรุ่น **บวกกันตรง ๆ ไม่ได้** (วัดทีละขั้นเทียบรุ่นก่อน)
 - **ที่ node เท่ากัน s9 ช้ากว่า s6 ต่อ node ราว 29%** แต่ที่เวลาเท่ากัน s9 ยังชนะ s6 ชัดเจน (+92 ± 24 ที่ระดับ 50k, +74 ± 26 ที่ 10k) แปลว่า s7–s9 รวมกันคุ้มกับต้นทุนความเร็ว (EVALUATION.md ข้อ 7.2)
+- s10 วัดด้วย `wyrd-vi` ไม่ใช่ `wyrd-iv` จึงเทียบตรง ๆ กับแถวอื่นไม่ได้ ที่เวลาเท่ากันยังชนะ s9 (+45 ± 25 ที่ 10k, +30 ± 25 ที่ 50k, EVALUATION.md ข้อ 7.5)
 - PVS ลองแล้วไม่รับ (EVALUATION.md ข้อ 7.3)
 
 ---

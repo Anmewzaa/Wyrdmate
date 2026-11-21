@@ -45,12 +45,74 @@ fn is_capture(board: &Board, mv: Move) -> bool {
     board.colors(!board.side_to_move()).has(mv.to)
 }
 
+/// Value used for the piece being exchanged in SEE (the king can capture but is never worth trading).
+fn see_value(p: Piece) -> i32 {
+    if p == Piece::King { 20_000 } else { piece_value(p) }
+}
+
+/// Static exchange evaluation of a capture on `mv.to`: the material result (centipawns, mover's view)
+/// if both sides keep recapturing there with their least valuable attacker, either side free to stop.
+fn see(board: &Board, mv: Move) -> i32 {
+    let to = mv.to;
+    let Some(attacker) = board.piece_on(mv.from) else { return 0 };
+    let mut a_piece = attacker;
+    let mut gain = [0i32; 32];
+    let mut d = 0usize;
+    gain[0] = board.piece_on(to).map_or(0, piece_value);
+    let mut occ = board.occupied() ^ mv.from.bitboard();
+    let mut side = !board.side_to_move();
+    let pawns = board.pieces(Piece::Pawn);
+    let knights = board.pieces(Piece::Knight);
+    let kings = board.pieces(Piece::King);
+    let diag = board.pieces(Piece::Bishop) | board.pieces(Piece::Queen);
+    let line = board.pieces(Piece::Rook) | board.pieces(Piece::Queen);
+    loop {
+        d += 1;
+        if d >= gain.len() {
+            d -= 1;
+            break;
+        }
+        gain[d] = see_value(a_piece) - gain[d - 1];
+        // least valuable attacker of `to` for `side`, with x-rays through pieces already removed
+        let att = ((cozy_chess::get_pawn_attacks(to, !side) & pawns)
+            | (cozy_chess::get_knight_moves(to) & knights)
+            | (cozy_chess::get_king_moves(to) & kings)
+            | (cozy_chess::get_bishop_moves(to, occ) & diag)
+            | (cozy_chess::get_rook_moves(to, occ) & line))
+            & board.colors(side)
+            & occ;
+        let mut found = None;
+        for p in Piece::ALL {
+            let m = att & board.pieces(p);
+            if let Some(sq) = m.next_square() {
+                found = Some((p, sq));
+                break;
+            }
+        }
+        let Some((p, sq)) = found else { break };
+        a_piece = p;
+        occ ^= sq.bitboard();
+        side = !side;
+    }
+    while d > 1 {
+        d -= 1;
+        gain[d - 1] = -((-gain[d - 1]).max(gain[d]));
+    }
+    gain[0]
+}
+
+const BAD_CAPTURE_BASE: i32 = -20_000;
+
 fn order_key(board: &Board, mv: Move) -> i32 {
     let mut k = 0;
     if is_capture(board, mv) {
         let victim = board.piece_on(mv.to).map_or(0, piece_value);
         let attacker = board.piece_on(mv.from).map_or(0, piece_value);
-        k += 10_000 + victim * 10 - attacker;
+        if victim >= attacker || see(board, mv) >= 0 {
+            k += 10_000 + victim * 10 - attacker;
+        } else {
+            k += BAD_CAPTURE_BASE + victim * 10 - attacker; // losing capture: after killers and quiet moves
+        }
     }
     if mv.promotion.is_some() {
         k += 9_000;
@@ -210,7 +272,7 @@ impl Searcher {
             return TT_MOVE_SCORE;
         }
         let k = order_key(board, mv);
-        if k > 0 {
+        if k != 0 {
             return k;
         }
         if let Some(slot) = self.killers.get(ply as usize) {
@@ -304,6 +366,9 @@ impl Searcher {
                 let victim = board.piece_on(mv.to).map_or(piece_value(Piece::Pawn), piece_value); // en passant: a pawn
                 if stand + victim + DELTA_MARGIN <= alpha {
                     continue;
+                }
+                if see(board, mv) < 0 {
+                    continue; // losing capture: not worth searching in quiescence
                 }
             }
             let mut next = board.clone();
@@ -585,6 +650,24 @@ mod tests {
         let mut s = Searcher::new(5_000);
         s.search(&board, 4).unwrap();
         assert!(s.hist.is_empty());
+    }
+
+    fn see_of(fen: &str, from: &str, to: &str) -> i32 {
+        let board: Board = fen.parse().unwrap();
+        let mv = Move { from: from.parse().unwrap(), to: to.parse().unwrap(), promotion: None };
+        see(&board, mv)
+    }
+
+    #[test]
+    fn see_values_exchanges() {
+        // free pawn: nothing defends d5
+        assert_eq!(see_of("4k3/8/8/3p4/8/8/8/3RK3 w - - 0 1", "d1", "d5"), 100);
+        // rook takes a pawn defended by a pawn: wins 100, loses 500
+        assert_eq!(see_of("4k3/8/4p3/3p4/8/8/8/3RK3 w - - 0 1", "d1", "d5"), -400);
+        // pawn takes a knight defended by a pawn: wins 320, loses 100
+        assert_eq!(see_of("4k3/8/4p3/3n4/4P3/8/8/4K3 w - - 0 1", "e4", "d5"), 220);
+        // x-ray: rook takes pawn, rook behind it backs up; defender rook recaptures once
+        assert_eq!(see_of("3r2k1/8/8/3p4/8/8/3R4/3RK3 w - - 0 1", "d2", "d5"), 100);
     }
 
     #[test]

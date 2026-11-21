@@ -53,6 +53,7 @@
 | **repetition detection** | ตรวจตำแหน่งซ้ำ นับเป็นเสมอ (s2) |
 | **round** | หนึ่งรอบของวงวน: datagen → training → A/B match |
 | **SCReLU** | activation function `clamp(x, 0, QA)²` |
+| **SEE** | Static Exchange Evaluation: คำนวณผลแลกหมากต่อเนื่องบนช่องหนึ่งโดยไม่ search ใช้จัดลำดับและตัด capture ที่เสียเปรียบ (s10) ([SEARCH.md](SEARCH.md) ข้อ 7) |
 | **search** | การลองเดินล่วงหน้าหลาย ply เพื่อเลือก move ที่ดีที่สุด ([SEARCH.md](SEARCH.md)) |
 | **self-play** | ให้ engine เล่นกับตัวเองเพื่อสร้างข้อมูล |
 | **training** | กระบวนการปรับ weights ให้ net ทายคะแนนใกล้เฉลยขึ้น ([TRAINING.md](TRAINING.md)) |
