@@ -14,6 +14,7 @@ import glob
 import json
 import os
 import re
+import subprocess
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -116,6 +117,59 @@ def net_label(path):
     return stem
 
 
+_SEARCH_CACHE = {}
+
+
+def search_steps():
+    """[(id, commit)] of the search versions in docs/EVALUATION.md section 10 (rows like '| s9 | ... | `ae72468` |')."""
+    steps = []
+    for line in read_text(os.path.join(ROOT, "docs", "EVALUATION.md")).splitlines():
+        m = re.match(r"\|\s*(s\d+)\s*\|.*`([0-9a-f]{7,40})`\s*\|\s*$", line)
+        if m:
+            steps.append((m.group(1), m.group(2)))
+    return steps
+
+
+def is_ancestor(old, new):
+    try:
+        return subprocess.run(["git", "merge-base", "--is-ancestor", old, new], cwd=ROOT,
+                              capture_output=True, timeout=10).returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def search_label(engine):
+    """'ae72468' -> 's9'; a later commit -> 'after s9 (abc1234)'; 'WORKTREE@abc1234' -> '... + uncommitted changes'."""
+    if not engine:
+        return None
+    if engine in _SEARCH_CACHE:
+        return _SEARCH_CACHE[engine]
+    base, dirty = (engine[len("WORKTREE@"):], True) if engine.startswith("WORKTREE@") else (engine, False)
+    if engine.endswith(".exe") or not re.fullmatch(r"[0-9a-f]{7,40}", base):
+        label = engine
+    else:
+        label = None
+        for sid, commit in steps_cache():
+            if base.startswith(commit[:7]) or commit.startswith(base[:7]):
+                label = sid
+            elif is_ancestor(commit, base):
+                label = f"after {sid} ({base})"
+        label = label or f"commit {base}"
+        if dirty:
+            label += " + uncommitted changes"
+    _SEARCH_CACHE[engine] = label
+    return label
+
+
+_STEPS = []
+
+
+def steps_cache():
+    if not _STEPS:
+        _STEPS.extend(search_steps())
+    return _STEPS
+
+
 def match_status():
     logs = glob.glob(os.path.join(ROOT, "logs", "ab-*.txt"))
     if not logs:
@@ -131,7 +185,8 @@ def match_status():
         with open(p[:-4] + ".meta.json", encoding="utf-8-sig") as f:
             meta = json.load(f)
         out.update(new=net_label(meta.get("new")), old=net_label(meta.get("old")),
-                   nodes=meta.get("nodes"), planned=meta.get("games"), book=meta.get("book"))
+                   nodes=meta.get("nodes"), planned=meta.get("games"), book=meta.get("book"),
+                   new_search=search_label(meta.get("new_engine")), old_search=search_label(meta.get("old_engine")))
     except (OSError, ValueError):
         pass
     if games:
@@ -223,6 +278,7 @@ function mtView(m,full){
   const gm=m.games||0,pass=m.elo!=null&&m.elo-m.err>0;
   let h=`<h2>A/B match ${pill(m.running,m.running?"running":(m.finished?"finished":"idle"))}<span class="mute">${m.name}</span></h2>
   ${m.new?`<div style="margin:2px 0 6px"><b>${m.new}</b> <span class="mute">(new)</span> vs <b>${m.old||"?"}</b> <span class="mute">(old)</span>${m.nodes?` · <span class="mute">${fmt(m.nodes)} nodes per move</span>`:""}</div>`:`<div class="mute" style="margin:2px 0 6px">net names not recorded for this run (older log)</div>`}
+  <div class="mute" style="margin:0 0 6px">search: ${m.new_search?`<b>${m.new_search}</b> (new) vs <b>${m.old_search||"?"}</b> (old)`:"not recorded for this run (older log)"}</div>
   <div class="big">${m.elo==null?"-":(m.elo>0?"+":"")+m.elo.toFixed(1)+" ± "+m.err.toFixed(1)} Elo</div><div class="mute">${gm}${m.planned?" / "+m.planned:""} games · W ${m.wins||0} / D ${m.draws||0} / L ${m.losses||0}</div>`;
   if(full&&gm){
     const sc=(m.wins+m.draws/2)/gm*100;
