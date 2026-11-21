@@ -15,7 +15,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 
 > Status: engine (search s1-s9 + NNUE eval + UCI), datagen and the bullet trainer work.
 > Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-vi`, and `wyrd-vii` (current, trained on data from search s10): +34 +/- 25 Elo vs wyrd-vi at 10k nodes
-> and about +29 +/- 18 at 50k (two independent 600-game sets pooled by hand; first set alone +23 +/- 24, lower bound -2). Gains per round: +115, +81, +31, +64, +47, +34.
+> and about +29 +/- 18 at 50k (two independent 600-game sets pooled by hand; first set alone +23 +/- 24, lower bound -2). Gains per round: +115, +81, +31, +64, +47, +34; round 8 (`r8a`, 7.6M positions, search s11) was NOT accepted (-9 / -12 Elo at 10k / 50k): the loop has plateaued.
 > Failed round-7 candidates `r7a` (5,000 nodes/move, s9 data) and `r7b` (20,000 nodes/move) were NOT accepted. Provenance and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
 > The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).

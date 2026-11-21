@@ -97,7 +97,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Gain per round: +115, +81, +31, +64, +47. Still positive after the label/search change, not yet shrinking
   clearly; two data points since s9 are too few to call a trend.
 
-## wyrd-vii.bin — ACCEPTED (current best; checkpoint run `r7c`)
+## wyrd-vii.bin — ACCEPTED (current best; checkpoint run `r7c`; round 8 `r8a` did not beat it)
 
 - Tooling: commit `0b31292` (search s10; datagen and trainer code unchanged since `69d4dcb`).
 - Data: round-7 self-play (4 runs x 2500 games, seeds 101-104, 5000 nodes/move, played by `wyrd-vi.bin` with
@@ -113,6 +113,16 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
   Raw logs `logs/ab-net-r7c-10000.txt`, `logs/ab-net-r7c-50000.txt`, `logs/ab-net-r7c-50k-book2.txt` (git-ignored).
 - Not run: ladder and Stockfish measurements with this net (the ladder in docs/EVALUATION.md section 5 is wyrd-vi + s10).
 - Gain per round: +115, +81, +31, +64, +47, +34.
+
+## r8a (round 8 candidate) — NOT ACCEPTED
+
+- Tooling: commit `0558764` (search s11). Data: round-8 self-play (4 x 2500 games, seeds 111-114, 5000 nodes/move, played by
+  `wyrd-vii.bin` with search s11; 1,049,269 positions) **plus all round-2 to round-7 data** (`data/r7call.txt`) = 7,647,183 positions.
+  Training: `wyrdmate-trainer data/r8train.data 200 467 16384 0.0 r8a` (final running loss 0.001656). The net is only in
+  `checkpoints/r8a-200/quantised.bin` (git-ignored).
+- Match vs `wyrd-vii` (fastchess, same engine s11, 600 games each): 10,000 nodes **-9 +/- 25** (lower bound -35); 50,000 nodes
+  **-12 +/- 24** (lower bound -37). Neither passes rule 2; both slightly negative.
+- Gain per round: +115, +81, +31, +64, +47, +34, then about -10 (not accepted): the loop has plateaued at this net size and recipe.
 
 ## r7a (round 7 candidate) — NOT ACCEPTED (owner decision 2026-11-21: the 50k result does not clearly pass)
 
