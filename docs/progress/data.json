@@ -571,6 +571,7 @@
     {"id": "s8", "what": "delta pruning",               "rejected": false, "n1k": null,       "n10k": [33, 24],  "n50k": [31, 23]},
     {"id": "s9", "what": "check extension",             "rejected": false, "n1k": null,       "n10k": [53, 24],  "n50k": [31, 25]},
     {"id": "s10", "what": "static exchange eval (SEE)", "rejected": false, "n1k": null,       "n10k": [97, 24],  "n50k": [65, 24]},
+    {"id": "s11", "what": "reverse futility pruning", "rejected": false, "n1k": null,       "n10k": [40, 23],  "n50k": [19, 23]},
     {"id": "PVS", "what": "principal variation search", "rejected": true,  "n1k": [-36, 23],  "n10k": [-10, 22], "n50k": [-1, 25]}
   ],
   "stockfish": {

@@ -22,10 +22,10 @@ Don't re-open them unless the user does. For a file-by-file tour read
 > Strength levels (ladder) are measured with wyrd-vi + s10 (not re-measured with wyrd-vii): relative Elo per node limit (docs/EVALUATION.md section 5).
 > Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher) only with wyrd-iv + s6, not re-measured:
 > 51,200 nodes ~ `UCI_Elo` 1530 (rough, docs/EVALUATION.md section 6).
-> Search is at s10 (docs/SEARCH.md section 9): s9 added futility, delta pruning and check extension on top of s6 (~29% slower
-> per node, still beats s6 at equal time, docs/EVALUATION.md section 7.2); s10 adds SEE (static exchange evaluation) in move
-> ordering and quiescence: +97 / +65 Elo vs s9 at equal nodes (10k / 50k), +45 / +30 at equal time (section 7.5). The ladder was re-measured
-> with s10; the Stockfish numbers below still predate it.
+> Search is at s11 (docs/SEARCH.md section 9). s9 added futility, delta pruning and check extension on top of s6 (~29% slower per node,
+> still beats s6 at equal time, docs/EVALUATION.md section 7.2); s10 added SEE (static exchange evaluation) in move ordering and quiescence
+> (+97 / +65 Elo vs s9 at equal nodes 10k / 50k, +45 / +30 at equal time, section 7.5); s11 adds reverse futility pruning, which is faster
+> per node (+62 / +60 Elo at equal time, section 7.6). The ladder was re-measured with s10 only; the Stockfish numbers above predate it.
 > A browser demo exists (`web/`, WebAssembly, deployed to GitHub Pages by `.github/workflows/pages.yml`).
 > Hidden size was tested (16/64/128 vs 32, docs/EVALUATION.md section 8.1): bigger nets are not worth it at equal time, so 32 stays.
 > Next (docs/ROADMAP.md): more search work, better datagen. The `no_std` firmware is

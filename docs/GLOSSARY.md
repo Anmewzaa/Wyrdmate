@@ -51,6 +51,7 @@
 | **quantisation** | การปัด weights ทศนิยมเป็นจำนวนเต็ม (`i16`) เพื่อให้ไฟล์เล็กและคำนวณบน microcontroller ได้ |
 | **quiescence search** | การค้นต่อเฉพาะ capture/promotion จนตำแหน่ง quiet ก่อนประเมิน ([SEARCH.md](SEARCH.md) ข้อ 5) |
 | **repetition detection** | ตรวจตำแหน่งซ้ำ นับเป็นเสมอ (s2) |
+| **reverse futility pruning (RFP)** | ใกล้ปลายต้นไม้ ถ้า eval − margin ยังสูงกว่า beta ก็ตัด node ว่า fail high (s11) |
 | **round** | หนึ่งรอบของวงวน: datagen → training → A/B match |
 | **SCReLU** | activation function `clamp(x, 0, QA)²` |
 | **SEE** | Static Exchange Evaluation: คำนวณผลแลกหมากต่อเนื่องบนช่องหนึ่งโดยไม่ search ใช้จัดลำดับและตัด capture ที่เสียเปรียบ (s10) ([SEARCH.md](SEARCH.md) ข้อ 7) |

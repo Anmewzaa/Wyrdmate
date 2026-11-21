@@ -6,7 +6,7 @@
 
 | รายการ | สถานะ |
 |---|---|
-| engine | search s1–s10 + UCI + node limit ([SEARCH.md](SEARCH.md)) |
+| engine | search s1–s11 + UCI + node limit ([SEARCH.md](SEARCH.md)) |
 | net inference | NNUE พร้อม accumulator แบบ incremental ([NET.md](NET.md)) |
 | datagen / trainer | self-play และ training ด้วย bullet บน GPU ([TRAINING.md](TRAINING.md)) |
 | net 7 รุ่น | `wyrd-i` (ผู้เล่นสร้างข้อมูลเท่านั้น) ถึง `wyrd-vii` (**ปัจจุบัน**: +34 ± 25 Elo เทียบ wyrd-vi ที่ 10k, ราว +29 ± 18 ที่ 50k) |
@@ -21,7 +21,7 @@
 | ลำดับ | งาน | สถานะ | หมายเหตุ |
 |---:|---|---|---|
 | 1 | hidden size (16, 64, 128 เทียบ 32) | **ทำแล้ว** | net ใหญ่ขึ้นไม่คุ้มที่เวลาเท่ากัน คง 32 ([EVALUATION.md](EVALUATION.md) ข้อ 8.1) ยังไม่ได้ลองหลาย hidden layer หรือ feature ละเอียดขึ้น |
-| 2 | ปรับ search ต่อ | เปิดอยู่ | margin ของ futility/delta ปรับแล้วไม่ช่วย ([EVALUATION.md](EVALUATION.md) ข้อ 7.4) SEE ทำแล้ว (s10: +97 / +65 Elo ที่ node เท่ากัน, +45 / +30 ที่เวลาเท่ากัน, [EVALUATION.md](EVALUATION.md) ข้อ 7.5) ที่เหลือ: ลอง PVS ใหม่, TT ข้ามตา, aspiration window, ปรับ threshold ของ SEE ([SEARCH.md](SEARCH.md) ข้อ 10) |
+| 2 | ปรับ search ต่อ | เปิดอยู่ | margin ของ futility/delta ปรับแล้วไม่ช่วย ([EVALUATION.md](EVALUATION.md) ข้อ 7.4) reverse futility pruning ทำแล้ว (s11: +62 / +60 Elo ที่เวลาเท่ากัน, [EVALUATION.md](EVALUATION.md) ข้อ 7.6) SEE ทำแล้ว (s10: +97 / +65 Elo ที่ node เท่ากัน, +45 / +30 ที่เวลาเท่ากัน, [EVALUATION.md](EVALUATION.md) ข้อ 7.5) ที่เหลือ: ลอง PVS ใหม่, TT ข้ามตา, aspiration window, ปรับ threshold ของ SEE ([SEARCH.md](SEARCH.md) ข้อ 10) |
 | 3 | datagen คุณภาพสูงขึ้น | **ทำแล้ว** | 20,000 node ต่อ move (`r7b`) ได้ +22 / +14 Elo ที่ 10k / 50k ไม่ผ่านเกณฑ์ ไม่รับ ([EVALUATION.md](EVALUATION.md) ข้อ 8.2) ยังไม่ได้ลองข้อมูลมากขึ้นต่อรอบ |
 | 4 | distillation | ยังไม่ทำ | เทรน net ใหญ่ของเราเองเป็นครูให้ net เล็ก (ยังอยู่ในแนว self-play ต้องบันทึกที่มาตามกฎเหล็กข้อ 1) |
 | 5 | input feature ที่ฉลาดขึ้น (เช่น king buckets) | ยังไม่ทำ | แลกกับ RAM |
