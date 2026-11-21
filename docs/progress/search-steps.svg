@@ -19,83 +19,91 @@
 <line x1="90" y1="128" x2="880" y2="128" stroke="#e1e0d9" stroke-width="1"/>
 <text x="82" y="132" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="end">160</text>
 <text transform="translate(24 278) rotate(-90)" font-size="12" fill="#6b6a66" text-anchor="middle">Elo vs previous version</text>
-<rect x="127.38" y="273" width="24" height="55" rx="2" fill="#2a78d6"/>
-<path d="M139.38 286.75V259.25M135.38 286.75H143.38M135.38 259.25H143.38" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="139.38" y="254.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+44</text>
-<text x="139.38" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s2</text>
-<text x="139.38" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">repeat detection</text>
-<rect x="198.13" y="308" width="24" height="20" rx="2" fill="#9cc3ee"/>
-<path d="M210.13 338V278M206.13 338H214.13M206.13 278H214.13" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="210.13" y="273" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+16</text>
-<rect x="226.13" y="229.25" width="24" height="99" rx="2" fill="#2a78d6"/>
-<path d="M238.13 260.5V198M234.13 260.5H242.13M234.13 198H242.13" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="238.13" y="193" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+79</text>
-<rect x="254.13" y="213" width="24" height="115" rx="2" fill="#16427c"/>
-<path d="M266.13 243V183M262.13 243H270.13M262.13 183H270.13" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="266.13" y="178" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+92</text>
-<text x="238.13" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s3</text>
-<text x="238.13" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">killer + history ordering</text>
-<rect x="296.88" y="328" width="24" height="1" rx="2" fill="#9cc3ee"/>
-<path d="M308.88 330.5V325.5M304.88 330.5H312.88M304.88 325.5H312.88" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="308.88" y="320.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">0</text>
-<rect x="324.88" y="303" width="24" height="25" rx="2" fill="#2a78d6"/>
-<path d="M336.88 326.75V279.25M332.88 326.75H340.88M332.88 279.25H340.88" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="336.88" y="274.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+20</text>
-<rect x="352.88" y="273" width="24" height="55" rx="2" fill="#16427c"/>
-<path d="M364.88 301.75V244.25M360.88 301.75H368.88M360.88 244.25H368.88" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="364.88" y="239.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+44</text>
-<text x="336.88" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s4</text>
-<text x="336.88" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">null-move pruning</text>
-<rect x="395.63" y="325.5" width="24" height="2" rx="2" fill="#9cc3ee"/>
-<path d="M407.63 329.25V321.75M403.63 329.25H411.63M403.63 321.75H411.63" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="407.63" y="316.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+2</text>
-<rect x="423.63" y="293" width="24" height="35" rx="2" fill="#2a78d6"/>
-<path d="M435.63 309.25V276.75M431.63 309.25H439.63M431.63 276.75H439.63" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="435.63" y="271.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+28</text>
-<rect x="451.63" y="299.25" width="24" height="29" rx="2" fill="#16427c"/>
-<path d="M463.63 316.75V281.75M459.63 316.75H467.63M459.63 281.75H467.63" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="463.63" y="276.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+23</text>
-<text x="435.63" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s5</text>
-<text x="435.63" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">late move reductions</text>
-<rect x="494.38" y="328" width="24" height="1" rx="2" fill="#9cc3ee"/>
-<path d="M506.38 343V315.5M502.38 343H510.38M502.38 315.5H510.38" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="506.38" y="357" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-1</text>
-<rect x="522.38" y="263" width="24" height="65" rx="2" fill="#2a78d6"/>
-<path d="M534.38 280.5V245.5M530.38 280.5H538.38M530.38 245.5H538.38" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="534.38" y="240.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+52</text>
-<rect x="550.38" y="171.75" width="24" height="156" rx="2" fill="#16427c"/>
-<path d="M562.38 190.5V153M558.38 190.5H566.38M558.38 153H566.38" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="562.38" y="148" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+125</text>
-<text x="534.38" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s6</text>
-<text x="534.38" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">transposition table 64 KB</text>
-<rect x="621.13" y="296.75" width="24" height="31" rx="2" fill="#2a78d6"/>
-<path d="M633.13 326.75V266.75M629.13 326.75H637.13M629.13 266.75H637.13" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="633.13" y="261.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+25</text>
-<rect x="649.13" y="281.75" width="24" height="46" rx="2" fill="#16427c"/>
-<path d="M661.13 308V255.5M657.13 308H665.13M657.13 255.5H665.13" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="661.13" y="250.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+37</text>
-<text x="633.13" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s7</text>
-<text x="633.13" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">futility pruning</text>
-<rect x="719.88" y="286.75" width="24" height="41" rx="2" fill="#2a78d6"/>
-<path d="M731.88 316.75V256.75M727.88 316.75H735.88M727.88 256.75H735.88" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="731.88" y="251.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+33</text>
-<rect x="747.88" y="289.25" width="24" height="39" rx="2" fill="#16427c"/>
-<path d="M759.88 318V260.5M755.88 318H763.88M755.88 260.5H763.88" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="759.88" y="255.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+31</text>
-<text x="731.88" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s8</text>
-<text x="731.88" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">delta pruning</text>
-<rect x="790.63" y="328" width="24" height="45" rx="2" fill="#d7d5ce"/>
-<path d="M802.63 401.75V344.25M798.63 401.75H806.63M798.63 344.25H806.63" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="802.63" y="415.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-36</text>
-<rect x="818.63" y="328" width="24" height="12" rx="2" fill="#aeaca5"/>
-<path d="M830.63 368V313M826.63 368H834.63M826.63 313H834.63" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="830.63" y="382" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-10</text>
-<rect x="846.63" y="328" width="24" height="1" rx="2" fill="#7d7b75"/>
-<path d="M858.63 360.5V298M854.63 360.5H862.63M854.63 298H862.63" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
-<text x="858.63" y="374.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-1</text>
-<text x="830.63" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">PVS</text>
-<text x="830.63" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">principal variation search</text>
-<text x="830.63" y="478" font-size="10" font-weight="700" fill="#e34948" text-anchor="middle">tried, not accepted</text>
+<rect x="121.89" y="273" width="24" height="55" rx="2" fill="#2a78d6"/>
+<path d="M133.89 286.75V259.25M129.89 286.75H137.89M129.89 259.25H137.89" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="133.89" y="254.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+44</text>
+<text x="133.89" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s2</text>
+<text x="133.89" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">repeat detection</text>
+<rect x="181.67" y="308" width="24" height="20" rx="2" fill="#9cc3ee"/>
+<path d="M193.67 338V278M189.67 338H197.67M189.67 278H197.67" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="193.67" y="273" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+16</text>
+<rect x="209.67" y="229.25" width="24" height="99" rx="2" fill="#2a78d6"/>
+<path d="M221.67 260.5V198M217.67 260.5H225.67M217.67 198H225.67" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="221.67" y="193" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+79</text>
+<rect x="237.67" y="213" width="24" height="115" rx="2" fill="#16427c"/>
+<path d="M249.67 243V183M245.67 243H253.67M245.67 183H253.67" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="249.67" y="178" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+92</text>
+<text x="221.67" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s3</text>
+<text x="221.67" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">killer + history ordering</text>
+<rect x="269.44" y="328" width="24" height="1" rx="2" fill="#9cc3ee"/>
+<path d="M281.44 330.5V325.5M277.44 330.5H285.44M277.44 325.5H285.44" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="281.44" y="320.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">0</text>
+<rect x="297.44" y="303" width="24" height="25" rx="2" fill="#2a78d6"/>
+<path d="M309.44 326.75V279.25M305.44 326.75H313.44M305.44 279.25H313.44" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="309.44" y="274.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+20</text>
+<rect x="325.44" y="273" width="24" height="55" rx="2" fill="#16427c"/>
+<path d="M337.44 301.75V244.25M333.44 301.75H341.44M333.44 244.25H341.44" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="337.44" y="239.25" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+44</text>
+<text x="309.44" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s4</text>
+<text x="309.44" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">null-move pruning</text>
+<rect x="357.22" y="325.5" width="24" height="2" rx="2" fill="#9cc3ee"/>
+<path d="M369.22 329.25V321.75M365.22 329.25H373.22M365.22 321.75H373.22" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="369.22" y="316.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+2</text>
+<rect x="385.22" y="293" width="24" height="35" rx="2" fill="#2a78d6"/>
+<path d="M397.22 309.25V276.75M393.22 309.25H401.22M393.22 276.75H401.22" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="397.22" y="271.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+28</text>
+<rect x="413.22" y="299.25" width="24" height="29" rx="2" fill="#16427c"/>
+<path d="M425.22 316.75V281.75M421.22 316.75H429.22M421.22 281.75H429.22" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="425.22" y="276.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+23</text>
+<text x="397.22" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s5</text>
+<text x="397.22" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">late move reductions</text>
+<rect x="445" y="328" width="24" height="1" rx="2" fill="#9cc3ee"/>
+<path d="M457 343V315.5M453 343H461M453 315.5H461" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="457" y="357" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-1</text>
+<rect x="473" y="263" width="24" height="65" rx="2" fill="#2a78d6"/>
+<path d="M485 280.5V245.5M481 280.5H489M481 245.5H489" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="485" y="240.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+52</text>
+<rect x="501" y="171.75" width="24" height="156" rx="2" fill="#16427c"/>
+<path d="M513 190.5V153M509 190.5H517M509 153H517" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="513" y="148" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+125</text>
+<text x="485" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s6</text>
+<text x="485" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">transposition table 64 KB</text>
+<rect x="560.78" y="296.75" width="24" height="31" rx="2" fill="#2a78d6"/>
+<path d="M572.78 326.75V266.75M568.78 326.75H576.78M568.78 266.75H576.78" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="572.78" y="261.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+25</text>
+<rect x="588.78" y="281.75" width="24" height="46" rx="2" fill="#16427c"/>
+<path d="M600.78 308V255.5M596.78 308H604.78M596.78 255.5H604.78" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="600.78" y="250.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+37</text>
+<text x="572.78" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s7</text>
+<text x="572.78" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">futility pruning</text>
+<rect x="648.56" y="286.75" width="24" height="41" rx="2" fill="#2a78d6"/>
+<path d="M660.56 316.75V256.75M656.56 316.75H664.56M656.56 256.75H664.56" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="660.56" y="251.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+33</text>
+<rect x="676.56" y="289.25" width="24" height="39" rx="2" fill="#16427c"/>
+<path d="M688.56 318V260.5M684.56 318H692.56M684.56 260.5H692.56" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="688.56" y="255.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+31</text>
+<text x="660.56" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s8</text>
+<text x="660.56" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">delta pruning</text>
+<rect x="736.33" y="261.75" width="24" height="66" rx="2" fill="#2a78d6"/>
+<path d="M748.33 291.75V231.75M744.33 291.75H752.33M744.33 231.75H752.33" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="748.33" y="226.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+53</text>
+<rect x="764.33" y="289.25" width="24" height="39" rx="2" fill="#16427c"/>
+<path d="M776.33 320.5V258M772.33 320.5H780.33M772.33 258H780.33" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="776.33" y="253" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">+31</text>
+<text x="748.33" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">s9</text>
+<text x="748.33" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">check extension</text>
+<rect x="796.11" y="328" width="24" height="45" rx="2" fill="#d7d5ce"/>
+<path d="M808.11 401.75V344.25M804.11 401.75H812.11M804.11 344.25H812.11" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="808.11" y="415.75" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-36</text>
+<rect x="824.11" y="328" width="24" height="12" rx="2" fill="#aeaca5"/>
+<path d="M836.11 368V313M832.11 368H840.11M832.11 313H840.11" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="836.11" y="382" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-10</text>
+<rect x="852.11" y="328" width="24" height="1" rx="2" fill="#7d7b75"/>
+<path d="M864.11 360.5V298M860.11 360.5H868.11M860.11 298H868.11" stroke="#1f1f1e" stroke-width="1.2" fill="none"/>
+<text x="864.11" y="374.5" font-size="10" font-weight="700" fill="#1f1f1e" text-anchor="middle">-1</text>
+<text x="836.11" y="448" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="middle">PVS</text>
+<text x="836.11" y="464" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="middle">principal variation search</text>
+<text x="836.11" y="478" font-size="10" font-weight="700" fill="#e34948" text-anchor="middle">tried, not accepted</text>
 <rect x="110" y="110" width="12" height="12" rx="2" fill="#9cc3ee"/>
 <text x="128" y="120" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">1,000 nodes</text>
 <rect x="240" y="110" width="12" height="12" rx="2" fill="#2a78d6"/>

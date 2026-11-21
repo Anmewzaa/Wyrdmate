@@ -383,6 +383,7 @@
     {"id": "s6", "what": "transposition table 64 KB",   "rejected": false, "n1k": [-1, 11],   "n10k": [52, 14],  "n50k": [125, 15]},
     {"id": "s7", "what": "futility pruning",            "rejected": false, "n1k": null,       "n10k": [25, 24],  "n50k": [37, 21]},
     {"id": "s8", "what": "delta pruning",               "rejected": false, "n1k": null,       "n10k": [33, 24],  "n50k": [31, 23]},
+    {"id": "s9", "what": "check extension",             "rejected": false, "n1k": null,       "n10k": [53, 24],  "n50k": [31, 25]},
     {"id": "PVS", "what": "principal variation search", "rejected": true,  "n1k": [-36, 23],  "n10k": [-10, 22], "n50k": [-1, 25]}
   ],
   "stockfish": {
