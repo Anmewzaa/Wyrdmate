@@ -12,7 +12,7 @@
 | net 6 รุ่น | `wyrd-i` (ผู้เล่นสร้างข้อมูลเท่านั้น) ถึง `wyrd-vi` (**ปัจจุบัน**: +47 ± 25 Elo เทียบ wyrd-v) |
 | เครื่องมือวัดผล | `ab.ps1` (A/B, เวลาเท่ากัน), ladder, เทียบ Stockfish, หน้า `monitor.py` ([EVALUATION.md](EVALUATION.md)) |
 | เว็บเดโม | `web/` + GitHub Pages ใช้ `wyrd-vi` เป็นค่าเริ่มต้น |
-| ladder ปัจจุบัน | วัดแล้วกับ `wyrd-vi` + s9: 51,200 node = +549 Elo เทียบ 1,600 node ([EVALUATION.md](EVALUATION.md) ข้อ 5) |
+| ladder ปัจจุบัน | วัดแล้วกับ `wyrd-vi` + s10: 51,200 node = +547 Elo เทียบ 1,600 node ([EVALUATION.md](EVALUATION.md) ข้อ 5) |
 
 ผลที่เพิ่มต่อรอบ: +115, +81, +31, +64, +47 Elo และรอบ 7 (`r7a`) ไม่ผ่านเกณฑ์ที่ 50,000 node จึงไม่รับ ([TRAINING.md](TRAINING.md) ข้อ 5)
 

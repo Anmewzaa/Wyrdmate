@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="940" height="652" viewBox="0 0 940 652" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · What each search step added">
-<rect width="940" height="652" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="702" viewBox="0 0 940 702" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · What each search step added">
+<rect width="940" height="702" fill="#ffffff"/>
 <text x="24" y="38" font-size="22" font-weight="700" fill="#1f1f1e" text-anchor="start">Wyrdmate · What each search step added</text>
 <text x="24" y="58" font-size="13" font-weight="400" fill="#6b6a66" text-anchor="start">Elo against the previous search version at the same node limit (wyrd-iv on both sides, whiskers = error margin)</text>
 <rect x="24" y="72" width="892" height="28" rx="6" fill="#f6f5f0"/>
@@ -8,77 +8,83 @@
 <text x="56" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">10,000 nodes</text>
 <rect x="160" y="114" width="14" height="14" rx="3" fill="#9cc3ee"/>
 <text x="180" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">50,000 nodes</text>
-<line x1="300" y1="146" x2="300" y2="596" stroke="#e1e0d9"/>
-<text x="300" y="612" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-40</text>
-<line x1="396" y1="146" x2="396" y2="596" stroke="#e1e0d9"/>
-<text x="396" y="612" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0</text>
-<line x1="492" y1="146" x2="492" y2="596" stroke="#e1e0d9"/>
-<text x="492" y="612" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">40</text>
-<line x1="588" y1="146" x2="588" y2="596" stroke="#e1e0d9"/>
-<text x="588" y="612" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">80</text>
-<line x1="684" y1="146" x2="684" y2="596" stroke="#e1e0d9"/>
-<text x="684" y="612" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">120</text>
-<line x1="780" y1="146" x2="780" y2="596" stroke="#e1e0d9"/>
-<text x="780" y="612" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">160</text>
+<line x1="300" y1="146" x2="300" y2="646" stroke="#e1e0d9"/>
+<text x="300" y="662" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-40</text>
+<line x1="396" y1="146" x2="396" y2="646" stroke="#e1e0d9"/>
+<text x="396" y="662" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0</text>
+<line x1="492" y1="146" x2="492" y2="646" stroke="#e1e0d9"/>
+<text x="492" y="662" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">40</text>
+<line x1="588" y1="146" x2="588" y2="646" stroke="#e1e0d9"/>
+<text x="588" y="662" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">80</text>
+<line x1="684" y1="146" x2="684" y2="646" stroke="#e1e0d9"/>
+<text x="684" y="662" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">120</text>
+<line x1="780" y1="146" x2="780" y2="646" stroke="#e1e0d9"/>
+<text x="780" y="662" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">160</text>
 <rect x="24" y="146" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="168" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s3</text>
-<text x="36" y="185" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">killer + history ordering</text>
-<rect x="396" y="157" width="190" height="14" rx="3" fill="#2a78d6"/>
-<text x="591.6" y="168" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+79 ± 25</text>
-<rect x="396" y="174.5" width="221" height="9" rx="3" fill="#9cc3ee"/>
-<text x="622.8" y="183" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+92 ± 24</text>
-<text x="36" y="218" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s9</text>
-<text x="36" y="235" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">check extension</text>
-<rect x="396" y="207" width="127" height="14" rx="3" fill="#2a78d6"/>
-<text x="529.2" y="218" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+53 ± 24</text>
-<rect x="396" y="224.5" width="74" height="9" rx="3" fill="#9cc3ee"/>
-<text x="476.4" y="233" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+31 ± 25</text>
+<text x="36" y="168" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s10</text>
+<text x="36" y="185" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">static exchange eval (SEE)</text>
+<rect x="396" y="157" width="233" height="14" rx="3" fill="#2a78d6"/>
+<text x="634.8" y="168" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+97 ± 24</text>
+<rect x="396" y="174.5" width="156" height="9" rx="3" fill="#9cc3ee"/>
+<text x="558" y="183" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+65 ± 24</text>
+<text x="36" y="218" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s3</text>
+<text x="36" y="235" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">killer + history ordering</text>
+<rect x="396" y="207" width="190" height="14" rx="3" fill="#2a78d6"/>
+<text x="591.6" y="218" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+79 ± 25</text>
+<rect x="396" y="224.5" width="221" height="9" rx="3" fill="#9cc3ee"/>
+<text x="622.8" y="233" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+92 ± 24</text>
 <rect x="24" y="246" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="268" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s6</text>
-<text x="36" y="285" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">transposition table 64 KB</text>
-<rect x="396" y="257" width="125" height="14" rx="3" fill="#2a78d6"/>
-<text x="526.8" y="268" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+52 ± 14</text>
-<rect x="396" y="274.5" width="300" height="9" rx="3" fill="#9cc3ee"/>
-<text x="702" y="283" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+125 ± 15</text>
-<text x="36" y="318" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s2</text>
-<text x="36" y="335" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">repeat detection</text>
-<rect x="396" y="307" width="106" height="14" rx="3" fill="#2a78d6"/>
-<text x="507.6" y="318" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+44 ± 11</text>
+<text x="36" y="268" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s9</text>
+<text x="36" y="285" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">check extension</text>
+<rect x="396" y="257" width="127" height="14" rx="3" fill="#2a78d6"/>
+<text x="529.2" y="268" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+53 ± 24</text>
+<rect x="396" y="274.5" width="74" height="9" rx="3" fill="#9cc3ee"/>
+<text x="476.4" y="283" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+31 ± 25</text>
+<text x="36" y="318" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s6</text>
+<text x="36" y="335" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">transposition table 64 KB</text>
+<rect x="396" y="307" width="125" height="14" rx="3" fill="#2a78d6"/>
+<text x="526.8" y="318" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+52 ± 14</text>
+<rect x="396" y="324.5" width="300" height="9" rx="3" fill="#9cc3ee"/>
+<text x="702" y="333" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+125 ± 15</text>
 <rect x="24" y="346" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="368" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s8</text>
-<text x="36" y="385" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">delta pruning</text>
-<rect x="396" y="357" width="79" height="14" rx="3" fill="#2a78d6"/>
-<text x="481.2" y="368" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+33 ± 24</text>
-<rect x="396" y="374.5" width="74" height="9" rx="3" fill="#9cc3ee"/>
-<text x="476.4" y="383" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+31 ± 23</text>
-<text x="36" y="418" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s5</text>
-<text x="36" y="435" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">late move reductions</text>
-<rect x="396" y="407" width="67" height="14" rx="3" fill="#2a78d6"/>
-<text x="469.2" y="418" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+28 ± 13</text>
-<rect x="396" y="424.5" width="55" height="9" rx="3" fill="#9cc3ee"/>
-<text x="457.2" y="433" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+23 ± 14</text>
+<text x="36" y="368" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s2</text>
+<text x="36" y="385" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">repeat detection</text>
+<rect x="396" y="357" width="106" height="14" rx="3" fill="#2a78d6"/>
+<text x="507.6" y="368" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+44 ± 11</text>
+<text x="36" y="418" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s8</text>
+<text x="36" y="435" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">delta pruning</text>
+<rect x="396" y="407" width="79" height="14" rx="3" fill="#2a78d6"/>
+<text x="481.2" y="418" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+33 ± 24</text>
+<rect x="396" y="424.5" width="74" height="9" rx="3" fill="#9cc3ee"/>
+<text x="476.4" y="433" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+31 ± 23</text>
 <rect x="24" y="446" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="468" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s7</text>
-<text x="36" y="485" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">futility pruning</text>
-<rect x="396" y="457" width="60" height="14" rx="3" fill="#2a78d6"/>
-<text x="462" y="468" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+25 ± 24</text>
-<rect x="396" y="474.5" width="89" height="9" rx="3" fill="#9cc3ee"/>
-<text x="490.8" y="483" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+37 ± 21</text>
-<text x="36" y="518" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s4</text>
-<text x="36" y="535" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">null-move pruning</text>
-<rect x="396" y="507" width="48" height="14" rx="3" fill="#2a78d6"/>
-<text x="450" y="518" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+20 ± 19</text>
-<rect x="396" y="524.5" width="106" height="9" rx="3" fill="#9cc3ee"/>
-<text x="507.6" y="533" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+44 ± 23</text>
+<text x="36" y="468" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s5</text>
+<text x="36" y="485" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">late move reductions</text>
+<rect x="396" y="457" width="67" height="14" rx="3" fill="#2a78d6"/>
+<text x="469.2" y="468" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+28 ± 13</text>
+<rect x="396" y="474.5" width="55" height="9" rx="3" fill="#9cc3ee"/>
+<text x="457.2" y="483" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+23 ± 14</text>
+<text x="36" y="518" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s7</text>
+<text x="36" y="535" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">futility pruning</text>
+<rect x="396" y="507" width="60" height="14" rx="3" fill="#2a78d6"/>
+<text x="462" y="518" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+25 ± 24</text>
+<rect x="396" y="524.5" width="89" height="9" rx="3" fill="#9cc3ee"/>
+<text x="490.8" y="533" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+37 ± 21</text>
 <rect x="24" y="546" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="568" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">PVS</text>
-<text x="66" y="568" font-size="11" font-weight="700" fill="#e34948" text-anchor="start">tried, not accepted</text>
-<text x="36" y="585" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">principal variation search</text>
-<rect x="372" y="557" width="24" height="14" rx="3" fill="#898781"/>
-<text x="366" y="568" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="end">-10 ± 22</text>
-<rect x="393.6" y="574.5" width="2" height="9" rx="3" fill="#d7d5ce"/>
-<text x="387.6" y="583" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="end">-1 ± 25</text>
-<line x1="396" y1="146" x2="396" y2="596" stroke="#1f1f1e" stroke-width="1.5"/>
-<text x="540" y="634" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">Elo vs previous version</text>
-<text x="24" y="640" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
+<text x="36" y="568" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">s4</text>
+<text x="36" y="585" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">null-move pruning</text>
+<rect x="396" y="557" width="48" height="14" rx="3" fill="#2a78d6"/>
+<text x="450" y="568" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+20 ± 19</text>
+<rect x="396" y="574.5" width="106" height="9" rx="3" fill="#9cc3ee"/>
+<text x="507.6" y="583" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="start">+44 ± 23</text>
+<text x="36" y="618" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">PVS</text>
+<text x="66" y="618" font-size="11" font-weight="700" fill="#e34948" text-anchor="start">tried, not accepted</text>
+<text x="36" y="635" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">principal variation search</text>
+<rect x="372" y="607" width="24" height="14" rx="3" fill="#898781"/>
+<text x="366" y="618" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="end">-10 ± 22</text>
+<rect x="393.6" y="624.5" width="2" height="9" rx="3" fill="#d7d5ce"/>
+<text x="387.6" y="633" font-size="11" font-weight="700" fill="#1f1f1e" text-anchor="end">-1 ± 25</text>
+<line x1="396" y1="146" x2="396" y2="646" stroke="#1f1f1e" stroke-width="1.5"/>
+<text x="540" y="684" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">Elo vs previous version</text>
+<text x="24" y="690" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
 </svg>

@@ -69,7 +69,7 @@ The search was improved in steps after the nets (see [SEARCH.md](docs/SEARCH.md)
 
 <div align="center">
 
-![Strength by node limit (wyrd-vi, search s9)](docs/progress/ladder.svg)
+![Strength by node limit (wyrd-vi, search s10)](docs/progress/ladder.svg)
 
 ![What each search step added](docs/progress/search-steps.svg)
 

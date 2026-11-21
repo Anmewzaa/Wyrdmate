@@ -216,7 +216,7 @@ foreach ($r in $rows) {
   $cy = $top + $i * $rowH + $rowH / 2
   if ($i % 2 -eq 0) { A "<rect x=`"24`" y=`"$($top + $i * $rowH)`" width=`"$($W - 48)`" height=`"$rowH`" fill=`"$band`" opacity=`"0.7`"/>" }
   A (T 36 ($cy + 5) 14 $ink "$(([int]$r.nodes).ToString('N0', $inv)) $($ui.nodes)" 'start' '700')
-  $v = $r.s9; $e = $v[0]
+  $v = $r.s10; $e = $v[0]
   Bar (LX 0) (LX $e) $cy 18 $blue
   $lab = "$(Sgn $e)$e $pm $($v[1])"
   if ($e -ge 0) { A (T ((LX $e) + 6) ($cy + 4) 12 $blue $lab 'start' '700') } else { A (T ((LX $e) - 6) ($cy + 4) 12 $blue $lab 'end' '700') }
