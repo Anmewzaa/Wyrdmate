@@ -19,6 +19,7 @@ param(
     [int]$Concurrency = 12,
     [string]$Tag = '',
     [string]$Book = 'data\book.epd',   # opening book (EPD), relative to the repo root; use another seed for an independent second set
+    [int]$NewNodes = 0,  # node limit for the new engine only (default: same as -Nodes); for equal-time comparisons
     [int]$NewHash = -1   # transposition table size in KiB for the new engine only (default: the engine's own)
 )
 $ErrorActionPreference = 'Continue'
@@ -82,24 +83,34 @@ $name = if ($Tag) { $Tag } else { "$([IO.Path]::GetFileNameWithoutExtension($new
 $pgn = "$root\logs\ab-$name.pgn"
 $txt = "$root\logs\ab-$name.txt"
 
+$nn = if ($NewNodes -gt 0) { $NewNodes } else { $Nodes }   # -NewNodes: a different node budget for the new engine (equal-time matches)
 $fc = @(
-    '-engine', 'name=new', "cmd=$newExe", "option.EvalFile=$root\$Net", "option.Nodes=$Nodes",
-    '-engine', 'name=old', "cmd=$oldExe", "option.Nodes=$Nodes",
-    '-each', 'proto=uci', 'tc=inf', "nodes=$Nodes",
+    '-engine', 'name=new', "cmd=$newExe", "option.EvalFile=$root\$Net", "option.Nodes=$nn", "nodes=$nn",
+    '-engine', 'name=old', "cmd=$oldExe", "option.Nodes=$Nodes", "nodes=$Nodes",
+    '-each', 'proto=uci', 'tc=inf',
     '-openings', "file=$root\$Book", 'format=epd', 'order=random',
     '-rounds', $Rounds, '-games', 2, '-repeat', '-concurrency', $Concurrency, '-maxmoves', 120,
     '-draw', 'movenumber=30', 'movecount=8', 'score=10', '-resign', 'movecount=4', 'score=800',
     '-pgnout', "file=$pgn"
 )
-if ($NewHash -ge 0) { $fc = $fc[0..4] + @("option.Hash=$NewHash") + $fc[5..($fc.Count - 1)] }
-# old engine: a net unless OldNet is 'material'
-if ($OldNet -ne 'material') { $fc = $fc[0..8] + @("option.EvalFile=$root\$OldNet") + $fc[9..($fc.Count - 1)] }
+if ($NewHash -ge 0) { $fc = $fc[0..5] + @("option.Hash=$NewHash") + $fc[6..($fc.Count - 1)] }
+# old engine: a net unless OldNet is 'material' (its block ends 5 items after the new engine's, +1 if Hash was inserted)
+$oldEnd = if ($NewHash -ge 0) { 11 } else { 10 }
+if ($OldNet -ne 'material') { $fc = $fc[0..$oldEnd] + @("option.EvalFile=$root\$OldNet") + $fc[($oldEnd + 1)..($fc.Count - 1)] }
 
 Write-Host "new: $newExe ($Net)"
 Write-Host "old: $oldExe ($OldNet)"
 Write-Host "nodes=$Nodes, $($Rounds * 2) games, log: $txt"
 # sidecar for scripts/monitor.py: which nets played, so the page can name them
-[ordered]@{ new = $Net; old = $OldNet; nodes = $Nodes; games = $Rounds * 2; book = $Book; started = (Get-Date -Format 'yyyy-MM-dd HH:mm') } |
+function Get-EngineId([string]$ref) {   # for the monitor: which engine build played (commit, or WORKTREE@<head commit> for uncommitted code)
+    if ($ref -like '*.exe') { return [IO.Path]::GetFileName($ref) }
+    Push-Location $root
+    try {
+        if ($ref -eq 'WORKTREE') { return "WORKTREE@$((git rev-parse --short HEAD).Trim())" }
+        return (git rev-parse --short $ref).Trim()
+    } finally { Pop-Location }
+}
+[ordered]@{ new_engine = (Get-EngineId $New); old_engine = (Get-EngineId $Old); new = $Net; old = $OldNet; nodes = $Nodes; new_nodes = $nn; games = $Rounds * 2; book = $Book; started = (Get-Date -Format 'yyyy-MM-dd HH:mm') } |
     ConvertTo-Json | Set-Content -Encoding UTF8 "$root\logs\ab-$name.meta.json"
 & $fastchess @fc > $txt 2>&1
 
