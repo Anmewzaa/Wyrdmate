@@ -112,6 +112,15 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
   `scripts/ab.ps1` now warns when `-Rounds` exceeds the book size and takes `-Book` for another opening set.
 - Gain per round: +115, +81, +31, +64, +47, then +39 (10k) / about +18 (50k) for this candidate: shrinking again.
 
+## r7b (datagen quality: 20,000 nodes/move) — NOT ACCEPTED, not copied to `nets/`
+
+- Tooling: commit `69d4dcb` (search s9). Data: round-7 self-play (4 x 2500 games, seeds 91-94, **20000 nodes/move**, played by
+  `wyrd-vi.bin`) **plus all round-2 to round-6 data** = 6,594,606 positions (datagen took 32 min).
+  Training: `wyrdmate-trainer data/r7btrain.data 200 403 16384 0.0 r7b` (final running loss 0.001635).
+  The net is only in `checkpoints/r7b-200/quantised.bin` (git-ignored).
+- Match vs `wyrd-vi` (600 games each, same engine): 10,000 nodes **+22 +/- 25** (lower bound -2); 50,000 nodes **+14 +/- 24**
+  (lower bound -10). Neither passes rule 2. Not run: `r7b` vs `r7a`. Details: docs/EVALUATION.md section 8.2.
+
 ## Hidden size experiment (r6h16, r6h64, r6h128) — NOT ACCEPTED, none copied to `nets/`
 
 - Tooling: commit `53bbbb8` plus the trainer change that makes hidden size the 7th argument (this commit). Data: the same
