@@ -1,6 +1,6 @@
-"""Local progress page for datagen, training and A/B matches (read-only, stdlib only).
+"""Local progress pages for datagen, training and A/B matches (read-only, stdlib only).
 
-    python scripts/monitor.py            # then open http://localhost:8765
+    python scripts/monitor.py            # then open http://localhost:8765 (pages: /, /datagen, /train, /match)
     python scripts/monitor.py --port 9000 --superbatches 200
 
 It reads the log files the tools already write:
@@ -60,9 +60,23 @@ def datagen_status():
             md = re.match(r"done: (\d+) games, (\d+) positions", last[0])
             g = tot = int(md.group(1)) if md else 0
             pos = int(md.group(2)) if md else 0
-        jobs.append({"seed": seed, "games": g, "total": tot, "positions": pos,
-                     "done": done, "running": (not done) and age(p) < RUNNING_SECS})
-    return {"name": name.rstrip("part") or name, "jobs": jobs}
+        running = (not done) and age(p) < RUNNING_SECS
+        start = os.path.getctime(p)  # log creation time = job start (Windows creation time)
+        end = time.time() if running else os.path.getmtime(p)
+        elapsed = max(1.0, end - start)
+        rate = g / elapsed * 60  # games per minute over the whole run so far
+        eta = (tot - g) / rate * 60 if running and rate > 0 else None
+        jobs.append({"seed": seed, "games": g, "total": tot, "positions": pos, "done": done,
+                     "running": running, "elapsed": elapsed, "rate": rate, "eta": eta})
+    return {"name": name[:-4] if name.endswith("part") else name, "jobs": jobs}
+
+
+def reference_loss():
+    try:
+        with open(os.path.join(ROOT, "docs", "progress", "data.json"), encoding="utf-8") as f:
+            return [{"name": s["name"], "points": s["points"]} for s in json.load(f)["loss"]][-2:]
+    except (OSError, ValueError, KeyError):
+        return []
 
 
 def train_status(total_sb):
@@ -70,7 +84,7 @@ def train_status(total_sb):
     if not logs:
         return None
     p = max(logs, key=os.path.getmtime)
-    pts, last_by_sb = [], {}
+    last_by_sb = {}
     for line in read_text(p).splitlines():
         parts = line.strip().split(",")
         if len(parts) == 3:
@@ -78,13 +92,15 @@ def train_status(total_sb):
                 last_by_sb[int(parts[0])] = float(parts[2])
             except ValueError:
                 pass
-    for sb in sorted(last_by_sb):
-        pts.append([sb, last_by_sb[sb]])
+    pts = [[sb, last_by_sb[sb]] for sb in sorted(last_by_sb)]
     step = max(1, len(pts) // 200)
-    sb_now = pts[-1][0] if pts else 0
-    return {"run": os.path.basename(os.path.dirname(p)), "superbatch": sb_now, "total": total_sb,
-            "loss": pts[-1][1] if pts else None, "points": pts[::step],
-            "running": age(p) < RUNNING_SECS}
+    gain10 = None
+    if len(pts) > 10 and pts[-11][1] > 0:
+        gain10 = 100.0 * (pts[-11][1] - pts[-1][1]) / pts[-11][1]  # % loss drop over the last 10 superbatches
+    return {"run": os.path.basename(os.path.dirname(p)), "superbatch": pts[-1][0] if pts else 0,
+            "total": total_sb, "loss": pts[-1][1] if pts else None, "best": min((q[1] for q in pts), default=None),
+            "gain10": gain10, "points": pts[::step], "rows": pts[-15:][::-1],
+            "reference": reference_loss(), "running": age(p) < RUNNING_SECS}
 
 
 def match_status():
@@ -106,71 +122,102 @@ def match_status():
     return out
 
 
-PAGE = """<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+PAGE = r"""<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Wyrdmate monitor</title>
 <style>
-:root{--bg:#fff;--ink:#1f1f1e;--mute:#6b6a66;--line:#e1e0d9;--card:#f6f5f0;--blue:#2a78d6;--green:#1baf7a;--red:#e34948}
-@media (prefers-color-scheme:dark){:root{--bg:#171716;--ink:#ecebe6;--mute:#a09f98;--line:#33332f;--card:#222220;--blue:#5a9be8;--green:#35c593;--red:#ef6b6a}}
+:root{--bg:#fff;--ink:#1f1f1e;--mute:#6b6a66;--line:#e1e0d9;--card:#f6f5f0;--blue:#2a78d6;--green:#1baf7a;--red:#e34948;--orange:#eb6834}
+@media (prefers-color-scheme:dark){:root{--bg:#171716;--ink:#ecebe6;--mute:#a09f98;--line:#33332f;--card:#222220;--blue:#5a9be8;--green:#35c593;--red:#ef6b6a;--orange:#f08a5d}}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",Helvetica,Arial,sans-serif}
 main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
-h1{font-size:22px;margin:0 0 2px}.sub{color:var(--mute);font-size:13px;margin:0 0 18px}
-section{background:var(--card);border-radius:10px;padding:14px 16px;margin:0 0 16px}
+h1{font-size:22px;margin:0 0 2px}.sub{color:var(--mute);font-size:13px;margin:0 0 14px}
+nav{display:flex;gap:6px;margin:0 0 16px;flex-wrap:wrap}
+nav a{padding:5px 14px;border-radius:16px;color:var(--mute);text-decoration:none;border:1px solid var(--line);font-size:14px}
+nav a.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+section,.card{background:var(--card);border-radius:10px;padding:14px 16px;margin:0 0 16px}
 h2{font-size:15px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
 .pill{font-size:11px;padding:1px 8px;border-radius:10px;border:1px solid var(--line);color:var(--mute)}
 .pill.on{color:var(--green);border-color:var(--green)}
-.row{display:grid;grid-template-columns:80px 1fr 150px;gap:10px;align-items:center;margin:6px 0;font-size:13px}
-.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--blue);transition:width .6s}
+.row{display:grid;grid-template-columns:70px 1fr 190px;gap:10px;align-items:center;margin:6px 0;font-size:13px}
+.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden;display:flex}.bar>i{display:block;height:100%;background:var(--blue);transition:width .6s}
 .bar.done>i{background:var(--green)}.num{color:var(--mute);text-align:right;font-variant-numeric:tabular-nums}
 .big{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}.mute{color:var(--mute);font-size:13px}
-svg{width:100%;height:auto;display:block}.empty{color:var(--mute);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0 4px}
+.stat b{display:block;font-size:19px;font-variant-numeric:tabular-nums}.stat span{color:var(--mute);font-size:12px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}th,td{text-align:right;padding:3px 6px;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}
+svg{width:100%;height:auto;display:block}.empty{color:var(--mute);font-size:13px}.ok{color:var(--green)}.bad{color:var(--red)}
+.leg{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:4px;flex-wrap:wrap}.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px}
+a.card{display:block;color:inherit;text-decoration:none}
 </style>
 <main>
 <h1>Wyrdmate monitor</h1><p class="sub" id="upd">connecting...</p>
-<section id="dg"></section><section id="tr"></section><section id="mt"></section>
+<nav id="nav"></nav><div id="view"></div>
 </main>
 <script>
 const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString("en-US");
+const PAGES=[["/","Overview"],["/datagen","Datagen"],["/train","Training"],["/match","A/B match"]];
+const page=location.pathname.replace(/\/$/,"")||"/";
+$("#nav").innerHTML=PAGES.map(([h,n])=>`<a href="${h}" class="${h===page?'on':''}">${n}</a>`).join("");
 const pill=(on,t)=>`<span class="pill ${on?'on':''}">${t}</span>`;
-function chart(pts){
-  if(pts.length<2)return"";
-  const W=800,H=180,L=54,B=22,xs=pts.map(p=>p[0]),ys=pts.map(p=>Math.log10(p[1]));
+const dur=s=>{if(s==null||!isFinite(s))return"-";s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}h ${m}m`:m?`${m}m ${s%60}s`:`${s}s`};
+const stat=(v,l)=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`;
+const COLS=["var(--blue)","var(--orange)","var(--green)"];
+function chart(series){
+  const all=series.flatMap(s=>s.points);if(all.length<2)return"";
+  const W=800,H=220,L=58,B=24,xs=all.map(p=>p[0]),ys=all.map(p=>Math.log10(p[1]));
   const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),pad=(y1-y0)*.08||.1;
   const X=v=>L+(v-x0)/((x1-x0)||1)*(W-L-8),Y=v=>8+(1-(v-y0+pad)/((y1-y0)+2*pad))*(H-B-8);
-  const d=pts.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(Math.log10(p[1])).toFixed(1)).join("");
-  const last=pts[pts.length-1];
-  return `<svg viewBox="0 0 ${W} ${H}"><path d="${d}" fill="none" stroke="var(--blue)" stroke-width="2.5"/>
-  <circle cx="${X(last[0])}" cy="${Y(Math.log10(last[1]))}" r="4" fill="var(--blue)"/>
-  <text x="${L}" y="${H-4}" font-size="11" fill="var(--mute)">superbatch ${x0}</text>
-  <text x="${W-8}" y="${H-4}" font-size="11" fill="var(--mute)" text-anchor="end">${x1}</text>
-  <text x="4" y="14" font-size="11" fill="var(--mute)">loss (log)</text></svg>`;
+  let g="";for(let k=0;k<4;k++){const v=y0+(y1-y0)*k/3,yy=Y(v);g+=`<line x1="${L}" x2="${W-8}" y1="${yy}" y2="${yy}" stroke="var(--line)"/><text x="${L-6}" y="${yy+4}" font-size="10" fill="var(--mute)" text-anchor="end">${Math.pow(10,v).toFixed(5)}</text>`}
+  const lines=series.map((s,i)=>s.points.length<2?"":`<path d="${s.points.map((p,j)=>(j?"L":"M")+X(p[0]).toFixed(1)+" "+Y(Math.log10(p[1])).toFixed(1)).join("")}" fill="none" stroke="${COLS[i%3]}" stroke-width="${i===series.length-1?3:1.8}" ${i===series.length-1?"":'stroke-dasharray="5 3"'}/>`).join("");
+  return `<svg viewBox="0 0 ${W} ${H}">${g}${lines}<text x="${L}" y="${H-4}" font-size="11" fill="var(--mute)">superbatch ${x0}</text><text x="${W-8}" y="${H-4}" font-size="11" fill="var(--mute)" text-anchor="end">${x1}</text></svg>
+  <div class="leg">${series.map((s,i)=>`<span><i style="background:${COLS[i%3]}"></i>${s.name}</span>`).join("")}</div>`;
+}
+function dgView(dg,full){
+  if(!dg)return'<h2>Datagen</h2><div class="empty">no datagen logs yet</div>';
+  const J=dg.jobs,g=J.reduce((a,j)=>a+j.games,0),t=J.reduce((a,j)=>a+j.total,0),p=J.reduce((a,j)=>a+j.positions,0);
+  const on=J.some(j=>j.running),pc=t?100*g/t:0,rate=J.reduce((a,j)=>a+(j.running?j.rate:0),0),etas=J.filter(j=>j.eta!=null).map(j=>j.eta);
+  let h=`<h2>Datagen ${pill(on,on?"running":(pc>=100?"done":"idle"))}<span class="mute">${dg.name}</span></h2><div class="big">${pc.toFixed(1)}%</div>
+  <div class="mute">${fmt(g)} / ${fmt(t)} games · ${fmt(p)} positions</div>`;
+  if(full){
+    const el=Math.max(...J.map(j=>j.elapsed));
+    h+=`<div class="grid">${stat(on?rate.toFixed(0):"-","games / min (all jobs)")}${stat(on&&etas.length?dur(Math.max(...etas)):"-","time left (estimate)")}${stat(dur(el),"elapsed")}${stat(g?(p/g).toFixed(1):"-","positions / game")}</div>`;
+    h+=J.map(j=>{const q=j.total?100*j.games/j.total:0;return `<div class="row"><span>seed ${j.seed}</span><div class="bar ${j.done?'done':''}"><i style="width:${q}%"></i></div><span class="num">${fmt(j.games)}/${fmt(j.total)} · ${q.toFixed(0)}% · ${j.running?j.rate.toFixed(0)+"/min":(j.done?"done":"idle")}</span></div>`}).join("");
+    h+=`<p class="mute">Speed is the average since each job started; the time left assumes it stays that speed.</p>`;
+  }
+  return h;
+}
+function trView(tr,full){
+  if(!tr)return'<h2>Training</h2><div class="empty">no training logs yet</div>';
+  const pc=tr.total?100*tr.superbatch/tr.total:0;
+  let h=`<h2>Training ${pill(tr.running,tr.running?"running":"idle")}<span class="mute">${tr.run}</span></h2><div class="big">${pc.toFixed(0)}%</div>
+  <div class="mute">superbatch ${tr.superbatch} / ${tr.total} · loss ${tr.loss==null?"-":tr.loss.toFixed(6)}</div>`;
+  if(full){
+    h+=`<div class="grid">${stat(tr.loss==null?"-":tr.loss.toFixed(6),"current loss")}${stat(tr.best==null?"-":tr.best.toFixed(6),"best loss")}${stat(tr.gain10==null?"-":tr.gain10.toFixed(2)+"%","loss drop, last 10 superbatches")}</div>`;
+    h+=chart([...tr.reference.map(r=>({name:r.name+" (reference)",points:r.points})),{name:tr.run+" (this run)",points:tr.points}]);
+    h+=`<p class="mute">Loss is not comparable across different datasets; the reference curves only show the shape. The trainer writes its log when it saves a checkpoint, so this updates in steps.</p>`;
+    h+=`<table><tr><th>superbatch</th><th>loss</th><th>change</th></tr>${tr.rows.map((r,i)=>{const n=tr.rows[i+1];const d=n?100*(r[1]-n[1])/n[1]:null;return `<tr><td>${r[0]}</td><td>${r[1].toFixed(6)}</td><td>${d==null?"-":(d>0?"+":"")+d.toFixed(2)+"%"}</td></tr>`}).join("")}</table>`;
+  }
+  return h;
+}
+function mtView(m,full){
+  if(!m)return'<h2>A/B match</h2><div class="empty">no match logs yet</div>';
+  const gm=m.games||0,pass=m.elo!=null&&m.elo-m.err>0;
+  let h=`<h2>A/B match ${pill(m.running,m.running?"running":(m.finished?"finished":"idle"))}<span class="mute">${m.name}</span></h2>
+  <div class="big">${m.elo==null?"-":(m.elo>0?"+":"")+m.elo.toFixed(1)+" ± "+m.err.toFixed(1)} Elo</div><div class="mute">${gm} games · W ${m.wins||0} / D ${m.draws||0} / L ${m.losses||0}</div>`;
+  if(full&&gm){
+    const sc=(m.wins+m.draws/2)/gm*100;
+    h+=`<div class="grid">${stat(sc.toFixed(1)+"%","score")}${stat(m.elo==null?"-":(m.elo-m.err).toFixed(1),"lower bound (Elo)")}${stat(m.elo==null?"-":`<span class="${pass?'ok':'bad'}">${pass?"passes":"does not pass"}</span>`,"rule 2: lower bound above 0")}</div>
+    <div class="bar" style="margin-top:8px"><i style="width:${100*m.wins/gm}%;background:var(--green)"></i><i style="width:${100*m.draws/gm}%;background:var(--mute)"></i><i style="width:${100*m.losses/gm}%;background:var(--red)"></i></div>
+    <div class="leg"><span><i style="background:var(--green)"></i>wins</span><span><i style="background:var(--mute)"></i>draws</span><span><i style="background:var(--red)"></i>losses</span></div>`;
+  }
+  return h;
 }
 function render(s){
-  const dg=s.datagen;
-  if(!dg)$("#dg").innerHTML='<h2>Datagen</h2><div class="empty">no datagen logs yet</div>';
-  else{
-    const g=dg.jobs.reduce((a,j)=>a+j.games,0),t=dg.jobs.reduce((a,j)=>a+j.total,0),p=dg.jobs.reduce((a,j)=>a+j.positions,0);
-    const on=dg.jobs.some(j=>j.running),pc=t?100*g/t:0;
-    $("#dg").innerHTML=`<h2>Datagen ${pill(on,on?"running":(pc>=100?"done":"idle"))}<span class="mute">${dg.name||""}</span></h2>
-    <div class="big">${pc.toFixed(1)}%</div><div class="mute">${fmt(g)} / ${fmt(t)} games · ${fmt(p)} positions</div>`+
-    dg.jobs.map(j=>{const q=j.total?100*j.games/j.total:0;
-      return `<div class="row"><span>seed ${j.seed}</span><div class="bar ${j.done?'done':''}"><i style="width:${q}%"></i></div><span class="num">${fmt(j.games)}/${fmt(j.total)} · ${q.toFixed(0)}%</span></div>`}).join("");
-  }
-  const tr=s.train;
-  if(!tr)$("#tr").innerHTML='<h2>Training</h2><div class="empty">no training logs yet</div>';
-  else{
-    const pc=tr.total?100*tr.superbatch/tr.total:0;
-    $("#tr").innerHTML=`<h2>Training ${pill(tr.running,tr.running?"running":"idle")}<span class="mute">${tr.run}</span></h2>
-    <div class="big">${pc.toFixed(0)}%</div><div class="mute">superbatch ${tr.superbatch} / ${tr.total} · loss ${tr.loss==null?"-":tr.loss.toFixed(6)}</div>
-    ${chart(tr.points)}<div class="mute">the trainer writes its log when it saves a checkpoint, so this updates in steps</div>`;
-  }
-  const m=s.match;
-  if(!m)$("#mt").innerHTML='<h2>A/B match</h2><div class="empty">no match logs yet</div>';
-  else{
-    const gm=m.games||0;
-    $("#mt").innerHTML=`<h2>A/B match ${pill(m.running,m.running?"running":(m.finished?"finished":"idle"))}<span class="mute">${m.name}</span></h2>
-    <div class="big">${m.elo==null?"-":(m.elo>0?"+":"")+m.elo.toFixed(1)+" ± "+m.err.toFixed(1)} Elo</div>
-    <div class="mute">${gm} games · W ${m.wins||0} / D ${m.draws||0} / L ${m.losses||0}</div>`;
-  }
+  let h="";
+  if(page==="/datagen")h=`<section>${dgView(s.datagen,true)}</section>`;
+  else if(page==="/train")h=`<section>${trView(s.train,true)}</section>`;
+  else if(page==="/match")h=`<section>${mtView(s.match,true)}</section>`;
+  else h=`<a class="card" href="/datagen">${dgView(s.datagen,false)}</a><a class="card" href="/train">${trView(s.train,false)}</a><a class="card" href="/match">${mtView(s.match,false)}</a>`;
+  $("#view").innerHTML=h;
   $("#upd").textContent="updated "+new Date().toLocaleTimeString()+" · refreshes every 3 s · read-only";
 }
 async function tick(){try{render(await (await fetch("/api/status",{cache:"no-store"})).json())}catch(e){$("#upd").textContent="server not reachable"}}
