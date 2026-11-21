@@ -46,6 +46,7 @@
   aside { width:min(92vw,300px); background:var(--panel); border-radius:8px; padding:16px; }
   h1 { font-size:16px; margin:0 0 12px; }
   label.f { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  input.custom { width:100%; margin-top:6px; background:var(--bg); color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:8px 10px; font:inherit; }
   select { width:100%; background:var(--bg); color:var(--fg); border:1px solid var(--line); border-radius:6px; padding:8px 10px; font:inherit; }
   .pair { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
   .group { margin-top:10px; padding-top:2px; }
@@ -95,9 +96,11 @@
 
     <div class="group" id="cfgW"><h2 id="titleW">Engine</h2>
       <div class="pair"><select id="netW" title="Net"></select><select id="levelW" title="Level (relative Elo)"></select></div>
+      <input id="nodesW" class="custom hide" type="number" min="1" max="1000000" step="100" value="1600" title="Nodes per move (1 to 1,000,000)">
     </div>
     <div class="group" id="cfgB"><h2 id="titleB">Engine</h2>
       <div class="pair"><select id="netB" title="Net"></select><select id="levelB" title="Level (relative Elo)"></select></div>
+      <input id="nodesB" class="custom hide" type="number" min="1" max="1000000" step="100" value="1600" title="Nodes per move (1 to 1,000,000)">
     </div>
     <div id="speedRow" class="hide">
       <label class="f" for="speed">Move delay</label>
@@ -127,12 +130,30 @@ let game = new Chess(), mode = 'hve', human = 'w', selected = null, last = null;
 let thinking = false, running = false, token = 0, timer = null;
 
 const levelOptions = LEVELS.map(([n, e]) =>
-  `<option value="${n}" ${n === 1600 ? 'selected' : ''}>${n.toLocaleString()} nodes (${e > 0 ? '+' : ''}${e})</option>`).join('');
+  `<option value="${n}" ${n === 1600 ? 'selected' : ''}>${n.toLocaleString()} nodes (${e > 0 ? '+' : ''}${e})</option>`).join('')
+  + '<option value="custom">Custom…</option>';
 el('levelW').innerHTML = levelOptions; el('levelB').innerHTML = levelOptions;
 
-const cfg = c => ({ net: el('net' + c.toUpperCase()).value, nodes: +el('level' + c.toUpperCase()).value });
-const eloOf = nodes => (LEVELS.find(l => l[0] === nodes) || [0, 0])[1];
+// Nodes per move: a preset level, or any number from 1 to 1,000,000 typed by the user.
+const MAX_NODES = 1000000;
+const clampNodes = v => Math.min(MAX_NODES, Math.max(1, Math.round(+v) || 1600));
+const cfg = c => {
+  const C = c.toUpperCase(), lv = el('level' + C).value;
+  return { net: el('net' + C).value, nodes: lv === 'custom' ? clampNodes(el('nodes' + C).value) : +lv };
+};
+const eloOf = nodes => { const l = LEVELS.find(l => l[0] === nodes); return l ? l[1] : null; };   // null = not measured
 const fmtElo = e => (e > 0 ? '+' : '') + e;
+
+// Net names sort oldest first: wyrd-i ... wyrd-ix, then wyrd-1, wyrd-1-i ...; the material baseline comes first.
+const ROMAN = { i:1, v:5, x:10 };
+const romanValue = s => [...s].reduce((t, ch, k, a) => t + (ROMAN[ch] < (ROMAN[a[k + 1]] || 0) ? -ROMAN[ch] : ROMAN[ch]), 0);
+const netKey = name => {
+  if (name === 'material') return [-1, 0, 0];
+  const m = /^wyrd-(?:(\d+)(?:-([ivx]+))?|([ivx]+))$/.exec(name);
+  if (!m) return [999, 0, 0];
+  return m[3] ? [0, romanValue(m[3]), 0] : [+m[1], 0, m[2] ? romanValue(m[2]) : 0];
+};
+const byNet = (a, b) => { const x = netKey(a), y = netKey(b); return x[0] - y[0] || x[1] - y[1] || x[2] - y[2] || a.localeCompare(b); };
 
 // Where moves come from: the local play.py server by default; web/backend.js replaces
 // this with the WebAssembly engine for the hosted version.
@@ -145,7 +166,7 @@ const backend = window.WYRD_BACKEND || {
 async function loadNets() {
   try {
     const j = await backend.nets();
-    const opts = j.nets.map(n => `<option value="${n}" ${n === j.default ? 'selected' : ''}>${n}</option>`).join('');
+    const opts = [...j.nets].sort(byNet).map(n => `<option value="${n}" ${n === j.default ? 'selected' : ''}>${n}</option>`).join('');
     el('netW').innerHTML = opts; el('netB').innerHTML = opts;
   } catch (e) { el('status').textContent = 'Cannot load the engine (is the play server running? python scripts/play.py)'; }
 }
@@ -153,7 +174,10 @@ async function loadNets() {
 // Which colour is at the bottom of the board: the human's, or white in engine-vs-engine.
 const bottom = () => (mode === 'hve' ? human : 'w');
 const engineName = c => `Wyrdmate · ${cfg(c).net}`;
-const engineSub = c => `${cfg(c).nodes.toLocaleString()} nodes · ${fmtElo(eloOf(cfg(c).nodes))} Elo (relative)`;
+const engineSub = c => {
+  const n = cfg(c).nodes, e = eloOf(n);
+  return `${n.toLocaleString()} nodes` + (e === null ? '' : ` · ${fmtElo(e)} Elo (relative)`);
+};
 
 function captured(color) {            // pieces of `color` that have been taken
   const have = { p:0, n:0, b:0, r:0, q:0 };
@@ -273,7 +297,11 @@ function newGame() {
   render(); engineMove();
 }
 el('new').onclick = newGame; el('mode').onchange = newGame; el('side').onchange = newGame;
-for (const id of ['netW', 'netB', 'levelW', 'levelB']) el(id).onchange = render;
+for (const id of ['netW', 'netB', 'levelW', 'levelB']) el(id).onchange = () => {
+  for (const C of ['W', 'B']) el('nodes' + C).classList.toggle('hide', el('level' + C).value !== 'custom');
+  render();
+};
+for (const id of ['nodesW', 'nodesB']) el(id).oninput = render;
 el('run').onclick = () => {
   running = !running;
   if (!running) { token++; clearTimeout(timer); thinking = false; }   // drop an in-flight request
