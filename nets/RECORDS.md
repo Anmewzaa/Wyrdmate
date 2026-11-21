@@ -119,7 +119,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
   Training: `wyrdmate-trainer data/r7btrain.data 200 403 16384 0.0 r7b` (final running loss 0.001635).
   The net is only in `checkpoints/r7b-200/quantised.bin` (git-ignored).
 - Match vs `wyrd-vi` (600 games each, same engine): 10,000 nodes **+22 +/- 25** (lower bound -2); 50,000 nodes **+14 +/- 24**
-  (lower bound -10). Neither passes rule 2. Not run: `r7b` vs `r7a`. Details: docs/EVALUATION.md section 8.2.
+  (lower bound -10). Neither passes rule 2. `r7b` vs `r7a` (600 games each): 10,000 nodes +34 +/- 25, 50,000 nodes -3 +/- 24. Details: docs/EVALUATION.md section 8.2.
 
 ## Hidden size experiment (r6h16, r6h64, r6h128) — NOT ACCEPTED, none copied to `nets/`
 

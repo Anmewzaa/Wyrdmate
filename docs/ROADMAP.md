@@ -21,7 +21,7 @@
 | ลำดับ | งาน | สถานะ | หมายเหตุ |
 |---:|---|---|---|
 | 1 | hidden size (16, 64, 128 เทียบ 32) | **ทำแล้ว** | net ใหญ่ขึ้นไม่คุ้มที่เวลาเท่ากัน คง 32 ([EVALUATION.md](EVALUATION.md) ข้อ 8.1) ยังไม่ได้ลองหลาย hidden layer หรือ feature ละเอียดขึ้น |
-| 2 | ปรับ search ต่อ | เปิดอยู่ | ปรับ margin ของ futility/delta ที่ยังไม่เคยปรับ, TT ข้ามตา, SEE ใน capture ordering, aspiration window ([SEARCH.md](SEARCH.md) ข้อ 10) |
+| 2 | ปรับ search ต่อ | เปิดอยู่ | margin ของ futility/delta ปรับแล้วไม่ช่วย ([EVALUATION.md](EVALUATION.md) ข้อ 7.4) ที่เหลือ: TT ข้ามตา, SEE ใน capture ordering, aspiration window ([SEARCH.md](SEARCH.md) ข้อ 10) |
 | 3 | datagen คุณภาพสูงขึ้น | **ทำแล้ว** | 20,000 node ต่อ move (`r7b`) ได้ +22 / +14 Elo ที่ 10k / 50k ไม่ผ่านเกณฑ์ ไม่รับ ([EVALUATION.md](EVALUATION.md) ข้อ 8.2) ยังไม่ได้ลองข้อมูลมากขึ้นต่อรอบ |
 | 4 | distillation | ยังไม่ทำ | เทรน net ใหญ่ของเราเองเป็นครูให้ net เล็ก (ยังอยู่ในแนว self-play ต้องบันทึกที่มาตามกฎเหล็กข้อ 1) |
 | 5 | input feature ที่ฉลาดขึ้น (เช่น king buckets) | ยังไม่ทำ | แลกกับ RAM |
