@@ -5,7 +5,7 @@
 <rect x="24" y="72" width="892" height="28" rx="6" fill="#f6f5f0"/>
 <text x="40" y="91" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">Rough: straight-line between Stockfish levels, UCI_Elo is calibrated at a longer time control and is compressed here. Not a standard Elo. Whiskers = about +/-90.</text>
 <rect x="36" y="114" width="14" height="14" rx="3" fill="#2a78d6"/>
-<text x="56" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">current search (s6)</text>
+<text x="56" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">wyrd-iv + search s6</text>
 <rect x="209" y="114" width="14" height="14" rx="3" fill="#898781"/>
 <text x="229" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">first search (s1)</text>
 <line x1="362.5" y1="168" x2="362.5" y2="418" stroke="#e1e0d9"/>
