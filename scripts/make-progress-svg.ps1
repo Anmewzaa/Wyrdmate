@@ -1,5 +1,5 @@
 # Regenerates the charts from docs/progress/data.json:
-#   docs/progress/training-process.svg  (head-to-head match results per net)
+#   docs/progress/training-process.svg  (leaderboard: one row per accepted net, vs previous net and vs material eval)
 #   docs/progress/loss.svg              (training loss curves, with version/timestamp)
 #   docs/progress/ladder.svg            (leaderboard: strength per node limit, first vs current search)
 #   docs/progress/search-steps.svg      (leaderboard: what each search step added)
@@ -30,20 +30,25 @@ function Save-Svg($sb, $w, $h, $label, $file) {
 }
 
 # =====================================================================
-# 1) Training process: match results
+# 1) Training process: one row per accepted net (leaderboard), newest first
 # =====================================================================
 $s = New-Object Text.StringBuilder
 function A($line) { [void]$s.AppendLine($line) }
-$rows = @($d.matches)
-$px0 = 360; $px1 = 660
-$lim = [math]::Ceiling((($rows | ForEach-Object { [math]::Abs($_.elo) + $_.err } | Measure-Object -Maximum).Maximum + 30) / 50) * 50
-$step = if ($lim -gt 250) { 100 } else { 50 }
-function X($v) { $px0 + ($v + $lim) / (2 * $lim) * ($px1 - $px0) }
-
+function NetName($m) { ([string]$m.net -split (' ' + [char]0x00B7 + ' '))[0].Trim() }
+$accepted = @($d.matches | Where-Object { $_.accepted })
+$prevRows = @($accepted | Where-Object { $_.vs -like '*previous net*' } | Sort-Object { $_.finished } -Descending)
+$rejected = @($d.matches | Where-Object { -not $_.accepted })
 $boxTop = 70; $boxH = 104
-$eloTop = $boxTop + $boxH + 56; $rowH = 70
-$axisY = $eloTop + $rows.Count * $rowH + 4
-$H = $axisY + 80
+$top = $boxTop + $boxH + 46; $rowH = 62
+$bx0 = 330; $bx1 = 760
+$allv = @(); foreach ($r in $prevRows) { $allv += ($r.elo + $r.err); $allv += ($r.elo - $r.err) }
+foreach ($r in $accepted) { if ($r.vs -like 'material*') { $allv += ($r.elo + $r.err); $allv += ($r.elo - $r.err) } }
+$dmax = [math]::Ceiling((($allv | Measure-Object -Maximum).Maximum + 10) / 50) * 50
+$dmin = [math]::Min(0, [math]::Floor((($allv | Measure-Object -Minimum).Minimum) / 50) * 50)
+function X($v) { $bx0 + ($v - $dmin) / ($dmax - $dmin) * ($bx1 - $bx0) }
+$by = $top + $prevRows.Count * $rowH
+$notesTop = $by + 64
+$H = $notesTop + 24 + $rejected.Count * 18 + 40
 
 A (T 24 38 22 $ink $ui.procTitle 'start' '700')
 A (T 24 58 13 $mute $ui.procSub)
@@ -51,42 +56,51 @@ A "<rect x=`"24`" y=`"$boxTop`" width=`"$($W - 48)`" height=`"$boxH`" rx=`"6`" f
 $ly = $boxTop + 26
 foreach ($k in 'how1', 'how2', 'how3', 'baseline') { A (T 40 $ly 12 $ink $ui.$k); $ly += 23 }
 
-A (T ((X 0) - 10) ($eloTop - 14) 12 $mute "< $($ui.weaker)" 'end')
-A (T ((X 0) + 10) ($eloTop - 14) 12 $mute "$($ui.stronger) >" 'start')
-for ($v = -$lim; $v -le $lim; $v += $step) {
-  $x = X $v
-  A "<line x1=`"$(F $x)`" y1=`"$eloTop`" x2=`"$(F $x)`" y2=`"$axisY`" stroke=`"$grid`"/>"
-  A (T $x ($axisY + 16) 11 $mute $v 'middle')
-}
-A (T (($px0 + $px1) / 2) ($axisY + 38) 12 $mute $ui.axis 'middle')
+A "<rect x=`"36`" y=`"$($top - 28)`" width=`"14`" height=`"14`" rx=`"3`" fill=`"$blue`"/>"
+A (T 56 ($top - 16) 12 $ink $ui.procPrev)
+A "<rect x=`"270`" y=`"$($top - 28)`" width=`"14`" height=`"14`" rx=`"3`" fill=`"$gray`"/>"
+A (T 290 ($top - 16) 12 $ink $ui.procMat)
 
+for ($v = $dmin; $v -le $dmax; $v += 50) {
+  $x = X $v
+  A "<line x1=`"$(F $x)`" y1=`"$top`" x2=`"$(F $x)`" y2=`"$by`" stroke=`"$grid`"/>"
+  A (T $x ($by + 16) 11 $mute $v 'middle')
+}
 $i = 0
-foreach ($r in $rows) {
-  $top = $eloTop + $i * $rowH; $cy = $top + $rowH / 2
-  if ($i % 2 -eq 0) { A "<rect x=`"24`" y=`"$top`" width=`"$($W - 48)`" height=`"$rowH`" fill=`"$band`" opacity=`"0.7`"/>" }
-  if ($r.accepted) { $col = $blue; $verdict = $ui.betterAccepted }
-  elseif (($r.elo + $r.err) -lt 0) { $col = $red; $verdict = $ui.worse }
-  elseif (($r.elo - $r.err) -gt 0) { $col = $blue; $verdict = $ui.notAccepted }
-  else { $col = $gray; $verdict = $ui.unclear }
-  $score = [math]::Round(100 / (1 + [math]::Pow(10, -$r.elo / 400)))
+foreach ($r in $prevRows) {
+  $cy = $top + $i * $rowH + $rowH / 2
+  if ($i % 2 -eq 0) { A "<rect x=`"24`" y=`"$($top + $i * $rowH)`" width=`"$($W - 48)`" height=`"$rowH`" fill=`"$band`" opacity=`"0.7`"/>" }
+  $name = NetName $r
+  $detail = ([string]$r.net).Substring($name.Length).TrimStart(" ", [char]0x00B7).Trim()
   $meta = "$($r.finished) $dot $($r.games) $($ui.games)"
   if ($r.commit) { $meta += " $dot $($ui.commit) $($r.commit)" }
-  A (T 36 ($cy - 12) 13 $ink $r.net 'start' '700')
-  A (T 36 ($cy + 4) 12 $ink "$($ui.vs) $($r.vs)" 'start')
-  A (T 36 ($cy + 21) 11 $mute $meta 'start')
+  A (T 36 ($cy - 10) 15 $ink $name 'start' '700')
+  A (T 36 ($cy + 6) 11 $ink $detail)
+  A (T 36 ($cy + 21) 11 $mute $meta)
+  # main bar: vs previous net
   $x0 = X 0; $x1 = X $r.elo
-  A "<rect x=`"$(F ([math]::Min($x0, $x1)))`" y=`"$(F ($cy - 11))`" width=`"$(F ([math]::Abs($x1 - $x0)))`" height=`"22`" rx=`"3`" fill=`"$col`"/>"
-  $lo = X ($r.elo - $r.err); $hi = X ($r.elo + $r.err)
-  A "<path d=`"M$(F $lo) $(F $cy)H$(F $hi)M$(F $lo) $(F ($cy - 6))V$(F ($cy + 6))M$(F $hi) $(F ($cy - 6))V$(F ($cy + 6))`" stroke=`"$ink`" stroke-width=`"1.5`" fill=`"none`"/>"
+  A "<rect x=`"$(F ([math]::Min($x0, $x1)))`" y=`"$(F ($cy - 17))`" width=`"$(F ([math]::Max(1, [math]::Abs($x1 - $x0))))`" height=`"16`" rx=`"3`" fill=`"$blue`"/>"
   $sign = if ($r.elo -gt 0) { '+' } else { '' }
-  $label = "$sign$($r.elo) $pm $($r.err)"
-  if ($r.elo -ge 0) { A (T ($hi + 8) ($cy + 5) 13 $ink $label 'start' '700') } else { A (T ($x0 + 10) ($cy + 5) 13 $ink $label 'start' '700') }
-  A (T 750 ($cy - 4) 13 $col $verdict 'start' '700')
-  A (T 750 ($cy + 14) 11 $mute ($ui.scoreFmt -replace '\{0\}', $score) 'start')
+  A (T ($x1 + 8) ($cy - 4) 12 $ink "$sign$($r.elo) $pm $($r.err)" 'start' '700')
+  # thin bar: the same net vs the material eval, when that match exists
+  $mat = $accepted | Where-Object { (NetName $_) -eq $name -and $_.vs -like 'material*' } | Select-Object -First 1
+  if ($mat) {
+    $m1 = X $mat.elo
+    A "<rect x=`"$(F ([math]::Min($x0, $m1)))`" y=`"$(F ($cy + 2))`" width=`"$(F ([math]::Max(1, [math]::Abs($m1 - $x0))))`" height=`"10`" rx=`"3`" fill=`"$gray`"/>"
+    A (T ($m1 + 8) ($cy + 11) 11 $mute "+$($mat.elo) $pm $($mat.err)" 'start')
+  }
   $i++
 }
-$zx = X 0
-A "<line x1=`"$(F $zx)`" y1=`"$eloTop`" x2=`"$(F $zx)`" y2=`"$axisY`" stroke=`"$ink`" stroke-width=`"1.5`"/>"
+A "<line x1=`"$(F (X 0))`" y1=`"$top`" x2=`"$(F (X 0))`" y2=`"$by`" stroke=`"$ink`" stroke-width=`"1.5`"/>"
+A (T (($bx0 + $bx1) / 2) ($by + 38) 12 $mute $ui.axis 'middle')
+
+A (T 24 $notesTop 13 $ink $ui.procRejected 'start' '700')
+$ny = $notesTop + 20
+foreach ($r in $rejected) {
+  $sign = if ($r.elo -gt 0) { '+' } else { '' }
+  A (T 36 $ny 11 $mute "$($r.net) $dot $($ui.vs) $($r.vs): $sign$($r.elo) $pm $($r.err) ($($r.finished))")
+  $ny += 18
+}
 A (T 24 ($H - 12) 10 $mute $ui.generated)
 Save-Svg $s $W $H $ui.procTitle 'docs/progress/training-process.svg'
 
@@ -178,9 +192,7 @@ $rowH = 44; $top = 146; $bx0 = 300; $bx1 = 790; $dmin = -350; $dmax = 600
 function LX($v) { $bx0 + ($v - $dmin) / ($dmax - $dmin) * ($bx1 - $bx0) }
 $by = $top + $rows.Count * $rowH; $H = $by + 56
 Head $ui.ladderTitle $ui.ladderSub $ui.ladderNote
-Legend @(, @($blue, $ui.ladderS6)) 
-A "<rect x=`"$(36 + 40 + 7 * ([string]$ui.ladderS6).Length)`" y=`"114`" width=`"14`" height=`"14`" rx=`"3`" fill=`"$gray`"/>"
-A (T (36 + 60 + 7 * ([string]$ui.ladderS6).Length) 126 12 $ink $ui.ladderS1)
+Legend @(, @($blue, $ui.ladderS6))
 for ($t = -300; $t -le 600; $t += 100) {
   $x = LX $t
   A "<line x1=`"$(F $x)`" y1=`"$top`" x2=`"$(F $x)`" y2=`"$by`" stroke=`"$grid`"/>"
@@ -191,12 +203,10 @@ foreach ($r in $rows) {
   $cy = $top + $i * $rowH + $rowH / 2
   if ($i % 2 -eq 0) { A "<rect x=`"24`" y=`"$($top + $i * $rowH)`" width=`"$($W - 48)`" height=`"$rowH`" fill=`"$band`" opacity=`"0.7`"/>" }
   A (T 36 ($cy + 5) 14 $ink "$(([int]$r.nodes).ToString('N0', $inv)) $($ui.nodes)" 'start' '700')
-  foreach ($ser in @(@('s6', $blue, -7, 14, '700'), @('s1', $gray, 8, 9, '400'))) {
-    $v = $r.($ser[0]); $e = $v[0]; $yy = $cy + $ser[2]
-    Bar (LX 0) (LX $e) $yy $ser[3] $ser[1]
-    $lab = "$(Sgn $e)$e"; if ($ser[0] -eq 's6') { $lab += " $pm $($v[1])" }
-    if ($e -ge 0) { A (T ((LX $e) + 6) ($yy + 4) 11 $ser[1] $lab 'start' $ser[4]) } else { A (T ((LX $e) - 6) ($yy + 4) 11 $ser[1] $lab 'end' $ser[4]) }
-  }
+  $v = $r.s6; $e = $v[0]
+  Bar (LX 0) (LX $e) $cy 18 $blue
+  $lab = "$(Sgn $e)$e $pm $($v[1])"
+  if ($e -ge 0) { A (T ((LX $e) + 6) ($cy + 4) 12 $blue $lab 'start' '700') } else { A (T ((LX $e) - 6) ($cy + 4) 12 $blue $lab 'end' '700') }
   $i++
 }
 A "<line x1=`"$(F (LX 0))`" y1=`"$top`" x2=`"$(F (LX 0))`" y2=`"$by`" stroke=`"$ink`" stroke-width=`"1.5`"/>"

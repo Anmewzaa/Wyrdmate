@@ -1,9 +1,12 @@
 {
   "ui": {
     "procTitle": "Wyrdmate · Training process",
+    "procPrev": "vs previous net",
+    "procMat": "vs material eval (no net)",
+    "procRejected": "Not accepted (kept for the record)",
     "procSub": "Does each newly trained net beat its opponent? (head-to-head matches)",
     "how1": "How to read: bar to the right = the net is stronger than its opponent, to the left = weaker, 0 = equal.",
-    "how2": "Whisker = error margin. If it crosses the 0 line, we cannot tell the difference from luck.",
+    "how2": "The number after ± is the error margin. If the range includes 0, we cannot tell the difference from luck.",
     "how3": "Elo = relative strength. +100 means scoring about 64% of the points per game, +200 about 76%.",
     "baseline": "\"Material eval\" = the original engine that scores positions by piece values only (no net).",
     "axis": "Elo difference vs opponent (0 = equal)",
