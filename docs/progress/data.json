@@ -381,6 +381,7 @@
     {"id": "s4", "what": "null-move pruning",           "rejected": false, "n1k": [0, 2],     "n10k": [20, 19],  "n50k": [44, 23]},
     {"id": "s5", "what": "late move reductions",        "rejected": false, "n1k": [2, 3],     "n10k": [28, 13],  "n50k": [23, 14]},
     {"id": "s6", "what": "transposition table 64 KB",   "rejected": false, "n1k": [-1, 11],   "n10k": [52, 14],  "n50k": [125, 15]},
+    {"id": "s7", "what": "futility pruning",            "rejected": false, "n1k": null,       "n10k": [25, 24],  "n50k": [37, 21]},
     {"id": "PVS", "what": "principal variation search", "rejected": true,  "n1k": [-36, 23],  "n10k": [-10, 22], "n50k": [-1, 25]}
   ],
   "stockfish": {
