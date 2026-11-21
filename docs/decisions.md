@@ -22,6 +22,7 @@ Records the significant design decisions of Wyrdmate and the reasons behind them
 | D-008 | Process discipline for nets |
 | D-009 | Documentation layout |
 | D-010 | Training recipe |
+| D-011 | Documentation language and layout (supersedes the layout part of D-009) |
 
 Related: [ARCHITECTURE.md](ARCHITECTURE.md) (Thai), [`../nets/RECORDS.md`](../nets/RECORDS.md).
 
@@ -55,3 +56,9 @@ Related: [ARCHITECTURE.md](ARCHITECTURE.md) (Thai), [`../nets/RECORDS.md`](../ne
   22 vs wyrd-ii, rounds 2+3 together +81 +/- 22. The explanation (game results are
   noisy when most games are draws; more varied data helps) is a hypothesis, not
   tested separately. Revisit if the data stops being draw-heavy.
+- **D-011 Docs language and layout:** `docs/` prose stays Thai, but key technical terms
+  are kept in English and not translated (hidden layer, weights, search, evaluation,
+  pruning, node, centipawn, ...); `GLOSSARY.md` lists them. Each fact lives in one
+  document and the others link to it (measurements in `EVALUATION.md`, net structure in
+  the new `NET.md`, file tour in `STRUCTURE.md`). Reason: translated terms such as
+  "ชั้นซ่อน" for hidden layer made the documents harder to match with outside material.

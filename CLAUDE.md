@@ -13,19 +13,20 @@ RL). The product runs `no_std` on the board; training and datagen run on a PC.
 Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
-> Status: engine (search + NNUE eval + UCI), datagen and the bullet trainer work.
-> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii`, `wyrd-iii`, `wyrd-iv`, `wyrd-v`, `wyrd-vi` (current: +47 +/- 25 vs wyrd-v at 10k nodes, 600 games; wyrd-iv was: +31 +/- 22 Elo
-> vs wyrd-iii, +212 +/- 27 vs the material eval; 600 games, 10k nodes; gains per round +115, +81, +31). Provenance
-> and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
+> Status: engine (search s1-s9 + NNUE eval + UCI), datagen and the bullet trainer work.
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-v`, and `wyrd-vi` (current): +47 +/- 25 Elo vs wyrd-v at 10k nodes
+> and +42 +/- 25 at 50k (600 games each). Gains per round: +115, +81, +31, +64, +47. Round 7 (`r7a`) was NOT accepted
+> (passes at 10k, not at 50k). Provenance and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
 > The NNUE accumulator is incremental (same results as from-scratch, ~30% faster search).
-> Strength levels are measured: relative Elo per node limit, 100 to 51,200 nodes (docs/EVALUATION.md section 8).
+> Strength levels (ladder) are measured with wyrd-vi + s9: relative Elo per node limit (docs/EVALUATION.md section 5).
+> Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher) only with wyrd-iv + s6, not re-measured:
+> 51,200 nodes ~ `UCI_Elo` 1530 (rough, docs/EVALUATION.md section 6).
+> Search is at s9 (docs/SEARCH.md section 9): s9 adds futility, delta pruning and check extension on top of s6; it is ~29% slower
+> per node but still beats s6 at equal time (docs/EVALUATION.md section 7.2).
 > A browser demo exists (`web/`, WebAssembly, deployed to GitHub Pages by `.github/workflows/pages.yml`).
-> Measured vs Stockfish sf_19 (strength-limited, ruler only, NOT a training teacher): 51,200 nodes ~ `UCI_Elo` 1530 with search s6
-> (1415 with s1; rough, docs/EVALUATION.md sections 9, 9.1). Search is at s6 (docs/SEARCH.md section 9): s6 is much
-> stronger at equal nodes (not at 1k nodes) but ~20-25% slower per node. Next: a self-play/training round 5 with the s6
-> search (labels should be better; the old 'gains are shrinking' came from s1), more search work (docs/ROADMAP.md),
-> then the `no_std` firmware (nothing has run on a board).
+> Next (docs/ROADMAP.md): test hidden size (never tried, 32 so far), more search work, better datagen. The `no_std` firmware is
+> deferred until an ESP32 board exists (nothing has run on a board).
 
 ## Start here — read only what your task needs
 
@@ -36,6 +37,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 | Training data | `datagen/src/main.rs` (one file) |
 | Training / net shape | `trainer/src/main.rs`, bullet `examples/` (see Hard rule 4) |
 | ESP32 / `no_std` | `firmware/`, then bullet's example inference code |
+| What a net is (hidden layer, weights, file format) | `docs/NET.md` |
 | What exists / why | `docs/STRUCTURE.md`, `docs/decisions.md` |
 | How a net is made, step by step | `docs/TRAINING.md` |
 | Which nets exist and how they were made | `nets/RECORDS.md` |
@@ -97,8 +99,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
   Feature `cuda` enables the GPU backend.
 - `firmware/` — `no_std` ESP32 inference. Not a workspace member. Skeleton only.
 - `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).
-- `docs/` — `STRUCTURE.md` (human tour), `TRAINING.md` (how a net is made),
-  `decisions.md`, `progress/` (chart data + generated SVGs).
+- `docs/` — `NET.md` (what a net is), `STRUCTURE.md` (human tour), `TRAINING.md` (how a net is made),
+  `EVALUATION.md` (A/B matches and all measurements), `SEARCH.md`, `ROADMAP.md`, `GLOSSARY.md`, `decisions.md`, `progress/` (chart data + generated SVGs).
 - `scripts/` — `make-progress-svg.ps1`; `monitor.py` (local progress page for datagen/training/matches, read-only); `play.py` + `play.html` (local browser play page, engine vs
   engine too); `pgn-viewer.html` (replays fastchess PGN).
 - `web/` — the engine as WebAssembly (`cdylib`, plain C ABI) + `backend.js` + `build.ps1`/`build.sh` →
@@ -169,7 +171,7 @@ any other attribution trailer** (owner's decision). Don't push unless asked.
 ## A/B match recipe (fastchess)
 
 `powershell -File scripts/ab.ps1` runs the whole recipe below (builds old/new engines from git refs, plays, prints a
-verdict by rule 2). Search changes follow the same rule as nets: record them in docs/EVALUATION.md section 10.
+verdict by rule 2). Search changes follow the same rule as nets: record them in docs/EVALUATION.md section 7.
 
 Binary is not in the repo (download `fastchess-windows-x86-64.zip`, v1.8.3-alpha,
 from github.com/Disservin/fastchess releases). Openings: `cargo run --release -p
@@ -193,6 +195,6 @@ after a training run worth keeping add a series to `loss` (name, detail, data, f
 Then regenerate the two charts shown in the README and commit them with the data:
 
 ```text
-powershell -File scripts/make-progress-svg.ps1   # writes docs/progress/training-process.svg and loss.svg
+powershell -File scripts/make-progress-svg.ps1   # writes the charts in docs/progress/
 ```
 

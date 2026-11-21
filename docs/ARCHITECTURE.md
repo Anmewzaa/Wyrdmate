@@ -1,25 +1,26 @@
 # สถาปัตยกรรมของ Wyrdmate
 
-เอกสารนี้อธิบายการออกแบบระบบในระดับภาพรวม และกำหนดรูปแบบไฟล์ net ซึ่งเป็นข้อกำหนดที่
-`trainer`, `engine` และ `firmware` ต้องปฏิบัติตรงกัน
+ภาพรวมการออกแบบระบบ และข้อกำหนดที่ `trainer`, `engine` และ `firmware` ต้องปฏิบัติตรงกัน
+รายละเอียดของ net อยู่ที่ [NET.md](NET.md) รายละเอียดของ search อยู่ที่ [SEARCH.md](SEARCH.md)
 
 ## 1. วัตถุประสงค์
 
-Wyrdmate เป็นโปรแกรมหมากรุกขนาดเล็กสำหรับบอร์ดระดับ ESP32 โดยมีเป้าหมายให้ **เล่นอย่างสมเหตุสมผลและปรับระดับความแรงได้**
-ไม่ได้มุ่งเป็น engine ที่แรงที่สุด ความแรงถูกควบคุมอย่างเปิดเผยด้วยจำนวน node ที่อนุญาตให้ค้นหา (`node_limit`)
-ไม่มีการลดความสามารถด้วยวิธีซ่อนเร้น (กฎเหล็กข้อ 6 ใน `CLAUDE.md`)
+Wyrdmate เป็นโปรแกรมหมากรุกขนาดเล็กสำหรับบอร์ดระดับ ESP32 เป้าหมายคือ **เล่นอย่างสมเหตุสมผลและปรับระดับความแรงได้** (weak but clever)
+ไม่ได้มุ่งเป็น engine ที่แรงที่สุด ความแรงถูกควบคุมอย่างเปิดเผยด้วย node limit (`node_limit`) ไม่มีการลดความสามารถด้วยวิธีซ่อนเร้น
+(กฎเหล็กข้อ 6 ใน `CLAUDE.md`)
 
 ## 2. องค์ประกอบ
 
 | ส่วน | ตำแหน่ง | หน้าที่ | เรียนรู้ได้ |
 |---|---|---|---|
-| กฎหมากรุก | `cozy-chess` (ไลบรารีภายนอก) | สร้างตาเดินที่ถูกกติกา | ไม่ |
-| การค้นหา | `engine/src/lib.rs` | negamax + alpha-beta + quiescence + iterative deepening + ตรวจเดินซ้ำ, killer/history, null-move, LMR, transposition table 64 KB | ไม่ |
-| การประเมิน | `engine/src/nnue.rs` | ให้คะแนนตำแหน่งด้วย NNUE | **ได้** |
-| หน้าด่าน UCI | `engine/src/main.rs` | สื่อสารกับโปรแกรมภายนอกตามโปรโตคอล UCI | ไม่ |
-| ตัวสร้างข้อมูล | `datagen/` | ให้ engine เล่นกับตัวเองและบันทึกตำแหน่ง | ไม่ |
-| ตัวเทรน | `trainer/` | เทรน net ด้วย bullet | — |
-| เฟิร์มแวร์ | `firmware/` | รัน NNUE บน ESP32 (`no_std`) | — |
+| กฎหมากรุก | `cozy-chess` (ไลบรารีภายนอก) | สร้าง legal moves | ไม่ |
+| search | `engine/src/lib.rs` | เลือก move โดยคิดล่วงหน้า ([SEARCH.md](SEARCH.md)) | ไม่ |
+| evaluation (net) | `engine/src/nnue.rs` | ให้คะแนนตำแหน่งด้วย NNUE ([NET.md](NET.md)) | **ได้** |
+| UCI front end | `engine/src/main.rs` | สื่อสารกับโปรแกรมภายนอกตามโปรโตคอล UCI (options `Nodes`, `EvalFile`, `Hash`) | ไม่ |
+| datagen | `datagen/` | ให้ engine เล่นกับตัวเอง (self-play) และบันทึกตำแหน่ง | ไม่ |
+| trainer | `trainer/` | training net ด้วย bullet | — |
+| firmware | `firmware/` | รัน NNUE บน ESP32 (`no_std`) ยังเป็นโครงเปล่า | — |
+| web demo | `web/` | engine คอมไพล์เป็น WebAssembly สำหรับหน้าเล่นบนเว็บ ([`../web/README.md`](../web/README.md)) | — |
 
 ## 3. การไหลของข้อมูล
 
@@ -29,103 +30,39 @@ engine ──(เล่นเกม)──▶ datagen ──▶ data/*.txt ─�
 firmware ◀──(ฝังไฟล์ net)── nets/ ◀── checkpoints/ ◀── trainer (bullet)
 ```
 
-วงวนพัฒนา (D-005): ประเมินแบบง่าย → self-play ด้วย node จำกัด → เทรน → แข่ง A/B →
-หาก net ใหม่ชนะอย่างมีนัยสำคัญ ให้ใช้ net นั้นสร้างข้อมูลรอบถัดไป
+วงวนพัฒนา (D-005): self-play ด้วย node limit → training → A/B match → ถ้า net ใหม่ชนะอย่างมีนัยสำคัญ ให้ใช้ net นั้นสร้างข้อมูลรอบถัดไป
+ขั้นตอนละเอียดอยู่ที่ [TRAINING.md](TRAINING.md) และเกณฑ์รับ net อยู่ที่ [EVALUATION.md](EVALUATION.md)
 
-## 4. การค้นหา
+## 4. Search และการควบคุมความแรง
 
-- อัลกอริทึม (อธิบายละเอียดที่ [SEARCH.md](SEARCH.md)): negamax พร้อม alpha-beta, quiescence search, iterative deepening และเทคนิคตัดกิ่ง/จำผล (killer, history, null-move, LMR, transposition table) รุ่น s1 ถึง s6 ดู SEARCH.md ข้อ 9
-- ขีดจำกัด: `Searcher::new(node_limit)` เมื่อนับ node ถึงขีดจำกัด การค้นหาจะหยุดและคืนผลของความลึกล่าสุดที่เสร็จสมบูรณ์
-- ค่าตั้งต้นของ UCI option `Nodes` คือ 20,000 และสั่ง `go nodes N` เพื่อเปลี่ยนเฉพาะตาเดียวได้
-- คะแนนเป็นเซนติเบี้ย (centipawn) จากมุมมองฝ่ายที่ถึงตา รุกฆาตใช้ค่า `MATE = 30000`
+- อัลกอริทึม: negamax + alpha-beta, quiescence search, iterative deepening และเทคนิค pruning/caching (รุ่น s1 ถึง s9) ดู [SEARCH.md](SEARCH.md)
+- `Searcher::new(node_limit)`: เมื่อนับ node ถึงขีดจำกัด search หยุดและคืนผลของ depth ล่าสุดที่เสร็จสมบูรณ์
+- UCI option `Nodes` มีค่าตั้งต้น 20,000 สั่ง `go nodes N` เพื่อเปลี่ยนเฉพาะ move เดียวได้ **engine ยังไม่มีระบบจับเวลา** (จำกัดได้เฉพาะ node)
+- คะแนนเป็น centipawn จากมุมมอง side to move รุกฆาตใช้ `MATE = 30000`
 
-ส่วนประกอบสาธารณะ (public API):
+Public API:
 
 ```rust
 Searcher::new(node_limit).with_net(net).search(&board, max_depth) -> Option<(Move, cp)>
-evaluate(&board) -> i32          // ประเมินแบบนับมูลค่าหมาก (ตัวตั้งต้น)
+Searcher::with_history(hashes)    // ไม่บังคับ: ประวัติเกมสำหรับตรวจ repetition
+Searcher::with_tt_kb(kb)          // ขนาด transposition table (ค่าตั้งต้น 64 KB, 0 = ปิด)
+evaluate(&board) -> i32           // material eval (ตัวตั้งต้นสำหรับเทียบกับ net)
 legal_moves(&board) -> Vec<Move>
 ```
 
-## 5. การประเมินด้วย NNUE
+## 5. ข้อควรระวังด้านความเข้ากันได้
 
-### 5.1 โครงสร้างเครือข่าย
+การเปลี่ยนสิ่งต่อไปนี้ต้องแก้ทุกฝั่งพร้อมกันและ training ใหม่ (ดู `CLAUDE.md` หัวข้อ Compatibility surfaces):
 
-`(768 → 32) × 2 → 1` พร้อมฟังก์ชันกระตุ้น SCReLU
-
-| รายการ | ค่า |
-|---|---|
-| อินพุต | 768 = 6 ชนิดหมาก × 2 สี × 64 ช่อง (one-hot) |
-| มุมมอง | 2 มุมมอง: ฝ่ายที่ถึงตา (STM) และอีกฝ่าย (NTM) ใช้น้ำหนักชั้นแรกชุดเดียวกัน |
-| ชั้นซ่อน | 32 โหนดต่อมุมมอง |
-| ฟังก์ชันกระตุ้น | SCReLU: `clamp(x, 0, QA)²` |
-| เอาต์พุต | 1 ค่า แล้วคูณ `SCALE` เพื่อให้เป็นเซนติเบี้ย |
-
-### 5.2 การทำ Quantisation
-
-| ค่าคงที่ | ค่า | ใช้กับ |
-|---|---|---|
-| `QA` | 255 | น้ำหนักและ bias ชั้นแรก (`l0w`, `l0b`) |
-| `QB` | 64 | น้ำหนักชั้นเอาต์พุต (`l1w`) |
-| `QA × QB` | 16,320 | bias ชั้นเอาต์พุต (`l1b`) |
-| `SCALE` | 400 | แปลงเอาต์พุตเป็นเซนติเบี้ย |
-
-สูตรคำนวณใน `engine/src/nnue.rs`:
-
-```text
-out = Σ screlu(us[i]) · w[i] + Σ screlu(them[i]) · w[H+i]
-out = out / QA + l1b
-score_cp = out · SCALE / (QA · QB)
-```
-
-### 5.3 การแปลงตำแหน่งเป็นอินพุต
-
-ต้องตรงกับ `Chess768` ของ bullet ทุกประการ:
-
-- หมากของฝ่ายที่ถึงตาถือเป็น "ฝ่ายเรา" (ชุดอินพุต 0–383) หมากของอีกฝ่ายเป็นชุด 384–767
-- เมื่อฝ่ายดำถึงตา กระดานจะถูกพลิกในแนวตั้ง (`ช่อง ^ 56`)
-- มุมมองที่สอง (NTM) คือการพลิกแนวตั้งพร้อมสลับสี
-- ดัชนีฟีเจอร์ = `ออฟเซ็ตสี + 64 × ชนิดหมาก + ช่อง`
-
-### 5.4 รูปแบบไฟล์ net (`quantised.bin`)
-
-ไฟล์ไบนารีแบบ little-endian ของ `i16` เรียงต่อกันตามลำดับ:
-
-| ลำดับ | ชื่อ | ขนาด (จำนวน i16) | ตัวคูณ |
-|---|---|---|---|
-| 1 | `l0w` น้ำหนักชั้นแรก (เรียงตามฟีเจอร์) | 768 × H | QA |
-| 2 | `l0b` bias ชั้นแรก | H | QA |
-| 3 | `l1w` น้ำหนักชั้นเอาต์พุต | 2 × H | QB |
-| 4 | `l1b` bias ชั้นเอาต์พุต | 1 | QA × QB |
-
-bullet เติมศูนย์ท้ายไฟล์ให้ขนาดเป็นพหุคูณของ 64 ไบต์ engine ตรวจว่าส่วนเกินน้อยกว่า 32 ค่า
-และคำนวณ H จากขนาดไฟล์โดยอัตโนมัติ
-
-สำหรับ H = 32 (ทุก net ปัจจุบัน): เนื้อหาจริง 49,346 ไบต์ ไฟล์ขนาด **49,408 ไบต์**
-
-### 5.5 งบหน่วยความจำบนบอร์ด
-
-| รายการ | ขนาดโดยประมาณ |
-|---|---|
-| น้ำหนัก net (อ่านจาก flash ได้) | 49 KB |
-| accumulator 2 มุมมอง × 32 × `i16`/`i32` | น้อยกว่า 1 KB |
-| SRAM ทั้งหมดของ ESP32 | ประมาณ 520 KB |
-
-ตัวเลขนี้เป็นการประมาณจากขนาดไฟล์ ยังไม่ได้วัดบนบอร์ดจริง
-
-## 6. ข้อควรระวังด้านความเข้ากันได้
-
-การเปลี่ยนสิ่งต่อไปนี้ต้องแก้ทุกฝั่งพร้อมกันและเทรนใหม่ (ดู `CLAUDE.md` หัวข้อ Compatibility surfaces):
-
-1. สถาปัตยกรรมใน `trainer/src/main.rs` ↔ `engine/src/nnue.rs` ↔ `firmware/`
+1. โครงสร้างของ net ใน `trainer/src/main.rs` ↔ `engine/src/nnue.rs` ↔ `firmware/` (hidden size, จำนวน layer, feature)
 2. ค่า `QA`, `QB`, `SCALE`
-3. ลำดับและการแมปฟีเจอร์
+3. ลำดับและการแมป feature
 4. รูปแบบข้อมูลข้อความของ datagen (`FEN | คะแนน | ผลเกม`) ซึ่ง `bullet-utils convert --from text` ใช้อ่าน
-5. Public API ของ `Searcher` ซึ่ง datagen และ UCI ใช้
+5. Public API ของ `Searcher` ซึ่ง datagen, UCI front end และ `web/` ใช้
 
-## 7. ข้อจำกัดปัจจุบัน
+## 6. ข้อจำกัดปัจจุบัน
 
-- accumulator เป็นแบบ incremental แต่ `accumulator_after` ทำสำเนา `Vec` ต่อทุกตา (มีการจัดสรรหน่วยความจำ) เฟิร์มแวร์ต้องใช้บัฟเฟอร์ขนาดคงที่แทน
-- ยังไม่มีโค้ดใน `firmware/` และยังไม่เคยรันบนบอร์ด
-- ผลวัดเทียบกับรุ่นก่อนของโครงการ และเทียบ Stockfish จำกัดความแรงแบบหยาบ ๆ ไม่ใช่ Elo มาตรฐาน (EVALUATION.md ข้อ 9)
-- ตารางจำและตาราง history (รวม ~80 KB) ต้องนับในงบ RAM ของเฟิร์มแวร์ และ search ยังใช้ `Vec` ต่อ node
+- ยังไม่มีโค้ดใน `firmware/` และยังไม่เคยรันบนบอร์ด ตัวเลขหน่วยความจำและความเร็วบนบอร์ดเป็นการประมาณทั้งหมด
+- search ยังใช้ `Vec` และ clone กระดานต่อ node (รวมถึง `accumulator_after` ที่ทำสำเนาต่อทุก move) firmware ต้องใช้บัฟเฟอร์ขนาดคงที่แทน
+- transposition table (64 KB) และตาราง history (16 KB) ต้องนับในงบ RAM ของ firmware
+- ผลวัดทั้งหมดเทียบกับรุ่นก่อนของโครงการเอง ส่วนผลเทียบ Stockfish จำกัดความแรงเป็นค่าประมาณหยาบ ไม่ใช่ Elo มาตรฐาน ([EVALUATION.md](EVALUATION.md))
