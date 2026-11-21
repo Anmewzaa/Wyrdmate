@@ -66,6 +66,8 @@ const NULL_MIN_DEPTH: i32 = 3;
 const NULL_REDUCTION: i32 = 2;
 const LMR_MIN_DEPTH: i32 = 3;
 const LMR_MIN_INDEX: usize = 2;
+const FUT_MAX_DEPTH: i32 = 2;
+const FUT_MARGIN: i32 = 150; // centipawns per remaining ply
 
 const TT_EXACT: u8 = 1;
 const TT_LOWER: u8 = 2; // score is a lower bound (a beta cutoff happened)
@@ -372,10 +374,16 @@ impl Searcher {
         let mut best_mv: Option<Move> = None;
         let mut tried_quiet: Vec<Move> = Vec::new();
         let in_check = !board.checkers().is_empty();
+        // Futility pruning: near the leaves, if the static eval plus a margin is still below
+        // alpha, a quiet non-checking move is very unlikely to raise it, so skip it.
+        let futile = depth <= FUT_MAX_DEPTH && !in_check && alpha.abs() < MATE - 1_000 && self.eval(board, acc) + FUT_MARGIN * depth <= alpha;
         for (i, mv) in moves.into_iter().enumerate() {
             let quiet = !is_capture(board, mv) && mv.promotion.is_none();
             let mut next = board.clone();
             next.play_unchecked(mv);
+            if futile && i > 0 && quiet && best > -MATE + 1_000 && next.checkers().is_empty() {
+                continue;
+            }
             let nacc = self.child_acc(acc, board, mv);
             // Late move reductions: ordinary quiet moves far down the list are probably bad, so
             // search them shallower first and only redo the full depth if they beat alpha.
