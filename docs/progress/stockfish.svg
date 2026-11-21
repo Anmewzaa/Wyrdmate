@@ -1,57 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="940" height="544" viewBox="0 0 940 544" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Placed on the Stockfish scale">
-<rect width="940" height="544" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="474" viewBox="0 0 940 474" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Placed on the Stockfish scale">
+<rect width="940" height="474" fill="#ffffff"/>
 <text x="24" y="38" font-size="22" font-weight="700" fill="#1f1f1e" text-anchor="start">Wyrdmate · Placed on the Stockfish scale</text>
 <text x="24" y="58" font-size="13" font-weight="400" fill="#6b6a66" text-anchor="start">Approximate UCI_Elo of a strength-limited Stockfish that scores the same against our levels</text>
 <rect x="24" y="72" width="892" height="28" rx="6" fill="#f6f5f0"/>
 <text x="40" y="91" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">Rough: straight-line between Stockfish levels, UCI_Elo is calibrated at a longer time control and is compressed here. Not a standard Elo. Whiskers = about +/-90.</text>
-<line x1="325" y1="150" x2="325" y2="454" stroke="#e1e0d9" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="325" y="144" font-size="11" font-weight="700" fill="#6b6a66" text-anchor="middle">SF 1320</text>
-<line x1="595" y1="150" x2="595" y2="454" stroke="#e1e0d9" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="595" y="144" font-size="11" font-weight="700" fill="#6b6a66" text-anchor="middle">SF 1500</text>
-<line x1="895" y1="150" x2="895" y2="454" stroke="#e1e0d9" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="895" y="144" font-size="11" font-weight="700" fill="#6b6a66" text-anchor="middle">SF 1700</text>
-<text x="520" y="494" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">Stockfish UCI_Elo with the same results</text>
-<text x="295" y="472" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1300</text>
-<text x="445" y="472" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1400</text>
-<text x="595" y="472" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1500</text>
-<text x="745" y="472" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1600</text>
-<rect x="24" y="164" width="892" height="58" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="198" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">3,200 nodes</text>
-<path d="M323 184l-10 -6v12z" fill="#898781"/>
-<text x="307" y="188" font-size="10" font-weight="400" fill="#898781" text-anchor="end">below 1320 (lowest Stockfish setting)</text>
-<path d="M323 202l-10 -6v12z" fill="#2a78d6"/>
-<text x="307" y="206" font-size="10" font-weight="400" fill="#2a78d6" text-anchor="end">below 1320 (lowest Stockfish setting)</text>
-<text x="36" y="256" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">6,400 nodes</text>
-<path d="M323 242l-10 -6v12z" fill="#898781"/>
-<text x="307" y="246" font-size="10" font-weight="400" fill="#898781" text-anchor="end">below 1320 (lowest Stockfish setting)</text>
-<path d="M250 260H520" stroke="#2a78d6" stroke-width="1.5" fill="none"/>
-<circle cx="385" cy="260" r="5" fill="#2a78d6"/>
-<text x="394" y="253" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1360</text>
-<rect x="24" y="280" width="892" height="58" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="314" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">12,800 nodes</text>
-<path d="M323 300l-10 -6v12z" fill="#898781"/>
-<text x="307" y="304" font-size="10" font-weight="400" fill="#898781" text-anchor="end">below 1320 (lowest Stockfish setting)</text>
-<path d="M437.5 318H707.5" stroke="#2a78d6" stroke-width="1.5" fill="none"/>
-<circle cx="572.5" cy="318" r="5" fill="#2a78d6"/>
-<text x="581.5" y="311" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1485</text>
-<text x="36" y="372" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">25,600 nodes</text>
-<path d="M302.5 358H572.5" stroke="#898781" stroke-width="1.5" fill="none"/>
-<circle cx="437.5" cy="358" r="5" fill="#898781"/>
-<text x="446.5" y="351" font-size="11" font-weight="700" fill="#898781" text-anchor="start">~1395</text>
-<path d="M482.5 376H752.5" stroke="#2a78d6" stroke-width="1.5" fill="none"/>
-<circle cx="617.5" cy="376" r="5" fill="#2a78d6"/>
-<text x="626.5" y="369" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1515</text>
-<rect x="24" y="396" width="892" height="58" fill="#f6f5f0" opacity="0.7"/>
-<text x="36" y="430" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">51,200 nodes</text>
-<path d="M332.5 416H602.5" stroke="#898781" stroke-width="1.5" fill="none"/>
-<circle cx="467.5" cy="416" r="5" fill="#898781"/>
-<text x="476.5" y="409" font-size="11" font-weight="700" fill="#898781" text-anchor="start">~1415</text>
-<path d="M505 434H775" stroke="#2a78d6" stroke-width="1.5" fill="none"/>
-<circle cx="640" cy="434" r="5" fill="#2a78d6"/>
-<text x="649" y="427" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1530</text>
-<rect x="600" y="110" width="12" height="12" rx="3" fill="#898781"/>
-<text x="618" y="120" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">first search (s1)</text>
-<rect x="730" y="110" width="12" height="12" rx="3" fill="#2a78d6"/>
-<text x="748" y="120" font-size="11" font-weight="400" fill="#1f1f1e" text-anchor="start">current search (s6)</text>
-<text x="24" y="532" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
+<rect x="36" y="114" width="14" height="14" rx="3" fill="#2a78d6"/>
+<text x="56" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">current search (s6)</text>
+<rect x="209" y="114" width="14" height="14" rx="3" fill="#898781"/>
+<text x="229" y="126" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">first search (s1)</text>
+<line x1="362.5" y1="168" x2="362.5" y2="418" stroke="#e1e0d9"/>
+<text x="362.5" y="434" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1300</text>
+<line x1="487.5" y1="168" x2="487.5" y2="418" stroke="#e1e0d9"/>
+<text x="487.5" y="434" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1400</text>
+<line x1="612.5" y1="168" x2="612.5" y2="418" stroke="#e1e0d9"/>
+<text x="612.5" y="434" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1500</text>
+<line x1="737.5" y1="168" x2="737.5" y2="418" stroke="#e1e0d9"/>
+<text x="737.5" y="434" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">1600</text>
+<line x1="387.5" y1="158" x2="387.5" y2="418" stroke="#6b6a66" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="387.5" y="152" font-size="11" font-weight="700" fill="#6b6a66" text-anchor="middle">SF 1320</text>
+<line x1="612.5" y1="158" x2="612.5" y2="418" stroke="#6b6a66" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="612.5" y="152" font-size="11" font-weight="700" fill="#6b6a66" text-anchor="middle">SF 1500</text>
+<line x1="862.5" y1="158" x2="862.5" y2="418" stroke="#6b6a66" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="862.5" y="152" font-size="11" font-weight="700" fill="#6b6a66" text-anchor="middle">SF 1700</text>
+<rect x="24" y="168" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
+<text x="36" y="198" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">51,200 nodes</text>
+<rect x="300" y="179" width="350" height="14" rx="3" fill="#2a78d6"/>
+<text x="656" y="190" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1530</text>
+<rect x="300" y="196.5" width="206" height="9" rx="3" fill="#898781"/>
+<text x="512.25" y="205" font-size="11" font-weight="700" fill="#898781" text-anchor="start">~1415</text>
+<text x="36" y="248" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">25,600 nodes</text>
+<rect x="300" y="229" width="331" height="14" rx="3" fill="#2a78d6"/>
+<text x="637.25" y="240" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1515</text>
+<rect x="300" y="246.5" width="181" height="9" rx="3" fill="#898781"/>
+<text x="487.25" y="255" font-size="11" font-weight="700" fill="#898781" text-anchor="start">~1395</text>
+<rect x="24" y="268" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
+<text x="36" y="298" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">12,800 nodes</text>
+<rect x="300" y="279" width="294" height="14" rx="3" fill="#2a78d6"/>
+<text x="599.75" y="290" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1485</text>
+<text x="306" y="305" font-size="11" font-weight="400" fill="#898781" text-anchor="start">below 1320 (lowest Stockfish setting)</text>
+<text x="36" y="348" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">6,400 nodes</text>
+<rect x="300" y="329" width="138" height="14" rx="3" fill="#2a78d6"/>
+<text x="443.5" y="340" font-size="11" font-weight="700" fill="#2a78d6" text-anchor="start">~1360</text>
+<text x="306" y="355" font-size="11" font-weight="400" fill="#898781" text-anchor="start">below 1320 (lowest Stockfish setting)</text>
+<rect x="24" y="368" width="892" height="50" fill="#f6f5f0" opacity="0.7"/>
+<text x="36" y="398" font-size="14" font-weight="700" fill="#1f1f1e" text-anchor="start">3,200 nodes</text>
+<text x="306" y="390" font-size="11" font-weight="400" fill="#2a78d6" text-anchor="start">below 1320 (lowest Stockfish setting)</text>
+<text x="306" y="405" font-size="11" font-weight="400" fill="#898781" text-anchor="start">below 1320 (lowest Stockfish setting)</text>
+<text x="550" y="456" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">Stockfish UCI_Elo with the same results</text>
+<text x="24" y="462" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
 </svg>
