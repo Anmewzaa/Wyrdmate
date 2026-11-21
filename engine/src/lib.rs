@@ -66,6 +66,7 @@ const NULL_MIN_DEPTH: i32 = 3;
 const NULL_REDUCTION: i32 = 2;
 const LMR_MIN_DEPTH: i32 = 3;
 const LMR_MIN_INDEX: usize = 2;
+const DELTA_MARGIN: i32 = 200; // centipawns of slack for delta pruning in quiescence
 const FUT_MAX_DEPTH: i32 = 2;
 const FUT_MARGIN: i32 = 150; // centipawns per remaining ply
 
@@ -295,7 +296,15 @@ impl Searcher {
             .filter(|&m| is_capture(board, m) || m.promotion.is_some())
             .collect();
         moves.sort_by_key(|&m| -order_key(board, m));
+        // Delta pruning: even winning the captured piece plus a margin cannot reach alpha.
+        let in_check = !board.checkers().is_empty();
         for mv in moves {
+            if !in_check && mv.promotion.is_none() {
+                let victim = board.piece_on(mv.to).map_or(piece_value(Piece::Pawn), piece_value); // en passant: a pawn
+                if stand + victim + DELTA_MARGIN <= alpha {
+                    continue;
+                }
+            }
             let mut next = board.clone();
             next.play_unchecked(mv);
             let nacc = self.child_acc(acc, board, mv);
