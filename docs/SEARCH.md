@@ -136,7 +136,7 @@ let score = -self.negamax(&next, depth - 1, -beta, -alpha, ply + 1);
 | **SEE** (static exchange evaluation) | s10 | คำนวณผลลัพธ์ของการแลกหมากต่อเนื่องบนช่องที่ถูกกิน (ใช้หมากที่มูลค่าต่ำสุดกินก่อน แต่ละฝ่ายหยุดได้) ใช้ 2 ที่: (1) move ordering: capture ที่ SEE < 0 ถูกลองหลัง killer และ quiet move (2) quiescence: ข้าม capture ที่ SEE < 0 | ไม่ถูกรุก, ไม่ใช่ promotion (ใน quiescence); capture ที่กินของมูลค่า ≥ ตัวที่กินไม่ต้องคำนวณ SEE (ผลไม่ติดลบเสมอ); en passant ยังไม่ผ่าน SEE |
 | **Reverse futility pruning** | s11 | ใกล้ปลายต้นไม้ ถ้าคะแนนประเมิน − margin ยังสูงกว่า beta ถือว่า node นี้ fail high คืนค่านั้นโดยไม่ค้น | depth ≤ 3, margin 80 ต่อ ply, ไม่ถูกรุก, ไม่ใช่ราก, beta ไม่ใช่คะแนนรุกฆาต |
 
-ลองแล้วไม่รับ: **PVS** (ลอง 3 ครั้ง: ก่อนมี TT, หลังมี TT และหลังมี SEE/s11 ไม่ผ่านกฎทั้งสามครั้ง) และ **aspiration window** (ที่ราก delta 100 ได้ราว +6 ที่ 10k และ +21 ที่ 50k รวม 1,200 เกม ที่ 10k ไม่ผ่าน; EVALUATION.md ข้อ 7.7) และ **LMR แบบ logarithmic** (ลดตาม ilog2(depth) × ilog2(index) / 2: +12 ± 22 ที่ 10k, −9 ± 23 ที่ 50k; EVALUATION.md ข้อ 7.8)
+ลองแล้วไม่รับ: **PVS** (ลอง 3 ครั้ง: ก่อนมี TT, หลังมี TT และหลังมี SEE/s11 ไม่ผ่านกฎทั้งสามครั้ง) และ **aspiration window** (ที่ราก delta 100 ได้ราว +6 ที่ 10k และ +21 ที่ 50k รวม 1,200 เกม ที่ 10k ไม่ผ่าน; EVALUATION.md ข้อ 7.7) และ **LMR แบบ logarithmic** (ลดตาม ilog2(depth) × ilog2(index) / 2: +12 ± 22 ที่ 10k, −9 ± 23 ที่ 50k; EVALUATION.md ข้อ 7.8) และ **late move pruning** (−122 ± 27 ที่ 10k, −3 ± 24 ที่ 50k; EVALUATION.md ข้อ 7.9)
 
 ค่า margin/ขนาดทั้งหมดข้างบนเป็นค่าที่ลองครั้งเดียว ไม่ได้ปรับอย่างเป็นระบบ
 
