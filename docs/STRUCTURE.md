@@ -78,6 +78,7 @@ engine คอมไพล์เป็น WebAssembly (`cdylib` ใช้ C ABI) 
 | `ab.ps1` | รัน A/B match ครบขั้นตอน ([EVALUATION.md](EVALUATION.md) ข้อ 3) |
 | `monitor.py` | หน้าเว็บในเครื่อง (`python scripts/monitor.py` แล้วเปิด http://localhost:8765) ดูความคืบหน้า datagen, training และ A/B match จากไฟล์ log แบบอ่านอย่างเดียว มีหน้า `/datagen`, `/train`, `/match` |
 | `make-progress-svg.ps1` | สร้างกราฟใน `docs/progress/` จาก `data.json` |
+| `dedup.py` | ตัดตำแหน่งซ้ำออกจากไฟล์ข้อมูลของ datagen (ใช้สร้างข้อมูลของ `wyrd-1`) |
 | `play.py`, `play.html` | หน้าเล่นกับ engine ในเครื่อง (engine vs engine ได้ด้วย) `play.html` เป็นหน้าเดียวกับที่ `web/` ใช้ |
 | `pgn-viewer.html` | เปิด PGN จาก fastchess เพื่อดูเกมซ้ำ |
 
@@ -90,7 +91,8 @@ engine คอมไพล์เป็น WebAssembly (`cdylib` ใช้ C ABI) 
 | `wyrd-vi.bin` | net รอบ 6 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
 | `wyrd-vii.bin` | net รอบ 7 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
 | `wyrd-viii.bin` | net รอบ 8 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
-| `wyrd-ix.bin` | net รอบ 9 **ปัจจุบัน** |
+| `wyrd-ix.bin` | net รอบ 9 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
+| `wyrd-1.bin` | net รอบ 9 ข้อมูลตัดตำแหน่งซ้ำ เริ่มเลขใหม่ (D-013) **ปัจจุบัน** |
 | `RECORDS.md` | ที่มาของ net ทุกตัวและการทดลองที่ไม่ผ่าน (กฎเหล็กข้อ 1) |
 | `.gitkeep` | ไฟล์เปล่าจากสมัยที่โฟลเดอร์ยังว่าง |
 
@@ -114,7 +116,7 @@ engine คอมไพล์เป็น WebAssembly (`cdylib` ใช้ C ABI) 
 cargo test -p wyrdmate-engine                                           # ทดสอบ engine
 cargo run --release -p wyrdmate-datagen -- 1000 5000 1 data/a.txt       # สร้างข้อมูล 1,000 เกม
 cargo run --release -p wyrdmate-trainer --features cuda -- data/a.data  # training (ต้องมี CUDA)
-powershell -File scripts/ab.ps1 -Net nets/wyrd-ix.bin -OldNet nets/wyrd-viii.bin   # A/B match
+powershell -File scripts/ab.ps1 -Net nets/wyrd-1.bin -OldNet nets/wyrd-ix.bin   # A/B match
 python scripts/monitor.py                                               # หน้าดูความคืบหน้า
 ```
 

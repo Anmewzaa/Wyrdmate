@@ -114,7 +114,26 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Not run: ladder and Stockfish measurements with this net (the ladder in docs/EVALUATION.md section 5 is wyrd-vi + s10).
 - Gain per round: +115, +81, +31, +64, +47, +34.
 
-## wyrd-ix.bin — ACCEPTED (current best; checkpoint run `r9a`, round 9 data, wdl 0.1)
+## wyrd-1.bin — ACCEPTED (current best; checkpoint run `r9d`, round 9 data with repeated positions removed, wdl 0.1)
+
+- Naming: the first net of the new numbering (`wyrd-1`); later nets continue as `wyrd-1-i`, `wyrd-1-ii`, ... (decision D-013).
+- Tooling: commit `47fe909` (search s11; datagen and trainer code unchanged; adds `scripts/dedup.py`). Data: exactly the data of `wyrd-ix`
+  (`data/r9all.txt`, 8,693,520 positions: rounds 2-9, round 9 made by `wyrd-viii` + s11) with every repeated position removed
+  (`python scripts/dedup.py data/r9all.txt data/r9dedup.txt`; the first occurrence is kept, a position is board + side to move +
+  castling + en passant) = 5,803,975 positions; wins/draws/losses 1,952,653 / 1,848,576 / 2,002,746 (draws 32%, was 46%).
+  Then `bullet-utils convert --from text --threads 4` and `shuffle --mem-used-mb 2048` -> `data/r9dedup.data`.
+- Training: `wyrdmate-trainer data/r9dedup.data 200 531 16384 0.1 r9d` (same recipe as `wyrd-ix`, `--features cuda`). Final running loss 0.003210
+  (not comparable with other datasets).
+- Match vs `wyrd-ix` (fastchess, same engine s11, 600 games per set, three independent opening books `data/book.epd` seed 99,
+  `data/book2.epd` seed 100, `data/book3.epd` seed 200): 10,000 nodes **+65 +/- 24** (lower bound +41), **+52 +/- 25** (+27), **+70 +/- 25** (+46);
+  50,000 nodes **+61 +/- 25** (+36), **+44 +/- 26** (+18), **+54 +/- 24** (+30). All six sets pass rule 2 alone. Averaged over the three
+  equal-size sets (by hand, not a joint computation): 10,000 nodes about **+62 +/- 14**, 50,000 nodes about **+53 +/- 15**.
+  Raw logs `logs/ab-net-r9d-10000.txt`, `-50000.txt`, `-10000-book2.txt`, `-50000-book2.txt`, `-10000-book3.txt`, `-50000-book3.txt` (git-ignored).
+- Only the data changed against `wyrd-ix`; the explanation (the many repeated positions, mostly shuffling endgames, were over-weighted)
+  is a hypothesis, not tested separately. One training run only (run-to-run variation unknown). Not run: ladder and Stockfish with this net.
+- Gain per round: ..., about +25 (`wyrd-ix`), then about +62 / +53 (this one; the data and recipe of the round are the same, only repeats removed).
+
+## wyrd-ix.bin — ACCEPTED (previous best, superseded by wyrd-1; checkpoint run `r9a`, round 9 data, wdl 0.1)
 
 - Tooling: commit `654b740` (search s11; datagen and trainer code unchanged since `69d4dcb`). Data: round-9 self-play (4 x 2500 games,
   seeds 121-124, 5000 nodes/move, played by `wyrd-viii.bin` with search s11; 1,046,337 positions) **plus all round-2 to round-8

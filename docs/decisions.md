@@ -69,3 +69,8 @@ Related: [ARCHITECTURE.md](ARCHITECTURE.md) (Thai), [`../nets/RECORDS.md`](../ne
   a large one hurts. Hypothesis (not tested separately): the search scores come from the previous net, so a little real outcome
   information corrects its bias; the game results are noisy, so more than a little hurts. One training run per value: the
   run-to-run variation is not known. D-010's reason for wdl 0.0 (most games drawn) no longer holds (about 46% draws now).
+- **D-013 Net naming restart:** the net made from the round-9 data with repeated positions removed is named `wyrd-1` and starts a new
+  numbering; later nets are `wyrd-1-i`, `wyrd-1-ii`, ... (owner's request: a new number marks a change of recipe, a Roman suffix an
+  ordinary round). The names `wyrd-i` to `wyrd-ix` stay as they are in `nets/`, records and match logs; nothing is renamed.
+  Evidence for the change itself: same data and recipe as `wyrd-ix` but with repeated positions removed (33.6% of positions in r8
+  data were repeats; see `nets/RECORDS.md`), +65/+52/+70 (10k) and +61/+44/+54 (50k) Elo vs `wyrd-ix` on three opening books.

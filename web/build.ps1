@@ -21,7 +21,7 @@ Copy-Item "$root\nets\*.bin" "$dist\nets\"
 
 # The page is the same one scripts/play.py serves; only the backend script is added.
 $names = (Get-ChildItem "$root\nets\*.bin" | Sort-Object Name | ForEach-Object { $_.BaseName }) + 'material'
-$json = @{ nets = @($names); default = 'wyrd-ix' } | ConvertTo-Json -Compress
+$json = @{ nets = @($names); default = 'wyrd-1' } | ConvertTo-Json -Compress
 [System.IO.File]::WriteAllText("$dist\nets.json", $json, (New-Object System.Text.UTF8Encoding($false)))
 $page = Get-Content -Raw -Encoding utf8 "$root\scripts\play.html"
 $page = $page.Replace('</head>', "<script src=`"backend.js`"></script>`n</head>")

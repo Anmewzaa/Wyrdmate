@@ -14,7 +14,7 @@ cp web/backend.js "$D/backend.js"
 cp nets/*.bin "$D/nets/"
 
 names=$(cd nets && ls ./*.bin | sed 's#^\./##; s/\.bin$//' | sort | sed 's/.*/"&"/' | paste -sd, -)
-printf '{"nets":[%s,"material"],"default":"wyrd-ix"}\n' "$names" > "$D/nets.json"
+printf '{"nets":[%s,"material"],"default":"wyrd-1"}\n' "$names" > "$D/nets.json"
 
 # The page is the same one scripts/play.py serves; only the backend script is added.
 sed 's#</head>#<script src="backend.js"></script>\n</head>#' scripts/play.html > "$D/index.html"

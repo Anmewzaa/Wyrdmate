@@ -194,7 +194,7 @@ bullet เติมศูนย์ท้ายไฟล์ให้ขนาด�
 
 ## 10. สถานะปัจจุบัน
 
-net ที่ผ่านการรับอยู่ใน `nets/` (`wyrd-i` ถึง `wyrd-ix`) ทุกตัวมีโครงสร้างเดียวกัน (H = 32) ที่มาและผลแข่งของแต่ละตัวอยู่ใน [`../nets/RECORDS.md`](../nets/RECORDS.md)
+net ที่ผ่านการรับอยู่ใน `nets/` (`wyrd-i` ถึง `wyrd-ix` และ `wyrd-1`) ทุกตัวมีโครงสร้างเดียวกัน (H = 32) ที่มาและผลแข่งของแต่ละตัวอยู่ใน [`../nets/RECORDS.md`](../nets/RECORDS.md)
 
 การเปลี่ยนโครงสร้าง (hidden size, จำนวน layer, feature, `QA`/`QB`/`SCALE`) ต้องแก้ทุกฝั่งพร้อมกันและเทรนใหม่:
 `trainer/src/main.rs` ↔ `engine/src/nnue.rs` ↔ `firmware/` (ดู [ARCHITECTURE.md](ARCHITECTURE.md) ข้อ 5)

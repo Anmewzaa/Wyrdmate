@@ -14,7 +14,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: engine (search s1-s9 + NNUE eval + UCI), datagen and the bullet trainer work.
-> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-vi`, `wyrd-vii`, `wyrd-viii`, and `wyrd-ix` (current): about +25 +/- 15 Elo vs wyrd-viii at 10k nodes and +24 +/- 14 at 50k (three independent 600-game sets pooled by hand; sets alone +8..+41, three of six pass alone). Before it, `wyrd-viii`: +57 +/- 26 Elo vs wyrd-vii at 10k nodes and +80 +/- 25 at 50k (+79 / +63 on a second opening book). Earlier, `wyrd-vii` (data from search s10): +34 +/- 25 Elo vs wyrd-vi at 10k nodes
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii` to `wyrd-ix`, and `wyrd-1` (current, new numbering, D-013): the `wyrd-ix` data with repeated positions removed (`scripts/dedup.py`, 8.69M -> 5.80M positions), same recipe: +62 +/- 14 Elo vs wyrd-ix at 10k nodes and +53 +/- 15 at 50k (three opening books of 600 games each, all six sets pass alone: +65/+52/+70 and +61/+44/+54). Before it, `wyrd-ix`: about +25 +/- 15 Elo vs wyrd-viii at 10k nodes and +24 +/- 14 at 50k (three independent 600-game sets pooled by hand; sets alone +8..+41, three of six pass alone). Before it, `wyrd-viii`: +57 +/- 26 Elo vs wyrd-vii at 10k nodes and +80 +/- 25 at 50k (+79 / +63 on a second opening book). Earlier, `wyrd-vii` (data from search s10): +34 +/- 25 Elo vs wyrd-vi at 10k nodes
 > and about +29 +/- 18 at 50k (two independent 600-game sets pooled by hand; first set alone +23 +/- 24, lower bound -2). Gains per round: +115, +81, +31, +64, +47, +34; round 8 with `wdl 0.0` (`r8a`) was NOT accepted (-9 / -12), but the same data trained with `wdl 0.1` gave `wyrd-viii` (+57 / +80); `wdl` 0.2 gave +20 / +38, 0.3 and 0.4 were much worse (D-012).
 > Failed round-7 candidates `r7a` (5,000 nodes/move, s9 data) and `r7b` (20,000 nodes/move) were NOT accepted. Provenance and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.
@@ -104,7 +104,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 - `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).
 - `docs/` — `NET.md` (what a net is), `STRUCTURE.md` (human tour), `TRAINING.md` (how a net is made),
   `EVALUATION.md` (A/B matches and all measurements), `SEARCH.md`, `ROADMAP.md`, `GLOSSARY.md`, `decisions.md`, `progress/` (chart data + generated SVGs).
-- `scripts/` — `make-progress-svg.ps1`; `monitor.py` (local progress page for datagen/training/matches, read-only); `play.py` + `play.html` (local browser play page, engine vs
+- `scripts/` — `make-progress-svg.ps1`; `dedup.py` (drop repeated positions from datagen text, used for wyrd-1); `monitor.py` (local progress page for datagen/training/matches, read-only); `play.py` + `play.html` (local browser play page, engine vs
   engine too); `pgn-viewer.html` (replays fastchess PGN).
 - `web/` — the engine as WebAssembly (`cdylib`, plain C ABI) + `backend.js` + `build.ps1`/`build.sh` →
   `web/dist`. Not a workspace member (excluded like `firmware/`); engine code is unchanged by it.
