@@ -9,12 +9,12 @@
 | engine | search s1–s11 + UCI + node limit ([SEARCH.md](SEARCH.md)) |
 | net inference | NNUE พร้อม accumulator แบบ incremental ([NET.md](NET.md)) |
 | datagen / trainer | self-play และ training ด้วย bullet บน GPU ([TRAINING.md](TRAINING.md)) |
-| net 8 รุ่น | `wyrd-i` (ผู้เล่นสร้างข้อมูลเท่านั้น) ถึง `wyrd-viii` (**ปัจจุบัน**: +57 / +80 Elo เทียบ wyrd-vii ที่ 10k / 50k จากการเปลี่ยน `wdl` เป็น 0.1) |
+| net 9 รุ่น | `wyrd-i` (ผู้เล่นสร้างข้อมูลเท่านั้น) ถึง `wyrd-ix` (**ปัจจุบัน**: ≈ +25 / +24 Elo เทียบ wyrd-viii ที่ 10k / 50k รวม 3 ชุดอิสระ) |
 | เครื่องมือวัดผล | `ab.ps1` (A/B, เวลาเท่ากัน), ladder, เทียบ Stockfish, หน้า `monitor.py` ([EVALUATION.md](EVALUATION.md)) |
-| เว็บเดโม | `web/` + GitHub Pages ใช้ `wyrd-viii` เป็นค่าเริ่มต้น |
+| เว็บเดโม | `web/` + GitHub Pages ใช้ `wyrd-ix` เป็นค่าเริ่มต้น |
 | ladder ปัจจุบัน | วัดแล้วกับ `wyrd-vi` + s10 (ยังไม่ได้วัดซ้ำกับ `wyrd-vii`): 51,200 node = +547 Elo เทียบ 1,600 node ([EVALUATION.md](EVALUATION.md) ข้อ 5) |
 
-ผลที่เพิ่มต่อรอบ: +115, +81, +31, +64, +47, +34 Elo, รอบ 8 ที่ `wdl` 0.0 ได้ −9 / −12 ไม่รับ แต่ที่ `wdl` 0.1 ได้ +57 / +80 รับเป็น `wyrd-viii` ([EVALUATION.md](EVALUATION.md) ข้อ 8.3) (รอบ 7 ลอง 3 ครั้ง: `r7a` และ `r7b` ไม่รับ `r7c` ที่ใช้ข้อมูลจาก s10 ได้รับเป็น `wyrd-vii`) ([TRAINING.md](TRAINING.md) ข้อ 5)
+ผลที่เพิ่มต่อรอบ: +115, +81, +31, +64, +47, +34 Elo, รอบ 8 ที่ `wdl` 0.0 ได้ −9 / −12 ไม่รับ แต่ที่ `wdl` 0.1 ได้ +57 / +80 รับเป็น `wyrd-viii` ([EVALUATION.md](EVALUATION.md) ข้อ 8.3) รอบ 9 ได้ `wyrd-ix` ราว +25 (รอบ 7 ลอง 3 ครั้ง: `r7a` และ `r7b` ไม่รับ `r7c` ที่ใช้ข้อมูลจาก s10 ได้รับเป็น `wyrd-vii`) ([TRAINING.md](TRAINING.md) ข้อ 5)
 
 ## 2. งานที่เหลือ
 

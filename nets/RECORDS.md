@@ -114,7 +114,24 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Not run: ladder and Stockfish measurements with this net (the ladder in docs/EVALUATION.md section 5 is wyrd-vi + s10).
 - Gain per round: +115, +81, +31, +64, +47, +34.
 
-## wyrd-viii.bin — ACCEPTED (current best; checkpoint run `r8w1`, round 8 data with wdl 0.1)
+## wyrd-ix.bin — ACCEPTED (current best; checkpoint run `r9a`, round 9 data, wdl 0.1)
+
+- Tooling: commit `654b740` (search s11; datagen and trainer code unchanged since `69d4dcb`). Data: round-9 self-play (4 x 2500 games,
+  seeds 121-124, 5000 nodes/move, played by `wyrd-viii.bin` with search s11; 1,046,337 positions) **plus all round-2 to round-8
+  data** (`data/r8all.txt`) = 8,693,520 positions (`data/r9train.data`). Pipeline as before: `wyrdmate-datagen 2500 5000 <seed>
+  data/r9partSEED.txt nets/wyrd-viii.bin`, concatenated after `data/r8all.txt`, `bullet-utils convert --from text`, `shuffle --mem-used-mb 2048`.
+- Training: `wyrdmate-trainer data/r9train.data 200 531 16384 0.1 r9a` (wdl 0.1 per D-012, `--features cuda`). Final running loss 0.002692
+  (not comparable with other datasets).
+- Match vs `wyrd-viii` (fastchess, same engine s11, 600 games per set, three independent opening books: `data/book.epd` seed 99,
+  `data/book2.epd` seed 100, `data/book3.epd` seed 200): 10,000 nodes **+30 +/- 24** (lower bound +6), **+8 +/- 26** (-17), **+38 +/- 25** (+13);
+  50,000 nodes **+41 +/- 24** (+18), **+12 +/- 24** (-12), **+20 +/- 24** (-4). Pooling the three independent sets by hand
+  (trinomial, 1800 games): 10,000 nodes about **+25 +/- 15** (lower bound about +10.5), 50,000 nodes about **+24 +/- 14** (lower bound about +10).
+  Three of the six sets alone do not pass; all six are positive. Owner-delegated decision: accepted on the pooled result.
+  Raw logs `logs/ab-net-r9a-10000.txt`, `-50000.txt`, `-10000-book2.txt`, `-50000-book2.txt`, `-10000-book3.txt`, `-50000-book3.txt` (git-ignored).
+- One training run only (run-to-run variation unknown). Not run: ladder and Stockfish with this net.
+- Gain per round: +115, +81, +31, +64, +47, +34, +57..+80 (round 8 at wdl 0.1), then about +25 (this one).
+
+## wyrd-viii.bin — ACCEPTED (previous best, superseded by wyrd-ix; checkpoint run `r8w1`, round 8 data with wdl 0.1)
 
 - Tooling: commit `0558764` (search s11; datagen and trainer code unchanged since `69d4dcb`). Data: the same round-8 data as `r8a`
   (round-8 self-play, 4 x 2500 games, seeds 111-114, 5000 nodes/move, played by `wyrd-vii.bin` with search s11; 1,049,269 positions)

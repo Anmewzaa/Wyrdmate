@@ -89,7 +89,8 @@ engine คอมไพล์เป็น WebAssembly (`cdylib` ใช้ C ABI) 
 | `wyrd-ii.bin` ถึง `wyrd-v.bin` | net รอบ 2–5 ที่ผ่านเกณฑ์ (รุ่นเก่า เก็บไว้เทียบ) |
 | `wyrd-vi.bin` | net รอบ 6 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
 | `wyrd-vii.bin` | net รอบ 7 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
-| `wyrd-viii.bin` | net รอบ 8 **ปัจจุบัน** |
+| `wyrd-viii.bin` | net รอบ 8 (รุ่นก่อนหน้า เก็บไว้เทียบ) |
+| `wyrd-ix.bin` | net รอบ 9 **ปัจจุบัน** |
 | `RECORDS.md` | ที่มาของ net ทุกตัวและการทดลองที่ไม่ผ่าน (กฎเหล็กข้อ 1) |
 | `.gitkeep` | ไฟล์เปล่าจากสมัยที่โฟลเดอร์ยังว่าง |
 
@@ -113,7 +114,7 @@ engine คอมไพล์เป็น WebAssembly (`cdylib` ใช้ C ABI) 
 cargo test -p wyrdmate-engine                                           # ทดสอบ engine
 cargo run --release -p wyrdmate-datagen -- 1000 5000 1 data/a.txt       # สร้างข้อมูล 1,000 เกม
 cargo run --release -p wyrdmate-trainer --features cuda -- data/a.data  # training (ต้องมี CUDA)
-powershell -File scripts/ab.ps1 -Net nets/wyrd-viii.bin -OldNet nets/wyrd-vii.bin   # A/B match
+powershell -File scripts/ab.ps1 -Net nets/wyrd-ix.bin -OldNet nets/wyrd-viii.bin   # A/B match
 python scripts/monitor.py                                               # หน้าดูความคืบหน้า
 ```
 

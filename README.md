@@ -77,7 +77,7 @@ The search was improved in steps after the nets (see [SEARCH.md](docs/SEARCH.md)
 
 </div>
 
-Latest accepted net, **`wyrd-viii`** (round 8 data, trained with `wdl 0.1`): **+57 ± 26 Elo** against `wyrd-vii` at 10,000 nodes and **+80 ± 25** at 50,000 (confirmed on a second opening book: +79 and +63). The gain per round had been shrinking (+115, +81, +31, +64, +47, +34, and -9 / -12 for round 8 at `wdl 0.0`); mixing 10% of the real game result into the training target changed that, while 30-40% hurts a lot. What a net is and how it works: [NET.md](docs/NET.md).
+Latest accepted net, **`wyrd-ix`** (round 9 data, `wdl 0.1`): about **+25 ± 15 Elo** against `wyrd-viii` at 10,000 nodes and **+24 ± 14** at 50,000 (three independent 600-game sets pooled by hand; the sets alone range from +8 to +41, three of six pass on their own). The round before it, **`wyrd-viii`** (round 8 data, trained with `wdl 0.1`): **+57 ± 26 Elo** against `wyrd-vii` at 10,000 nodes and **+80 ± 25** at 50,000 (confirmed on a second opening book: +79 and +63). The gain per round had been shrinking (+115, +81, +31, +64, +47, +34, and -9 / -12 for round 8 at `wdl 0.0`); mixing 10% of the real game result into the training target changed that, while 30-40% hurts a lot. What a net is and how it works: [NET.md](docs/NET.md).
 Full history, including experiments that failed (a net trained to also fit game results lost to the baseline), is in [`nets/RECORDS.md`](nets/RECORDS.md).
 The charts are generated from [`docs/progress/data.json`](docs/progress/data.json) by `scripts/make-progress-svg.ps1`.
 
@@ -92,7 +92,7 @@ cargo build --release -p wyrdmate-engine
 
 ```text
 uci
-setoption name EvalFile value nets/wyrd-viii.bin      # the trained net (omit for the material-only baseline)
+setoption name EvalFile value nets/wyrd-ix.bin      # the trained net (omit for the material-only baseline)
 setoption name Nodes value 5000                      # strength: fewer nodes = weaker
 position startpos moves e2e4 e7e5
 go
@@ -114,7 +114,7 @@ The engine answers `bestmove ...`. `go nodes N` overrides the budget for one mov
 | `datagen/` | Self-play data generator (optionally played by a net) |
 | `trainer/` | [bullet](https://github.com/jw1912/bullet) training driver (pinned to a git revision) |
 | `firmware/` | `no_std` ESP32 inference. **Skeleton only**, built separately |
-| `nets/` | Accepted nets (`wyrd-i` to `wyrd-viii`) and their [records](nets/RECORDS.md) |
+| `nets/` | Accepted nets (`wyrd-i` to `wyrd-ix`) and their [records](nets/RECORDS.md) |
 | `docs/` | [Training guide](docs/TRAINING.md), [file-by-file tour](docs/STRUCTURE.md), [decisions](docs/decisions.md), progress data |
 | `web/` | The engine as WebAssembly plus the build for the GitHub Pages demo ([web/README.md](web/README.md)). Not a workspace member |
 | `scripts/` | Progress charts, the browser play page (`play.py`/`play.html`), a PGN game viewer |
@@ -125,7 +125,7 @@ You need Rust (stable). Training also needs an NVIDIA GPU with the CUDA Toolkit;
 
 ```bash
 cargo test -p wyrdmate-engine                  # engine tests
-cargo run --release -p wyrdmate-engine --example validate -- nets/wyrd-viii.bin data/some.txt   # net vs stored scores
+cargo run --release -p wyrdmate-engine --example validate -- nets/wyrd-ix.bin data/some.txt   # net vs stored scores
 ```
 
 One round of the loop (see the [training guide](docs/TRAINING.md) for what each step does):
