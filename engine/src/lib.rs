@@ -132,6 +132,8 @@ const DELTA_MARGIN: i32 = 200; // centipawns of slack for delta pruning in quies
 const CHECK_EXT_MAX_PLY: usize = 32; // no check extensions deeper than this, so a checking chain stays bounded
 const FUT_MAX_DEPTH: i32 = 2;
 const FUT_MARGIN: i32 = 150; // centipawns per remaining ply
+const RFP_MAX_DEPTH: i32 = 3;
+const RFP_MARGIN: i32 = 80; // centipawns per remaining ply (reverse futility pruning)
 
 const TT_EXACT: u8 = 1;
 const TT_LOWER: u8 = 2; // score is a lower bound (a beta cutoff happened)
@@ -424,6 +426,15 @@ impl Searcher {
                 }
             }
         }
+        // Reverse futility pruning: near the leaves, if the static eval is already far above beta
+        // even after giving back a margin, assume the node fails high and return without searching.
+        let in_check = !board.checkers().is_empty();
+        if ply > 0 && depth <= RFP_MAX_DEPTH && !in_check && beta.abs() < MATE - 1_000 {
+            let e = self.eval(board, acc);
+            if e - RFP_MARGIN * depth >= beta {
+                return e - RFP_MARGIN * depth;
+            }
+        }
         // Null-move pruning: if passing the move still leaves us at or above beta after a
         // reduced search, a real move would too. Not in check, not twice in a row, and only
         // with some piece besides pawns and the king (otherwise zugzwang makes it unsound).
@@ -448,7 +459,6 @@ impl Searcher {
         let mut best = -INF;
         let mut best_mv: Option<Move> = None;
         let mut tried_quiet: Vec<Move> = Vec::new();
-        let in_check = !board.checkers().is_empty();
         // Futility pruning: near the leaves, if the static eval plus a margin is still below
         // alpha, a quiet non-checking move is very unlikely to raise it, so skip it.
         let futile = depth <= FUT_MAX_DEPTH && !in_check && alpha.abs() < MATE - 1_000 && self.eval(board, acc) + FUT_MARGIN * depth <= alpha;
