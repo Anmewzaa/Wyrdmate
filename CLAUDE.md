@@ -14,7 +14,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
 `docs/STRUCTURE.md` (Thai, for humans).
 
 > Status: engine (search + NNUE eval + UCI), datagen and the bullet trainer work.
-> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii`, `wyrd-iii`, `wyrd-iv`, `wyrd-v` (current: +64 +/- 25 vs wyrd-iv at 10k nodes, 600 games; wyrd-iv was: +31 +/- 22 Elo
+> Accepted nets: `wyrd-i` (teacher only), `wyrd-ii`, `wyrd-iii`, `wyrd-iv`, `wyrd-v`, `wyrd-vi` (current: +47 +/- 25 vs wyrd-v at 10k nodes, 600 games; wyrd-iv was: +31 +/- 22 Elo
 > vs wyrd-iii, +212 +/- 27 vs the material eval; 600 games, 10k nodes; gains per round +115, +81, +31). Provenance
 > and failed experiments: `nets/RECORDS.md`; training recipe: decision D-010.
 > Results are only vs our own earlier versions, never vs outside engines.

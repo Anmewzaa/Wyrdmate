@@ -63,7 +63,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
   (lower bound still above 0); vs material eval **+212 +/- 27 Elo**.
 - Gains per round are shrinking: +115, +81, +31 Elo over the previous net.
 
-## wyrd-v.bin — ACCEPTED (current best)
+## wyrd-v.bin — ACCEPTED
 
 - Tooling: commit `3a32a05` (search s9: futility pruning, delta pruning, check extension on top of s6;
   datagen and trainer code unchanged since `c3ed243`).
@@ -80,3 +80,19 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
   Raw logs `logs/ab-net-r5a-10k.txt`, `logs/ab-net-r5a-50k.txt` (git-ignored).
 - Not run: match against the material eval; ladder and Stockfish measurements with this net.
 - Gain per round: +115, +81, +31, +64 (the last round also changed the search used to make labels).
+
+## wyrd-vi.bin — ACCEPTED (current best)
+
+- Tooling: commit `0cbd1a6` (search s9; datagen and trainer code unchanged since `c3ed243`).
+- Data: round-6 self-play (4 runs x 2500 games, seeds 71-74, 5000 nodes/move, played by `wyrd-v.bin`
+  with search s9; 1,024,739 positions) **plus all round-2 to round-5 data** = 5,560,850 positions.
+  `wyrdmate-datagen 2500 5000 <seed> data/r6partSEED.txt nets/wyrd-v.bin`, concatenated after
+  `data/r5all.txt`, then `bullet-utils convert --from text`, `shuffle`.
+- Training: `wyrdmate-trainer data/r6train.data 200 339 16384 0.0 r6a` (wdl 0.0; 339 batches/superbatch ~ one
+  pass; `--features cuda`). Final running loss 0.001436 (not comparable across datasets).
+- Match (fastchess, 600 games, same book, engine s9 on both sides, new net vs `wyrd-v`):
+  10,000 nodes **+47 +/- 25 Elo** (lower bound +22), 50,000 nodes **+42 +/- 25 Elo** (lower bound +17).
+  Raw logs `logs/ab-net-r6a-10k.txt`, `logs/ab-net-r6a-50k.txt` (git-ignored).
+- Not run: match against the material eval or `wyrd-iv`; ladder and Stockfish measurements with this net.
+- Gain per round: +115, +81, +31, +64, +47. Still positive after the label/search change, not yet shrinking
+  clearly; two data points since s9 are too few to call a trend.

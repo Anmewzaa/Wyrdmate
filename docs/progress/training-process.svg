@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="940" height="1084" viewBox="0 0 940 1084" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Training process">
-<rect width="940" height="1084" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="1154" viewBox="0 0 940 1154" font-family="Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Wyrdmate · Training process">
+<rect width="940" height="1154" fill="#ffffff"/>
 <text x="24" y="38" font-size="22" font-weight="700" fill="#1f1f1e" text-anchor="start">Wyrdmate · Training process</text>
 <text x="24" y="58" font-size="13" font-weight="400" fill="#6b6a66" text-anchor="start">Does each newly trained net beat its opponent? (head-to-head matches)</text>
 <rect x="24" y="70" width="892" height="104" rx="6" fill="#f6f5f0"/>
@@ -9,21 +9,21 @@
 <text x="40" y="165" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">&quot;Material eval&quot; = the original engine that scores positions by piece values only (no net).</text>
 <text x="500" y="216" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="end">&lt; weaker</text>
 <text x="520" y="216" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="start">stronger &gt;</text>
-<line x1="360" y1="230" x2="360" y2="1004" stroke="#e1e0d9"/>
-<text x="360" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-300</text>
-<line x1="410" y1="230" x2="410" y2="1004" stroke="#e1e0d9"/>
-<text x="410" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-200</text>
-<line x1="460" y1="230" x2="460" y2="1004" stroke="#e1e0d9"/>
-<text x="460" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-100</text>
-<line x1="510" y1="230" x2="510" y2="1004" stroke="#e1e0d9"/>
-<text x="510" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0</text>
-<line x1="560" y1="230" x2="560" y2="1004" stroke="#e1e0d9"/>
-<text x="560" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">100</text>
-<line x1="610" y1="230" x2="610" y2="1004" stroke="#e1e0d9"/>
-<text x="610" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">200</text>
-<line x1="660" y1="230" x2="660" y2="1004" stroke="#e1e0d9"/>
-<text x="660" y="1020" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">300</text>
-<text x="510" y="1042" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">Elo difference vs opponent (0 = equal)</text>
+<line x1="360" y1="230" x2="360" y2="1074" stroke="#e1e0d9"/>
+<text x="360" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-300</text>
+<line x1="410" y1="230" x2="410" y2="1074" stroke="#e1e0d9"/>
+<text x="410" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-200</text>
+<line x1="460" y1="230" x2="460" y2="1074" stroke="#e1e0d9"/>
+<text x="460" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">-100</text>
+<line x1="510" y1="230" x2="510" y2="1074" stroke="#e1e0d9"/>
+<text x="510" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">0</text>
+<line x1="560" y1="230" x2="560" y2="1074" stroke="#e1e0d9"/>
+<text x="560" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">100</text>
+<line x1="610" y1="230" x2="610" y2="1074" stroke="#e1e0d9"/>
+<text x="610" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">200</text>
+<line x1="660" y1="230" x2="660" y2="1074" stroke="#e1e0d9"/>
+<text x="660" y="1090" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="middle">300</text>
+<text x="510" y="1112" font-size="12" font-weight="400" fill="#6b6a66" text-anchor="middle">Elo difference vs opponent (0 = equal)</text>
 <rect x="24" y="230" width="892" height="70" fill="#f6f5f0" opacity="0.7"/>
 <text x="36" y="253" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-i · experiment, wdl 0.5 · 20 superbatches</text>
 <text x="36" y="269" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">vs material eval (baseline)</text>
@@ -112,12 +112,20 @@
 <rect x="24" y="930" width="892" height="70" fill="#f6f5f0" opacity="0.7"/>
 <text x="36" y="953" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-v · wdl 0.0 · round 2+3+4+5 data</text>
 <text x="36" y="969" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">vs wyrd-iv (previous net)</text>
-<text x="36" y="986" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">2026-11-21 13:20 · 600 games · commit 3a32a05</text>
+<text x="36" y="986" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">2026-11-21 13:12 · 600 games · commit 3a32a05</text>
 <rect x="510" y="954" width="32" height="22" rx="3" fill="#2a78d6"/>
 <path d="M529.5 965H554.5M529.5 959V971M554.5 959V971" stroke="#1f1f1e" stroke-width="1.5" fill="none"/>
 <text x="562.5" y="970" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">+64 ± 25</text>
 <text x="750" y="961" font-size="13" font-weight="700" fill="#2a78d6" text-anchor="start">Clearly better - accepted</text>
 <text x="750" y="979" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">scores ~59% per game</text>
-<line x1="510" y1="230" x2="510" y2="1004" stroke="#1f1f1e" stroke-width="1.5"/>
-<text x="24" y="1072" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
+<text x="36" y="1023" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">wyrd-vi · wdl 0.0 · round 2-6 data</text>
+<text x="36" y="1039" font-size="12" font-weight="400" fill="#1f1f1e" text-anchor="start">vs wyrd-v (previous net)</text>
+<text x="36" y="1056" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">2026-11-21 13:28 · 600 games · commit 0cbd1a6</text>
+<rect x="510" y="1024" width="23.5" height="22" rx="3" fill="#2a78d6"/>
+<path d="M521 1035H546M521 1029V1041M546 1029V1041" stroke="#1f1f1e" stroke-width="1.5" fill="none"/>
+<text x="554" y="1040" font-size="13" font-weight="700" fill="#1f1f1e" text-anchor="start">+47 ± 25</text>
+<text x="750" y="1031" font-size="13" font-weight="700" fill="#2a78d6" text-anchor="start">Clearly better - accepted</text>
+<text x="750" y="1049" font-size="11" font-weight="400" fill="#6b6a66" text-anchor="start">scores ~57% per game</text>
+<line x1="510" y1="230" x2="510" y2="1074" stroke="#1f1f1e" stroke-width="1.5"/>
+<text x="24" y="1142" font-size="10" font-weight="400" fill="#6b6a66" text-anchor="start">Generated from docs/progress/data.json by scripts/make-progress-svg.ps1</text>
 </svg>
