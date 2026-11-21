@@ -52,7 +52,7 @@ crate `wyrdmate-trainer` เป็นตัวขับ bullet
 | ไฟล์ | หน้าที่ |
 |---|---|
 | `Cargo.toml` | ดึง `bullet_lib` จาก git โดยตรึงที่ commit หนึ่ง (API เปลี่ยนบ่อย) มี feature `cuda` สำหรับ GPU NVIDIA |
-| `src/main.rs` | กำหนดโครงสร้าง net `(768 → 32) × 2 → 1` และตารางเทรน แล้วสั่ง bullet ผลเป็น net ที่ quantise แล้วใน `checkpoints/` |
+| `src/main.rs` | กำหนดโครงสร้าง net `(768 → H) × 2 → 1` (H = hidden size เป็นอาร์กิวเมนต์ ค่าเริ่มต้น 32) และตารางเทรน แล้วสั่ง bullet ผลเป็น net ที่ quantise แล้วใน `checkpoints/` |
 
 ## 5. `firmware/`
 

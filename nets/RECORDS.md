@@ -111,3 +111,13 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
   exactly, so every game was played twice (Elo identical to the 600-game run, error bar falsely smaller).
   `scripts/ab.ps1` now warns when `-Rounds` exceeds the book size and takes `-Book` for another opening set.
 - Gain per round: +115, +81, +31, +64, +47, then +39 (10k) / about +18 (50k) for this candidate: shrinking again.
+
+## Hidden size experiment (r6h16, r6h64, r6h128) — NOT ACCEPTED, none copied to `nets/`
+
+- Tooling: commit `53bbbb8` plus the trainer change that makes hidden size the 7th argument (this commit). Data: the same
+  round 2-6 data as `wyrd-vi` (5,560,850 positions). Training: `wyrdmate-trainer data/r6train.data 200 339 16384 0.0 r6h<H> <H>`
+  for H = 16, 64, 128 (one run each). Final running loss 0.001599 / 0.001269 / 0.001090 (`wyrd-vi`, H = 32: 0.001436).
+- Matches vs `wyrd-vi` (600 games each, same engine): equal nodes at 10k / 50k: H16 -24 +/- 26 / -27 +/- 24, H64 +25 +/- 25 / +21 +/- 25,
+  H128 +30 +/- 25 / +34 +/- 25. Equal time (fewer nodes for the bigger net): H64 -19 +/- 26 (10k) and +1 +/- 25 (50k),
+  H128 -53 +/- 26 and -18 +/- 26. Details and caveats: docs/EVALUATION.md section 8.1.
+- Conclusion: keep H = 32. The checkpoints are in `checkpoints/r6h*-200/` (git-ignored).

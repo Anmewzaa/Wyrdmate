@@ -1,6 +1,6 @@
-//! Trains a (768 -> HIDDEN)x2 -> 1 NNUE with bullet.
+//! Trains a (768 -> HIDDEN)x2 -> 1 NNUE with bullet (hidden size defaults to 32; see the 7th argument).
 //!
-//! Usage: wyrdmate-trainer <data.data> [superbatches=20] [batches_per_superbatch=1000] [batch_size=16384] [wdl=0.5] [net_id=wyrd]
+//! Usage: wyrdmate-trainer <data.data> [superbatches=20] [batches_per_superbatch=1000] [batch_size=16384] [wdl=0.5] [net_id=wyrd] [hidden=32]
 //! Convert datagen text first:
 //!   bullet-utils convert --from text --input data/selfplay.txt --output data/selfplay.data
 //! Nets land in checkpoints/<net_id>-<superbatch>/ (git-ignored).
@@ -16,7 +16,7 @@ use bullet_lib::{
     value::{loader, ValueTrainerBuilder},
 };
 
-const HIDDEN_SIZE: usize = 32;
+const DEFAULT_HIDDEN_SIZE: usize = 32;
 const SCALE: i32 = 400;
 const QA: i16 = 255;
 const QB: i16 = 64;
@@ -29,6 +29,8 @@ fn main() {
     let batch_size: usize = a.get(4).and_then(|s| s.parse().ok()).unwrap_or(16_384);
     let wdl: f32 = a.get(5).and_then(|s| s.parse().ok()).unwrap_or(0.5);
     let net_id = a.get(6).cloned().unwrap_or_else(|| "wyrd".to_string());
+    // hidden size (neurons in the hidden layer); the engine reads it back from the file size, the firmware must match
+    let hidden_size: usize = a.get(7).and_then(|s| s.parse().ok()).unwrap_or(DEFAULT_HIDDEN_SIZE);
 
     let mut trainer = ValueTrainerBuilder::default()
         .dual_perspective()
@@ -42,8 +44,8 @@ fn main() {
         ])
         .loss_fn(|output, target| output.sigmoid().squared_error(target))
         .build(|builder, stm_inputs, ntm_inputs| {
-            let l0 = builder.new_affine("l0", 768, HIDDEN_SIZE);
-            let l1 = builder.new_affine("l1", 2 * HIDDEN_SIZE, 1);
+            let l0 = builder.new_affine("l0", 768, hidden_size);
+            let l1 = builder.new_affine("l1", 2 * hidden_size, 1);
             let stm_hidden = l0.forward(stm_inputs).screlu();
             let ntm_hidden = l0.forward(ntm_inputs).screlu();
             l1.forward(stm_hidden.concat(ntm_hidden))

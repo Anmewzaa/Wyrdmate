@@ -25,7 +25,8 @@ Don't re-open them unless the user does. For a file-by-file tour read
 > Search is at s9 (docs/SEARCH.md section 9): s9 adds futility, delta pruning and check extension on top of s6; it is ~29% slower
 > per node but still beats s6 at equal time (docs/EVALUATION.md section 7.2).
 > A browser demo exists (`web/`, WebAssembly, deployed to GitHub Pages by `.github/workflows/pages.yml`).
-> Next (docs/ROADMAP.md): test hidden size (never tried, 32 so far), more search work, better datagen. The `no_std` firmware is
+> Hidden size was tested (16/64/128 vs 32, docs/EVALUATION.md section 8.1): bigger nets are not worth it at equal time, so 32 stays.
+> Next (docs/ROADMAP.md): more search work, better datagen. The `no_std` firmware is
 > deferred until an ESP32 board exists (nothing has run on a board).
 
 ## Start here — read only what your task needs
@@ -95,7 +96,7 @@ Don't re-open them unless the user does. For a file-by-file tour read
   `wyrdmate-datagen [games] [nodes] [seed] [out] [net.bin]` (net optional: it plays).
 - `trainer/` — bullet driver: `(768 -> 32)x2 -> 1`, screlu, i16 quantisation
   (QA 255, QB 64, scale 400). Usage: `wyrdmate-trainer <data.data> [superbatches]
-  [batches_per_sb] [batch_size] [wdl=0.5] [net_id=wyrd]` (use wdl 0.0, D-010).
+  [batches_per_sb] [batch_size] [wdl=0.5] [net_id=wyrd] [hidden=32]` (use wdl 0.0, D-010).
   Feature `cuda` enables the GPU backend.
 - `firmware/` — `no_std` ESP32 inference. Not a workspace member. Skeleton only.
 - `nets/` — quantised nets plus their records (`RECORDS.md`, rule 1).

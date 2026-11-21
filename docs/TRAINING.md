@@ -66,7 +66,7 @@ bullet-utils shuffle --input data/r7all.data --output data/r7train.data --mem-us
 ### ขั้นที่ 3: training ด้วย bullet (`trainer`)
 
 ```bash
-wyrdmate-trainer <data.data> [superbatches=20] [batches_per_sb=1000] [batch_size=16384] [wdl=0.5] [net_id=wyrd]
+wyrdmate-trainer <data.data> [superbatches=20] [batches_per_sb=1000] [batch_size=16384] [wdl=0.5] [net_id=wyrd] [hidden=32]
 wyrdmate-trainer data/r7train.data 200 402 16384 0.0 r7a      # สูตรปัจจุบัน
 ```
 
@@ -167,7 +167,7 @@ bullet ทำกระบวนการต่อไปนี้ซ้ำกั�
 
 กำไรต่อรอบ: +115, +81, +31, +64, +47 แล้วรอบ 7 ไม่ผ่านเกณฑ์ แนวโน้มคือลดลง สาเหตุที่เป็นไปได้ (ยังไม่ได้แยก):
 
-1. **net เล็กเกินไป** เรียนได้เกือบเต็ม capacity แล้ว (hidden size 32) เพดานขึ้นกับขนาด net ซึ่งถูกจำกัดด้วย RAM ของ ESP32 ([NET.md](NET.md) ข้อ 6)
+1. **net เล็กเกินไป** (hidden size 32) ทดสอบแล้วว่าไม่น่าใช่: net ใหญ่ขึ้นเพิ่ม Elo ที่ node เท่ากันได้ไม่มาก และไม่คุ้มที่เวลาเท่ากัน ([EVALUATION.md](EVALUATION.md) ข้อ 8.1)
 2. **ข้อมูลที่ engine สร้างเองไม่มีสิ่งใหม่ให้เรียน** (คุณภาพ label ถูกจำกัดด้วย node limit ของ datagen)
 3. **เทรนซ้ำกับชุดข้อมูลเดิม** จน net จดจำแทนที่จะสรุปรูปแบบ
 
