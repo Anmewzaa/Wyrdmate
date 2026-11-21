@@ -49,7 +49,7 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - r3a (round-3 data only, 76 batches/superbatch, wdl 0.0): +63 +/- 22 vs wyrd-ii, +143 +/- 23 vs material.
   Weaker than wyrd-iii, so combining the rounds' data helped. Not kept.
 
-## wyrd-iv.bin — ACCEPTED (current best)
+## wyrd-iv.bin — ACCEPTED
 
 - Tooling: commit `c3ed243` (unchanged through round 4).
 - Data: round-4 self-play (4 runs x 2500 games, seeds 51-54, 5000 nodes/move, played by
@@ -62,3 +62,21 @@ Trainer: bullet rev `5d70177680437b7c0ddf958bd4722d95afa78b0c`, batch 16384,
 - Match (fastchess, 600 games, 10000 nodes, same book): vs wyrd-iii **+31 +/- 22 Elo**
   (lower bound still above 0); vs material eval **+212 +/- 27 Elo**.
 - Gains per round are shrinking: +115, +81, +31 Elo over the previous net.
+
+## wyrd-v.bin — ACCEPTED (current best)
+
+- Tooling: commit `3a32a05` (search s9: futility pruning, delta pruning, check extension on top of s6;
+  datagen and trainer code unchanged since `c3ed243`).
+- Data: round-5 self-play (4 runs x 2500 games, seeds 61-64, 5000 nodes/move, played by `wyrd-iv.bin`
+  with search s9; 1,058,916 positions) **plus all round-2, 3 and 4 data** = 4,536,111 positions.
+  `wyrdmate-datagen 2500 5000 <seed> data/r5partSEED.txt nets/wyrd-iv.bin`, concatenated after
+  `data/r234all.txt`, then `bullet-utils convert --from text`, `shuffle`.
+  Note: rounds 2-4 were played with the older search (s1), round 5 with s9, so the gain below mixes new
+  data and more data; not separated.
+- Training: `wyrdmate-trainer data/r5train.data 200 277 16384 0.0 r5a` (wdl 0.0; 277 batches/superbatch ~ one
+  pass; `--features cuda`, ~36 s on the RTX 4060). Final running loss 0.001279 (not comparable across datasets).
+- Match (fastchess, 600 games, same book, engine s9 on both sides, new net vs `wyrd-iv`):
+  10,000 nodes **+64 +/- 25 Elo** (lower bound +40), 50,000 nodes **+83 +/- 26 Elo** (lower bound +58).
+  Raw logs `logs/ab-net-r5a-10k.txt`, `logs/ab-net-r5a-50k.txt` (git-ignored).
+- Not run: match against the material eval; ladder and Stockfish measurements with this net.
+- Gain per round: +115, +81, +31, +64 (the last round also changed the search used to make labels).
