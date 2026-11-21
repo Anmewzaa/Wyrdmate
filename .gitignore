@@ -8,3 +8,5 @@ logs/
 config.json
 tools/
 web/dist/
+__pycache__/
+*.pyc
